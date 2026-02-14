@@ -12,55 +12,113 @@ Module DatabaseModule
     ' ✅ Initialize and create database if not exists
     Public Sub InitializeDatabase()
         Try
-            ' Ensure AppData folder exists
             If Not Directory.Exists(appDataPath) Then
                 Directory.CreateDirectory(appDataPath)
             End If
 
-            ' Create the database file if it doesn't exist
             If Not File.Exists(dbPath) Then
                 SQLiteConnection.CreateFile(dbPath)
             End If
 
-            ' Open connection
             Using conn = New SQLiteConnection("Data Source=" & dbPath & ";Version=3;")
                 conn.Open()
 
-                ' ✅ Enable Write-Ahead Logging (WAL) globally
+                ' Enable WAL
                 Using walCmd As New SQLiteCommand("PRAGMA journal_mode = WAL;", conn)
                     walCmd.ExecuteNonQuery()
                 End Using
 
-                ' ✅ Optional: improve speed for local app usage
                 Using syncCmd As New SQLiteCommand("PRAGMA synchronous = NORMAL;", conn)
                     syncCmd.ExecuteNonQuery()
                 End Using
 
-                ' ✅ Optional: reduce locking issues
-                Using cacheCmd As New SQLiteCommand("PRAGMA temp_store = MEMORY;", conn)
-                    cacheCmd.ExecuteNonQuery()
+                Using fkCmd As New SQLiteCommand("PRAGMA foreign_keys = ON;", conn)
+                    fkCmd.ExecuteNonQuery()
                 End Using
 
-                ' ✅ Create USERS table if it doesn't exist
+                ' ================= USERS TABLE =================
                 Dim sql As String =
-                "CREATE TABLE IF NOT EXISTS users (" &
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " &
-                "username TEXT NOT NULL, " &
-                "password TEXT NOT NULL)"
+            "CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL
+            );"
+
                 Using createCmd As New SQLiteCommand(sql, conn)
                     createCmd.ExecuteNonQuery()
                 End Using
 
-                ' ✅ Insert default test user (only if not already existing)
-                sql = "INSERT INTO users (username, password) " &
-                  "SELECT 'testuser', '12345' WHERE NOT EXISTS (SELECT 1 FROM users WHERE username='testuser')"
+                ' Default admin
+                sql = "
+            INSERT INTO users (username, password)
+            SELECT 'MCCDADMIN', 'MCCD2026'
+            WHERE NOT EXISTS (
+                SELECT 1 FROM users WHERE username='MCCDADMIN'
+            );"
+
                 Using insertCmd As New SQLiteCommand(sql, conn)
                     insertCmd.ExecuteNonQuery()
                 End Using
+
+
+                ' ================= REGISTRATIONS TABLE =================
+                sql =
+            "CREATE TABLE IF NOT EXISTS registrations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                registration_id TEXT,
+                name TEXT NOT NULL,
+                birthday TEXT,
+                birthplace TEXT,
+                presentaddress TEXT,
+                permanentaddress TEXT,
+                nationality TEXT,
+                mobilenumber TEXT,
+                blinds TEXT,
+                sourceoffund TEXT,
+                worknature TEXT,
+                presentedid TEXT,
+                identification_number TEXT,
+                front_id BLOB,
+                back_id BLOB,
+                photo BLOB,
+                signature BLOB
+            );"
+
+                Using createRegCmd As New SQLiteCommand(sql, conn)
+                    createRegCmd.ExecuteNonQuery()
+                End Using
+
+
+                ' ================= CASHFLOWS TABLE =================
+                sql =
+            "CREATE TABLE IF NOT EXISTS cashflows (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                registration_id INTEGER NOT NULL,
+                type TEXT NOT NULL,
+                amount DECIMAL(18,2) NOT NULL,
+                payment_mode TEXT,
+                date_created TEXT,
+                time_created TEXT,
+                session_date TEXT NOT NULL,
+                created_by TEXT,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+                FOREIGN KEY (registration_id)
+                    REFERENCES registrations(id)
+                    ON DELETE CASCADE
+            );"
+
+                Using createCashflowCmd As New SQLiteCommand(sql, conn)
+                    createCashflowCmd.ExecuteNonQuery()
+                End Using
+
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("Error initializing database: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error initializing database: " & ex.Message,
+                        "Database Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error)
         End Try
     End Sub
 

@@ -11,23 +11,28 @@ Public Class PlayerLedger
     Private Sub PlayerLedger_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         lblFullname.Text = FullName
 
-        ' ✅ DateTimePicker for DATE selection
+        ' DATE picker
         dtpDate.Format = DateTimePickerFormat.Custom
         dtpDate.CustomFormat = "dddd, MMMM dd, yyyy"
         dtpDate.Value = DateTime.Now
 
-        ' ✅ Setup DateTimePicker for TIME selection
+        ' TIME picker
         dtpTime.Format = DateTimePickerFormat.Custom
-        dtpTime.CustomFormat = "hh:mm:ss tt"  ' 12-hour format + AM/PM
+        dtpTime.CustomFormat = "hh:mm:ss tt"
         dtpTime.ShowUpDown = True
         dtpTime.Value = DateTime.Now
 
-        ' ✅ Transaction types
+        ' SESSION DATE picker
+        dtpSessionDate.Format = DateTimePickerFormat.Custom
+        dtpSessionDate.CustomFormat = "dddd, MMMM dd, yyyy"
+        dtpSessionDate.Value = DateTime.Now
+
+        ' Transaction types
         cbTransactionType.Items.Clear()
         cbTransactionType.Items.AddRange({"Buy-In", "Cash-Out"})
         cbTransactionType.SelectedIndex = 0
 
-        ' ✅ Payment modes
+        ' Payment modes
         cbPaymentMode.Items.Clear()
         cbPaymentMode.Items.AddRange({"Cash", "GCash", "Bank Transfer", "Credit Card"})
         cbPaymentMode.SelectedIndex = 0
@@ -35,7 +40,6 @@ Public Class PlayerLedger
 
     Private Sub btnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
         Try
-            ' 🧩 Validate required fields
             If cbTransactionType.SelectedItem Is Nothing Then
                 MessageBox.Show("Please select a transaction type.")
                 Return
@@ -51,7 +55,6 @@ Public Class PlayerLedger
                 Return
             End If
 
-            ' ✅ Parse amount safely
             Dim transactionType = cbTransactionType.SelectedItem.ToString()
             Dim amount As Decimal
             If Not Decimal.TryParse(tbAmount.Text, amount) Then
@@ -59,29 +62,24 @@ Public Class PlayerLedger
                 Return
             End If
 
-            ' ✅ Get chosen date and time
             Dim selectedDate As String = dtpDate.Value.ToString("dddd, MMMM dd, yyyy")
             Dim selectedTime As String = dtpTime.Value.ToString("hh:mm:ss tt")
+            Dim sessionDate As String = dtpSessionDate.Value.ToString("dddd, MMMM dd, yyyy")
 
-            ' ✅ Define AppData path for DB
             Dim appDataPath As String = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "MetroCardClubDavao"
             )
 
-            ' ✅ Ensure folder exists
             If Not Directory.Exists(appDataPath) Then
                 Directory.CreateDirectory(appDataPath)
             End If
 
-            ' ✅ Full database path (use same DB for consistency)
             Dim dbPath As String = Path.Combine(appDataPath, "metrocarddavaodb.db")
 
-            ' ✅ Connect to database
             Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                 conn.Open()
 
-                ' ✅ Ensure player exists
                 Dim checkSql As String = "SELECT COUNT(*) FROM registrations WHERE id = @id"
                 Using checkCmd As New SQLiteCommand(checkSql, conn)
                     checkCmd.Parameters.AddWithValue("@id", RegistrationID)
@@ -92,11 +90,10 @@ Public Class PlayerLedger
                     End If
                 End Using
 
-                ' ✅ Insert transaction safely
                 Dim sql As String = "
                     INSERT INTO cashflows 
-                    (registration_id, type, amount, payment_mode, date_created, time_created, created_by) 
-                    VALUES (@regid, @type, @amount, @mode, @date, @time, @createdBy)
+                    (registration_id, type, amount, payment_mode, date_created, time_created, session_date, created_by) 
+                    VALUES (@regid, @type, @amount, @mode, @date, @time, @session, @createdBy)
                 "
 
                 Using cmd As New SQLiteCommand(sql, conn)
@@ -106,6 +103,7 @@ Public Class PlayerLedger
                     cmd.Parameters.AddWithValue("@mode", cbPaymentMode.Text)
                     cmd.Parameters.AddWithValue("@date", selectedDate)
                     cmd.Parameters.AddWithValue("@time", selectedTime)
+                    cmd.Parameters.AddWithValue("@session", sessionDate)
                     cmd.Parameters.AddWithValue("@createdBy", tbCashierName.Text.Trim())
                     cmd.ExecuteNonQuery()
                 End Using
@@ -121,7 +119,7 @@ Public Class PlayerLedger
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        Me.DialogResult = DialogResult.Cancel ' ✅ Notify parent that user canceled
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 

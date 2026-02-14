@@ -81,14 +81,14 @@ Public Class Reports
             ' 🔹 Query all transactions
             Dim sql As String = "
                 SELECT r.id AS ID,
-                       r.firstname, r.middlename, r.lastname,
-                       c.date_created,
-                       c.type,
-                       c.amount
-                FROM registrations r
-                LEFT JOIN cashflows c ON r.id = c.registration_id
-                WHERE c.date_created IS NOT NULL
-                ORDER BY r.lastname, r.firstname
+                   r.firstname, r.middlename, r.lastname,
+                   c.session_date,
+                   c.date_created,
+                   c.type,
+                   c.amount
+            FROM registrations r
+            LEFT JOIN cashflows c ON r.id = c.registration_id
+            ORDER BY r.lastname, r.firstname    
             "
 
             Dim cmd As New SQLiteCommand(sql, conn)
@@ -107,7 +107,15 @@ Public Class Reports
                 End If
 
                 ' Parse date_created
-                Dim dateStr As String = reader("date_created").ToString()
+                Dim dateStr As String
+
+                If Not IsDBNull(reader("session_date")) AndAlso
+                   If(reader("session_date").ToString().Trim(), "") <> "" Then
+                    dateStr = reader("session_date").ToString()
+                Else
+                    dateStr = reader("date_created").ToString()
+                End If
+
                 Dim txDate As Date
                 If Date.TryParse(dateStr, txDate) Then
                     If txDate.Year = selectedYear AndAlso txDate.Month = selectedMonth Then

@@ -42,8 +42,16 @@ Partial Class CashFlow
         btnRefresh = New Guna.UI2.WinForms.Guna2Button()
         btnPrintPDF = New Guna.UI2.WinForms.Guna2Button()
         Panel1 = New Panel()
+        Panel2 = New Panel()
+        lblCashIn = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Guna2HtmlLabel13 = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Panel3 = New Panel()
+        lblCashOut = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Guna2HtmlLabel4 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         CType(dgvCashFlow, ComponentModel.ISupportInitialize).BeginInit()
         Panel1.SuspendLayout()
+        Panel2.SuspendLayout()
+        Panel3.SuspendLayout()
         SuspendLayout()
         ' 
         ' Guna2HtmlLabel1
@@ -67,7 +75,7 @@ Partial Class CashFlow
         dgvCashFlow.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText
         DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = Color.FromArgb(CByte(100), CByte(88), CByte(255))
-        DataGridViewCellStyle2.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle2.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         DataGridViewCellStyle2.ForeColor = Color.White
         DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
@@ -77,7 +85,7 @@ Partial Class CashFlow
         dgvCashFlow.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
         DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = Color.White
-        DataGridViewCellStyle3.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle3.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         DataGridViewCellStyle3.ForeColor = Color.FromArgb(CByte(71), CByte(69), CByte(94))
         DataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(CByte(231), CByte(229), CByte(255))
         DataGridViewCellStyle3.SelectionForeColor = Color.FromArgb(CByte(71), CByte(69), CByte(94))
@@ -92,7 +100,7 @@ Partial Class CashFlow
         dgvCashFlow.RowHeadersVisible = False
         dgvCashFlow.RowHeadersWidth = 51
         dgvCashFlow.RowTemplate.Height = 29
-        dgvCashFlow.Size = New Size(1006, 470)
+        dgvCashFlow.Size = New Size(1369, 371)
         dgvCashFlow.TabIndex = 70
         dgvCashFlow.ThemeStyle.AlternatingRowsStyle.BackColor = Color.White
         dgvCashFlow.ThemeStyle.AlternatingRowsStyle.Font = Nothing
@@ -103,14 +111,14 @@ Partial Class CashFlow
         dgvCashFlow.ThemeStyle.GridColor = Color.FromArgb(CByte(231), CByte(229), CByte(255))
         dgvCashFlow.ThemeStyle.HeaderStyle.BackColor = Color.FromArgb(CByte(100), CByte(88), CByte(255))
         dgvCashFlow.ThemeStyle.HeaderStyle.BorderStyle = DataGridViewHeaderBorderStyle.None
-        dgvCashFlow.ThemeStyle.HeaderStyle.Font = New Font("Segoe UI", 9.0F)
+        dgvCashFlow.ThemeStyle.HeaderStyle.Font = New Font("Segoe UI", 9F)
         dgvCashFlow.ThemeStyle.HeaderStyle.ForeColor = Color.White
         dgvCashFlow.ThemeStyle.HeaderStyle.HeaightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
         dgvCashFlow.ThemeStyle.HeaderStyle.Height = 4
         dgvCashFlow.ThemeStyle.ReadOnly = True
         dgvCashFlow.ThemeStyle.RowsStyle.BackColor = Color.White
         dgvCashFlow.ThemeStyle.RowsStyle.BorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-        dgvCashFlow.ThemeStyle.RowsStyle.Font = New Font("Segoe UI", 9.0F)
+        dgvCashFlow.ThemeStyle.RowsStyle.Font = New Font("Segoe UI", 9F)
         dgvCashFlow.ThemeStyle.RowsStyle.ForeColor = Color.FromArgb(CByte(71), CByte(69), CByte(94))
         dgvCashFlow.ThemeStyle.RowsStyle.Height = 29
         dgvCashFlow.ThemeStyle.RowsStyle.SelectionBackColor = Color.FromArgb(CByte(231), CByte(229), CByte(255))
@@ -122,7 +130,7 @@ Partial Class CashFlow
         dtpDate.Checked = True
         dtpDate.CustomizableEdges = CustomizableEdges1
         dtpDate.FillColor = Color.Gainsboro
-        dtpDate.Font = New Font("Segoe UI", 9.0F)
+        dtpDate.Font = New Font("Segoe UI", 9F)
         dtpDate.ForeColor = Color.Black
         dtpDate.Format = DateTimePickerFormat.Long
         dtpDate.Location = New Point(78, 63)
@@ -155,9 +163,10 @@ Partial Class CashFlow
         tbSearchMember.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbSearchMember.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbSearchMember.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbSearchMember.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbSearchMember.Font = New Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbSearchMember.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbSearchMember.Location = New Point(533, 62)
+        tbSearchMember.Margin = New Padding(3, 4, 3, 4)
         tbSearchMember.Name = "tbSearchMember"
         tbSearchMember.PlaceholderText = "Enter Player/Member ID"
         tbSearchMember.SelectedText = ""
@@ -184,7 +193,7 @@ Partial Class CashFlow
         btnRefresh.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnRefresh.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnRefresh.FillColor = Color.White
-        btnRefresh.Font = New Font("Segoe UI", 9.0F)
+        btnRefresh.Font = New Font("Segoe UI", 9F)
         btnRefresh.ForeColor = Color.White
         btnRefresh.Image = My.Resources.Resources.refresh1
         btnRefresh.ImageSize = New Size(30, 30)
@@ -203,7 +212,7 @@ Partial Class CashFlow
         btnPrintPDF.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnPrintPDF.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnPrintPDF.FillColor = Color.Black
-        btnPrintPDF.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnPrintPDF.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnPrintPDF.ForeColor = Color.White
         btnPrintPDF.Location = New Point(770, 63)
         btnPrintPDF.Name = "btnPrintPDF"
@@ -216,16 +225,88 @@ Partial Class CashFlow
         ' 
         Panel1.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         Panel1.Controls.Add(dgvCashFlow)
-        Panel1.Location = New Point(18, 102)
+        Panel1.Location = New Point(18, 201)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(1006, 470)
+        Panel1.Size = New Size(1369, 371)
         Panel1.TabIndex = 78
+        ' 
+        ' Panel2
+        ' 
+        Panel2.BackColor = Color.Green
+        Panel2.Controls.Add(lblCashIn)
+        Panel2.Controls.Add(Guna2HtmlLabel13)
+        Panel2.Location = New Point(18, 101)
+        Panel2.Margin = New Padding(3, 2, 3, 2)
+        Panel2.Name = "Panel2"
+        Panel2.Size = New Size(431, 86)
+        Panel2.TabIndex = 79
+        ' 
+        ' lblCashIn
+        ' 
+        lblCashIn.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        lblCashIn.BackColor = Color.Transparent
+        lblCashIn.Font = New Font("Microsoft Sans Serif", 19.8000011F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        lblCashIn.ForeColor = Color.White
+        lblCashIn.Location = New Point(14, 34)
+        lblCashIn.Name = "lblCashIn"
+        lblCashIn.Size = New Size(17, 32)
+        lblCashIn.TabIndex = 76
+        lblCashIn.Text = "0"
+        ' 
+        ' Guna2HtmlLabel13
+        ' 
+        Guna2HtmlLabel13.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        Guna2HtmlLabel13.BackColor = Color.Transparent
+        Guna2HtmlLabel13.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel13.ForeColor = Color.White
+        Guna2HtmlLabel13.Location = New Point(14, 10)
+        Guna2HtmlLabel13.Name = "Guna2HtmlLabel13"
+        Guna2HtmlLabel13.Size = New Size(123, 20)
+        Guna2HtmlLabel13.TabIndex = 75
+        Guna2HtmlLabel13.Text = "TOTAL BUY-IN:"
+        ' 
+        ' Panel3
+        ' 
+        Panel3.BackColor = Color.Red
+        Panel3.Controls.Add(lblCashOut)
+        Panel3.Controls.Add(Guna2HtmlLabel4)
+        Panel3.Location = New Point(485, 101)
+        Panel3.Margin = New Padding(3, 2, 3, 2)
+        Panel3.Name = "Panel3"
+        Panel3.Size = New Size(454, 86)
+        Panel3.TabIndex = 80
+        ' 
+        ' lblCashOut
+        ' 
+        lblCashOut.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        lblCashOut.BackColor = Color.Transparent
+        lblCashOut.Font = New Font("Microsoft Sans Serif", 19.8000011F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        lblCashOut.ForeColor = Color.White
+        lblCashOut.Location = New Point(14, 34)
+        lblCashOut.Name = "lblCashOut"
+        lblCashOut.Size = New Size(17, 32)
+        lblCashOut.TabIndex = 76
+        lblCashOut.Text = "0"
+        ' 
+        ' Guna2HtmlLabel4
+        ' 
+        Guna2HtmlLabel4.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        Guna2HtmlLabel4.BackColor = Color.Transparent
+        Guna2HtmlLabel4.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel4.ForeColor = Color.White
+        Guna2HtmlLabel4.Location = New Point(14, 10)
+        Guna2HtmlLabel4.Name = "Guna2HtmlLabel4"
+        Guna2HtmlLabel4.Size = New Size(154, 20)
+        Guna2HtmlLabel4.TabIndex = 75
+        Guna2HtmlLabel4.Text = "TOTAL CASH-OUT:"
         ' 
         ' CashFlow
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.WhiteSmoke
+        Controls.Add(Panel3)
+        Controls.Add(Panel2)
         Controls.Add(Panel1)
         Controls.Add(btnPrintPDF)
         Controls.Add(btnRefresh)
@@ -236,9 +317,13 @@ Partial Class CashFlow
         Controls.Add(Guna2HtmlLabel1)
         Margin = New Padding(3, 2, 3, 2)
         Name = "CashFlow"
-        Size = New Size(1041, 635)
+        Size = New Size(1404, 635)
         CType(dgvCashFlow, ComponentModel.ISupportInitialize).EndInit()
         Panel1.ResumeLayout(False)
+        Panel2.ResumeLayout(False)
+        Panel2.PerformLayout()
+        Panel3.ResumeLayout(False)
+        Panel3.PerformLayout()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -252,5 +337,11 @@ Partial Class CashFlow
     Friend WithEvents btnRefresh As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnPrintPDF As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents lblCashIn As Guna.UI2.WinForms.Guna2HtmlLabel
+    Friend WithEvents Guna2HtmlLabel13 As Guna.UI2.WinForms.Guna2HtmlLabel
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents lblCashOut As Guna.UI2.WinForms.Guna2HtmlLabel
+    Friend WithEvents Guna2HtmlLabel4 As Guna.UI2.WinForms.Guna2HtmlLabel
 
 End Class
