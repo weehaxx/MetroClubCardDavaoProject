@@ -224,12 +224,15 @@ WHERE
                 Dim titleFont As iTextSharp.text.Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14)
                 Dim headerFont As iTextSharp.text.Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10)
                 Dim cellFont As iTextSharp.text.Font = FontFactory.GetFont(FontFactory.HELVETICA, 9)
+                Dim totalsFont As iTextSharp.text.Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10)
 
+                ' Title
                 Dim title As New Paragraph("CashFlow Report - " & dtpDate.Value.ToString("MMMM dd, yyyy"), titleFont)
                 title.Alignment = Element.ALIGN_CENTER
                 doc.Add(title)
                 doc.Add(New Paragraph(" "))
 
+                ' Columns to display
                 Dim visibleColumns = dgvCashFlow.Columns.
                 Cast(Of DataGridViewColumn)().
                 Where(Function(c) c.Visible AndAlso c.HeaderText <> "CASHFLOW_ID").
@@ -238,7 +241,7 @@ WHERE
                 Dim pdfTable As New PdfPTable(visibleColumns.Count)
                 pdfTable.WidthPercentage = 100
 
-                ' ✅ Custom column widths for PDF
+                ' Column widths
                 Dim widths(visibleColumns.Count - 1) As Single
                 For i As Integer = 0 To visibleColumns.Count - 1
                     Select Case visibleColumns(i).HeaderText
@@ -254,7 +257,7 @@ WHERE
                 Next
                 pdfTable.SetWidths(widths)
 
-                ' ✅ Table headers
+                ' Table headers
                 For Each col As DataGridViewColumn In visibleColumns
                     Dim cell As New PdfPCell(New Phrase(col.HeaderText, headerFont))
                     cell.BackgroundColor = BaseColor.LIGHT_GRAY
@@ -262,7 +265,7 @@ WHERE
                     pdfTable.AddCell(cell)
                 Next
 
-                ' ✅ Table rows
+                ' Table rows
                 For Each row As DataGridViewRow In dgvCashFlow.Rows
                     If Not row.IsNewRow Then
                         For Each col As DataGridViewColumn In visibleColumns
@@ -272,8 +275,20 @@ WHERE
                     End If
                 Next
 
-
                 doc.Add(pdfTable)
+
+                ' ✅ Add totals below table using lblCashIn / lblCashOut
+                Dim totalBuyIn As Decimal = 0
+                Dim totalCashOut As Decimal = 0
+
+                ' Remove currency symbol and parse
+                Decimal.TryParse(lblCashIn.Text.Replace("₱", "").Replace(",", ""), totalBuyIn)
+                Decimal.TryParse(lblCashOut.Text.Replace("₱", "").Replace(",", ""), totalCashOut)
+
+                doc.Add(New Paragraph(" "))
+                doc.Add(New Paragraph($"TOTAL BUY-IN: ₱{totalBuyIn:N2}", totalsFont))
+                doc.Add(New Paragraph($"TOTAL CASH-OUT: ₱{totalCashOut:N2}", totalsFont))
+
                 doc.Close()
                 MessageBox.Show("PDF exported successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
@@ -281,6 +296,7 @@ WHERE
             MessageBox.Show("Error exporting PDF: " & ex.Message)
         End Try
     End Sub
+
 
     Private Sub dgvCashFlow_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCashFlow.CellClick
         If e.RowIndex < 0 Then Exit Sub
