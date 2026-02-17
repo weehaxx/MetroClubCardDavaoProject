@@ -71,6 +71,8 @@ Public Class Members
 
         LoadRegistrations()
         UpdateTotalMembers()
+        tbSearch.Focus()
+
 
     End Sub
 
@@ -140,15 +142,18 @@ Public Class Members
 
     ' Live Search by firstname/lastname/middlename only
     Private Sub tbSearch_TextChanged(sender As Object, e As EventArgs) Handles tbSearch.TextChanged
+        tbSearch.Select()
+
         Try
-            If dt IsNot Nothing Then
+        If dt IsNot Nothing Then
                 Dim dv As New DataView(dt)
                 Dim keyword As String = tbSearch.Text.Replace("'", "''")
 
                 dv.RowFilter =
-                    $"lastname LIKE '%{keyword}%' OR " &
-                    $"firstname LIKE '%{keyword}%' OR " &
-                    $"middlename LIKE '%{keyword}%'"
+                $"Convert(registration_id, 'System.String') LIKE '%{keyword}%' OR " &
+                $"lastname LIKE '%{keyword}%' OR " &
+                $"firstname LIKE '%{keyword}%' OR " &
+                $"middlename LIKE '%{keyword}%'"
 
                 dgvRegistrations.DataSource = dv
             End If
@@ -156,6 +161,7 @@ Public Class Members
             MessageBox.Show("Error searching: " & ex.Message)
         End Try
     End Sub
+
 
     Private Sub dgvRegistrations_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvRegistrations.CellClick
         Try
@@ -609,7 +615,7 @@ Public Class Members
             Dim selectedRow = selectedRowView.Row
 
             ' ✅ Format and convert name to ALL CAPS: LASTNAME, FIRSTNAME MIDDLENAME
-            Dim memberName As String = $"{selectedRow("lastname")}, {selectedRow("firstname")} {selectedRow("middlename")}".ToUpper()
+            Dim memberName As String = $"{selectedRow("lastname")}".ToUpper()
 
             Dim registrationID As String = selectedRow("registration_id").ToString()
 
@@ -627,25 +633,30 @@ Public Class Members
             overlay.Show()
             overlay.Refresh()
 
-            ' ✅ Create popup
-            Dim frm As New Form With {
-                .Text = "ID Printing Preview",
-                .StartPosition = FormStartPosition.CenterScreen,
-                .FormBorderStyle = FormBorderStyle.FixedDialog,
-                .MaximizeBox = False,
-                .MinimizeBox = False,
-                .Size = New Size(800, 500),
-                .ShowInTaskbar = False
-            }
-
-            ' ✅ Create UserControl and assign values
+            ' ✅ Create the UserControl first (so we can read its size)
             Dim idPrintingControl As New IDPrinting() With {
-                .Dock = DockStyle.Fill,
-                .MemberName = memberName,
-                .MemberID = registrationID,
-                .MemberPhoto = memberPhoto
-            }
+            .MemberName = memberName,
+            .MemberID = registrationID,
+            .MemberPhoto = memberPhoto
+        }
 
+            ' ✅ Force layout to ensure proper size is calculated
+            idPrintingControl.PerformLayout()
+            idPrintingControl.Refresh()
+
+            ' ✅ Create popup form using the UserControl's preferred size
+            Dim frm As New Form With {
+            .Text = "ID Printing Preview",
+            .StartPosition = FormStartPosition.CenterScreen,
+            .FormBorderStyle = FormBorderStyle.FixedDialog,
+            .MaximizeBox = False,
+            .MinimizeBox = False,
+            .ShowInTaskbar = False,
+            .ClientSize = idPrintingControl.Size ' 👈 Match size of IDPrinting UserControl
+        }
+
+            ' ✅ Dock it and add control to form
+            idPrintingControl.Dock = DockStyle.Fill
             frm.Controls.Add(idPrintingControl)
 
             ' ✅ Show modal dialog
@@ -659,6 +670,7 @@ Public Class Members
             MessageBox.Show("Error opening ID Printing: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
     Private Sub UpdateTotalMembers()
         Try
             Dim dbPath As String = GetDatabasePath()

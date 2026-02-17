@@ -178,7 +178,7 @@ Partial Class Members
         tbSearch.SelectedText = ""
         tbSearch.ShadowDecoration.CustomizableEdges = CustomizableEdges2
         tbSearch.Size = New Size(386, 47)
-        tbSearch.TabIndex = 3
+        tbSearch.TabIndex = 0
         ' 
         ' Guna2HtmlLabel2
         ' 
@@ -206,7 +206,7 @@ Partial Class Members
         tbLastName.ForeColor = Color.Black
         tbLastName.HideSelection = False
         tbLastName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbLastName.Location = New Point(875, 18)
+        tbLastName.Location = New Point(875, 19)
         tbLastName.Margin = New Padding(5, 7, 5, 7)
         tbLastName.Name = "tbLastName"
         tbLastName.PlaceholderText = ""
@@ -265,7 +265,7 @@ Partial Class Members
         Guna2HtmlLabel3.BackColor = Color.Transparent
         Guna2HtmlLabel3.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel3.ForeColor = Color.Black
-        Guna2HtmlLabel3.Location = New Point(664, 106)
+        Guna2HtmlLabel3.Location = New Point(664, 107)
         Guna2HtmlLabel3.Margin = New Padding(3, 4, 3, 4)
         Guna2HtmlLabel3.Name = "Guna2HtmlLabel3"
         Guna2HtmlLabel3.Size = New Size(115, 25)
@@ -323,7 +323,7 @@ Partial Class Members
         Guna2HtmlLabel6.BackColor = Color.Transparent
         Guna2HtmlLabel6.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel6.ForeColor = Color.Black
-        Guna2HtmlLabel6.Location = New Point(663, 290)
+        Guna2HtmlLabel6.Location = New Point(663, 291)
         Guna2HtmlLabel6.Margin = New Padding(3, 4, 3, 4)
         Guna2HtmlLabel6.Name = "Guna2HtmlLabel6"
         Guna2HtmlLabel6.Size = New Size(117, 25)
@@ -377,7 +377,7 @@ Partial Class Members
         tbPresentAddress.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbPresentAddress.ForeColor = Color.Black
         tbPresentAddress.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPresentAddress.Location = New Point(875, 330)
+        tbPresentAddress.Location = New Point(875, 331)
         tbPresentAddress.Margin = New Padding(5, 7, 5, 7)
         tbPresentAddress.Name = "tbPresentAddress"
         tbPresentAddress.PlaceholderText = ""
@@ -392,7 +392,7 @@ Partial Class Members
         Guna2HtmlLabel8.BackColor = Color.Transparent
         Guna2HtmlLabel8.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel8.ForeColor = Color.Black
-        Guna2HtmlLabel8.Location = New Point(663, 421)
+        Guna2HtmlLabel8.Location = New Point(664, 421)
         Guna2HtmlLabel8.Margin = New Padding(3, 4, 3, 4)
         Guna2HtmlLabel8.Name = "Guna2HtmlLabel8"
         Guna2HtmlLabel8.Size = New Size(204, 25)
@@ -473,7 +473,7 @@ Partial Class Members
         Guna2HtmlLabel10.BackColor = Color.Transparent
         Guna2HtmlLabel10.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel10.ForeColor = Color.Black
-        Guna2HtmlLabel10.Location = New Point(668, 721)
+        Guna2HtmlLabel10.Location = New Point(667, 721)
         Guna2HtmlLabel10.Margin = New Padding(3, 4, 3, 4)
         Guna2HtmlLabel10.Name = "Guna2HtmlLabel10"
         Guna2HtmlLabel10.Size = New Size(112, 25)
@@ -819,7 +819,7 @@ Partial Class Members
         tbBirthday.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbBirthday.ForeColor = Color.Black
         tbBirthday.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBirthday.Location = New Point(875, 462)
+        tbBirthday.Location = New Point(875, 461)
         tbBirthday.Margin = New Padding(5, 7, 5, 7)
         tbBirthday.Name = "tbBirthday"
         tbBirthday.PlaceholderText = ""
@@ -859,7 +859,7 @@ Partial Class Members
         dgvRegistrations.ReadOnly = True
         dgvRegistrations.RowHeadersVisible = False
         dgvRegistrations.RowHeadersWidth = 51
-        dgvRegistrations.Size = New Size(386, 889)
+        dgvRegistrations.Size = New Size(386, 836)
         dgvRegistrations.TabIndex = 69
         dgvRegistrations.Theme = Guna.UI2.WinForms.Enums.DataGridViewPresetThemes.White
         dgvRegistrations.ThemeStyle.AlternatingRowsStyle.BackColor = Color.White
@@ -894,7 +894,7 @@ Partial Class Members
         gbPlayersLedger.FillColor = Color.White
         gbPlayersLedger.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         gbPlayersLedger.ForeColor = Color.Black
-        gbPlayersLedger.Location = New Point(427, 394)
+        gbPlayersLedger.Location = New Point(427, 395)
         gbPlayersLedger.Name = "gbPlayersLedger"
         gbPlayersLedger.ShadowDecoration.CustomizableEdges = CustomizableEdges40
         gbPlayersLedger.Size = New Size(217, 43)
@@ -911,7 +911,7 @@ Partial Class Members
         btnViewAccount.FillColor = Color.White
         btnViewAccount.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnViewAccount.ForeColor = Color.Black
-        btnViewAccount.Location = New Point(427, 326)
+        btnViewAccount.Location = New Point(427, 325)
         btnViewAccount.Name = "btnViewAccount"
         btnViewAccount.ShadowDecoration.CustomizableEdges = CustomizableEdges42
         btnViewAccount.Size = New Size(217, 43)
@@ -928,7 +928,7 @@ Partial Class Members
         btnEdit.FillColor = Color.White
         btnEdit.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnEdit.ForeColor = Color.Black
-        btnEdit.Location = New Point(427, 454)
+        btnEdit.Location = New Point(427, 453)
         btnEdit.Margin = New Padding(3, 3, 23, 3)
         btnEdit.Name = "btnEdit"
         btnEdit.ShadowDecoration.CustomizableEdges = CustomizableEdges44
@@ -947,7 +947,7 @@ Partial Class Members
         btnDelete.FillColor = Color.Red
         btnDelete.Font = New Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnDelete.ForeColor = Color.White
-        btnDelete.Location = New Point(427, 1063)
+        btnDelete.Location = New Point(427, 1011)
         btnDelete.Name = "btnDelete"
         btnDelete.ShadowDecoration.CustomizableEdges = CustomizableEdges46
         btnDelete.Size = New Size(198, 43)
@@ -971,7 +971,7 @@ Partial Class Members
         Guna2Panel1.Controls.Add(Label20)
         Guna2Panel1.Controls.Add(Label19)
         Guna2Panel1.CustomizableEdges = CustomizableEdges47
-        Guna2Panel1.Location = New Point(875, 775)
+        Guna2Panel1.Location = New Point(907, 775)
         Guna2Panel1.Margin = New Padding(3, 3, 23, 3)
         Guna2Panel1.Name = "Guna2Panel1"
         Guna2Panel1.ShadowDecoration.CustomizableEdges = CustomizableEdges48
@@ -1037,7 +1037,7 @@ Partial Class Members
         rbSelfEmployed.Enabled = False
         rbSelfEmployed.Font = New Font("Arial Rounded MT Bold", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         rbSelfEmployed.ForeColor = Color.Black
-        rbSelfEmployed.Location = New Point(39, 20)
+        rbSelfEmployed.Location = New Point(38, 20)
         rbSelfEmployed.Margin = New Padding(3, 4, 3, 4)
         rbSelfEmployed.Name = "rbSelfEmployed"
         rbSelfEmployed.Size = New Size(149, 24)
@@ -1136,7 +1136,7 @@ Partial Class Members
         Guna2Panel2.Controls.Add(Guna2HtmlLabel14)
         Guna2Panel2.Controls.Add(Guna2HtmlLabel16)
         Guna2Panel2.CustomizableEdges = CustomizableEdges57
-        Guna2Panel2.Location = New Point(413, 775)
+        Guna2Panel2.Location = New Point(427, 775)
         Guna2Panel2.Name = "Guna2Panel2"
         Guna2Panel2.ShadowDecoration.CustomizableEdges = CustomizableEdges58
         Guna2Panel2.Size = New Size(456, 216)
@@ -1213,16 +1213,16 @@ Partial Class Members
         btnPrintMember.DisabledState.CustomBorderColor = Color.DarkGray
         btnPrintMember.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnPrintMember.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
-        btnPrintMember.Enabled = False
-        btnPrintMember.Font = New Font("Segoe UI", 9F)
-        btnPrintMember.ForeColor = Color.White
-        btnPrintMember.Location = New Point(427, 631)
-        btnPrintMember.Margin = New Padding(3, 4, 3, 4)
+        btnPrintMember.FillColor = Color.White
+        btnPrintMember.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnPrintMember.ForeColor = Color.Black
+        btnPrintMember.Location = New Point(427, 699)
+        btnPrintMember.Margin = New Padding(3, 5, 3, 5)
         btnPrintMember.Name = "btnPrintMember"
         btnPrintMember.ShadowDecoration.CustomizableEdges = CustomizableEdges62
-        btnPrintMember.Size = New Size(206, 60)
+        btnPrintMember.Size = New Size(217, 57)
         btnPrintMember.TabIndex = 74
-        btnPrintMember.Text = "PRINT"
+        btnPrintMember.Text = "ID CARD PREVIEW"
         ' 
         ' Guna2HtmlLabel13
         ' 
@@ -1243,7 +1243,7 @@ Partial Class Members
         lblTotalMembers.BackColor = Color.Transparent
         lblTotalMembers.Font = New Font("Arial Rounded MT Bold", 19.8000011F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         lblTotalMembers.ForeColor = Color.White
-        lblTotalMembers.Location = New Point(16, 46)
+        lblTotalMembers.Location = New Point(16, 45)
         lblTotalMembers.Margin = New Padding(3, 4, 3, 4)
         lblTotalMembers.Name = "lblTotalMembers"
         lblTotalMembers.Size = New Size(23, 40)
@@ -1303,7 +1303,7 @@ Partial Class Members
         ForeColor = Color.Black
         Margin = New Padding(3, 4, 3, 4)
         Name = "Members"
-        Size = New Size(1574, 1124)
+        Size = New Size(1799, 1081)
         gpPoliticalExpose.ResumeLayout(False)
         gpPoliticalExpose.PerformLayout()
         CType(dgvRegistrations, ComponentModel.ISupportInitialize).EndInit()
