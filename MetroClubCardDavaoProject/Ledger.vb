@@ -37,7 +37,8 @@ Public Class Ledger
 
                 Dim sql As String = "
                     SELECT 
-                        date_created AS TxDate,
+                        session_date AS SessionDate,
+                        date_created AS ActualDate,
                         MIN(CASE WHEN type='Buy-In' THEN time_created END) AS FirstIn,
                         SUM(CASE WHEN type='Buy-In' THEN amount ELSE 0 END) AS TotalBuyIn,
                         SUM(CASE WHEN type='Buy-In' THEN 1 ELSE 0 END) AS BuyInFreq,
@@ -46,12 +47,14 @@ Public Class Ledger
                         SUM(CASE WHEN type='Cash-Out' THEN 1 ELSE 0 END) AS CashOutFreq
                     FROM cashflows
                     WHERE registration_id = @regID
-                    GROUP BY date_created
-                    ORDER BY date_created;
+                    GROUP BY session_date
+                    ORDER BY session_date;
                 "
 
+
                 Dim finalTable As New DataTable()
-                finalTable.Columns.Add("DATE")
+                finalTable.Columns.Add("SESSION DATE")
+                finalTable.Columns.Add("ACTUAL DATE")
                 finalTable.Columns.Add("FIRST TIME IN")
                 finalTable.Columns.Add("TOTAL BUY-IN")
                 finalTable.Columns.Add("BUY-IN FREQ")
@@ -67,7 +70,11 @@ Public Class Ledger
 
                     Using reader As SQLiteDataReader = cmd.ExecuteReader()
                         While reader.Read()
-                            Dim txDate As String = DateTime.Parse(reader("TxDate").ToString()).ToString("MMM dd, yyyy")
+                            Dim sessionDate As String =
+                                DateTime.Parse(reader("SessionDate").ToString()).ToString("MMM dd, yyyy")
+
+                            Dim actualDate As String =
+                                DateTime.Parse(reader("ActualDate").ToString()).ToString("MMM dd, yyyy")
 
                             Dim firstIn As String = ""
                             If Not IsDBNull(reader("FirstIn")) Then
@@ -89,7 +96,8 @@ Public Class Ledger
                             Dim winLossStr As String = "₱" & winLoss.ToString("N2")
 
                             Dim newRow = finalTable.NewRow()
-                            newRow("DATE") = txDate
+                            newRow("SESSION DATE") = sessionDate
+                            newRow("ACTUAL DATE") = actualDate
                             newRow("FIRST TIME IN") = firstIn
                             newRow("TOTAL BUY-IN") = "₱" & totalBuyIn.ToString("N2")
                             newRow("BUY-IN FREQ") = buyInFreq
