@@ -145,7 +145,7 @@ Public Class Members
         tbSearch.Select()
 
         Try
-        If dt IsNot Nothing Then
+            If dt IsNot Nothing Then
                 Dim dv As New DataView(dt)
                 Dim keyword As String = tbSearch.Text.Replace("'", "''")
 
@@ -432,9 +432,9 @@ Public Class Members
             End If
 
             ' ✅ Overlay
-            Dim overlay As New OverlayForm(Me.FindForm)
-            overlay.Show()
-            overlay.Refresh()
+            Dim overlay As New OverlayForm(FindForm)
+            overlay.Show
+            overlay.Refresh
 
             ' ✅ Authentication popup (145 x 47)
             Dim authForm As New Form With {
@@ -444,33 +444,33 @@ Public Class Members
             .BackColor = Color.White
         }
 
-            Dim authControl As New Authentication()
+            Dim authControl As New Authentication
             authControl.Dock = DockStyle.Fill
 
             ' ✅ Handle events
             AddHandler authControl.AuthSuccess,
             Sub()
                 authForm.DialogResult = DialogResult.OK
-                authForm.Close()
+                authForm.Close
             End Sub
 
             AddHandler authControl.AuthCancelled,
             Sub()
                 authForm.DialogResult = DialogResult.Cancel
-                authForm.Close()
+                authForm.Close
             End Sub
 
             authForm.Controls.Add(authControl)
 
             ' ✅ Show authentication dialog
-            If authForm.ShowDialog() = DialogResult.OK Then
+            If authForm.ShowDialog = DialogResult.OK Then
                 ' 🔹 Only continue if authentication passed
                 Dim selectedRowView = TryCast(dgvRegistrations.SelectedRows(0).DataBoundItem, DataRowView)
                 If selectedRowView Is Nothing Then Exit Sub
 
                 Dim selectedRow = selectedRowView.Row
                 Dim memberID As Integer = selectedRow("id")
-                Dim fullName As String = $"{selectedRow("lastname")} {selectedRow("firstname")} {selectedRow("middlename")}"
+                Dim fullName = $"{selectedRow("lastname")} {selectedRow("firstname")} {selectedRow("middlename")}"
 
                 ' ✅ Now show EditInfo
                 Dim popup As New Form With {
@@ -480,19 +480,19 @@ Public Class Members
                 .BackColor = Color.White
             }
 
-                Dim editControl As New editInfo()
+                Dim editControl As New editInfo
                 editControl.Dock = DockStyle.Fill
                 editControl.SelectedMemberID = memberID
                 editControl.SelectedFullName = fullName
 
                 popup.Controls.Add(editControl)
-                popup.ShowDialog()
+                popup.ShowDialog
 
                 ' ✅ Refresh grid
-                LoadRegistrations()
+                LoadRegistrations
             End If
 
-            overlay.Close()
+            overlay.Close
 
         Catch ex As Exception
             MessageBox.Show("Error opening edit form: " & ex.Message)
@@ -692,4 +692,69 @@ Public Class Members
     Private Sub lblTotalMembers_Click(sender As Object, e As EventArgs) Handles lblTotalMembers.Click
         UpdateTotalMembers()
     End Sub
+
+    Private Sub btnAddRaffleEntry_Click(sender As Object, e As EventArgs) Handles btnAddRaffleEntry.Click
+        Try
+            ' Ensure a member is selected
+            If dgvRegistrations.SelectedRows.Count = 0 Then
+                MessageBox.Show("Please select a member first.", "No Member Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Exit Sub
+            End If
+
+            Dim selectedRowView = TryCast(dgvRegistrations.SelectedRows(0).DataBoundItem, DataRowView)
+            If selectedRowView Is Nothing Then Exit Sub
+
+            Dim memberID As Long = Convert.ToInt64(selectedRowView.Row("id"))
+            Dim fullName As String = $"{selectedRowView.Row("lastname")} {selectedRowView.Row("firstname")} {selectedRowView.Row("middlename")}".Trim()
+
+            ' Confirmation dialog
+            Dim confirmResult = MessageBox.Show(
+                $"Are you sure you want to add a raffle entry for {fullName}?",
+                "Confirm Raffle Entry",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            )
+
+            If confirmResult = DialogResult.No Then Exit Sub
+
+            ' Determine next sequential raffle number for this member
+            Dim dbPath As String = GetDatabasePath()
+            Dim nextRaffleNumber As Integer = 1
+
+            Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+                conn.Open()
+
+                Dim sqlMax As String = "SELECT MAX(CAST(raffle_number AS INTEGER)) FROM raffle"
+                Using cmdMax As New SQLiteCommand(sqlMax, conn)
+                    cmdMax.Parameters.AddWithValue("@regid", memberID)
+                    Dim result = cmdMax.ExecuteScalar()
+                    If result IsNot DBNull.Value AndAlso result IsNot Nothing Then
+                        nextRaffleNumber = Convert.ToInt32(result) + 1
+                    End If
+                End Using
+
+                ' Insert new raffle entry
+                Dim sqlInsert As String = "
+                    INSERT INTO raffle (raffle_number, registration_id, full_name, raffle_date)
+                    VALUES (@num, @regid, @name, @date)
+                "
+                Using cmdInsert As New SQLiteCommand(sqlInsert, conn)
+                    cmdInsert.Parameters.AddWithValue("@num", nextRaffleNumber)
+                    cmdInsert.Parameters.AddWithValue("@regid", memberID)
+                    cmdInsert.Parameters.AddWithValue("@name", fullName)
+                    cmdInsert.Parameters.AddWithValue("@date", DateTime.Now.Date) ' Only date
+                    cmdInsert.ExecuteNonQuery()
+                End Using
+            End Using
+
+            MessageBox.Show($"Raffle entry #{nextRaffleNumber} added for {fullName}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+
+
+        Catch ex As Exception
+            MessageBox.Show("Error adding raffle entry: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+
 End Class

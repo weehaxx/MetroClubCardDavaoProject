@@ -11,6 +11,7 @@
         btnRegistration.Checked = False
         btnCashFlow.Checked = False
         btnReports.Checked = False
+        btnRaffle.Checked = False
         Panel3.Controls.Clear()
         ShowDashboard()
     End Sub
@@ -21,6 +22,7 @@
         btnRegistration.Checked = True
         btnCashFlow.Checked = False
         btnReports.Checked = False
+        btnRaffle.Checked = False
         Panel3.Controls.Clear()
 
         Dim registrationUC As New Registration()
@@ -34,6 +36,7 @@
         btnRegistration.Checked = False
         btnCashFlow.Checked = True
         btnReports.Checked = False
+        btnRaffle.Checked = False
         Panel3.Controls.Clear()
 
         Dim cashFlowUC As New CashFlow()
@@ -47,11 +50,25 @@
         btnRegistration.Checked = False
         btnCashFlow.Checked = False
         btnReports.Checked = True
+        btnRaffle.Checked = False
         Panel3.Controls.Clear()
 
         Dim reportsUC As New Reports()
         reportsUC.Dock = DockStyle.Fill
         Panel3.Controls.Add(reportsUC)
+    End Sub
+
+    Private Sub btnRaffle_Click(sender As Object, e As EventArgs) Handles btnRaffle.Click
+        btnDashboard.Checked = False
+        btnRegistration.Checked = False
+        btnCashFlow.Checked = False
+        btnReports.Checked = False
+        btnRaffle.Checked = True
+        Panel3.Controls.Clear()
+
+        Dim raffleUC As New RaffleEntry()
+        raffleUC.Dock = DockStyle.Fill
+        Panel3.Controls.Add(raffleUC)
     End Sub
 
     ' 🔹 Logout Button
@@ -87,5 +104,6 @@
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Application.Exit() ' Ensures the app fully closes (no background process)
     End Sub
+
 
 End Class
