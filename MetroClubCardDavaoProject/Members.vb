@@ -709,11 +709,11 @@ Public Class Members
 
             ' Confirmation dialog
             Dim confirmResult = MessageBox.Show(
-                $"Are you sure you want to add a raffle entry for {fullName}?",
-                "Confirm Raffle Entry",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            )
+            $"Are you sure you want to add a raffle entry for {fullName}?",
+            "Confirm Raffle Entry",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question
+        )
 
             If confirmResult = DialogResult.No Then Exit Sub
 
@@ -726,30 +726,94 @@ Public Class Members
 
                 Dim sqlMax As String = "SELECT MAX(CAST(raffle_number AS INTEGER)) FROM raffle"
                 Using cmdMax As New SQLiteCommand(sqlMax, conn)
-                    cmdMax.Parameters.AddWithValue("@regid", memberID)
                     Dim result = cmdMax.ExecuteScalar()
                     If result IsNot DBNull.Value AndAlso result IsNot Nothing Then
                         nextRaffleNumber = Convert.ToInt32(result) + 1
                     End If
                 End Using
-
-                ' Insert new raffle entry
-                Dim sqlInsert As String = "
-                    INSERT INTO raffle (raffle_number, registration_id, full_name, raffle_date)
-                    VALUES (@num, @regid, @name, @date)
-                "
-                Using cmdInsert As New SQLiteCommand(sqlInsert, conn)
-                    cmdInsert.Parameters.AddWithValue("@num", nextRaffleNumber)
-                    cmdInsert.Parameters.AddWithValue("@regid", memberID)
-                    cmdInsert.Parameters.AddWithValue("@name", fullName)
-                    cmdInsert.Parameters.AddWithValue("@date", DateTime.Now.Date) ' Only date
-                    cmdInsert.ExecuteNonQuery()
-                End Using
             End Using
 
-            MessageBox.Show($"Raffle entry #{nextRaffleNumber} added for {fullName}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ' --- Inline dialog to edit date & time ---
+            Dim promptForm As New Form() With {
+            .Text = "Edit Raffle Date & Time",
+            .Size = New Size(300, 180),
+            .StartPosition = FormStartPosition.CenterParent,
+            .FormBorderStyle = FormBorderStyle.FixedDialog,
+            .MaximizeBox = False,
+            .MinimizeBox = False
+        }
 
+            ' Name label
+            Dim lblName As New Label() With {
+            .Text = $"Member: {fullName}",
+            .AutoSize = True,
+            .Location = New Point(10, 10)
+        }
 
+            ' Date picker
+            Dim dtpDate As New DateTimePicker() With {
+            .Format = DateTimePickerFormat.Short,
+            .Value = DateTime.Now.Date,
+            .Location = New Point(10, 40)
+        }
+
+            ' Time picker
+            Dim dtpTime As New DateTimePicker() With {
+            .Format = DateTimePickerFormat.Time,
+            .ShowUpDown = True,
+            .Value = DateTime.Now,
+            .Location = New Point(10, 70)
+        }
+
+            ' OK button
+            Dim btnOK As New Button() With {
+            .Text = "OK",
+            .DialogResult = DialogResult.OK,
+            .Location = New Point(50, 110)
+        }
+
+            ' Cancel button
+            Dim btnCancel As New Button() With {
+            .Text = "Cancel",
+            .DialogResult = DialogResult.Cancel,
+            .Location = New Point(150, 110)
+        }
+
+            promptForm.Controls.Add(lblName)
+            promptForm.Controls.Add(dtpDate)
+            promptForm.Controls.Add(dtpTime)
+            promptForm.Controls.Add(btnOK)
+            promptForm.Controls.Add(btnCancel)
+            promptForm.AcceptButton = btnOK
+            promptForm.CancelButton = btnCancel
+
+            ' Show dialog
+            If promptForm.ShowDialog() = DialogResult.OK Then
+                Dim selectedDate As DateTime = dtpDate.Value.Date
+                Dim selectedTime As DateTime = dtpTime.Value
+                Dim selectedDateTime As DateTime = selectedDate.Add(selectedTime.TimeOfDay)
+
+                ' Insert into DB
+                Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+                    conn.Open()
+                    Dim sqlInsert As String = "
+                    INSERT INTO raffle (raffle_number, registration_id, full_name, raffle_date, raffle_time)
+                    VALUES (@num, @regid, @name, @date, @time)
+                "
+                    Using cmdInsert As New SQLiteCommand(sqlInsert, conn)
+                        cmdInsert.Parameters.AddWithValue("@num", nextRaffleNumber)
+                        cmdInsert.Parameters.AddWithValue("@regid", memberID)
+                        cmdInsert.Parameters.AddWithValue("@name", fullName)
+                        cmdInsert.Parameters.AddWithValue("@date", selectedDate)
+                        cmdInsert.Parameters.AddWithValue("@time", selectedDateTime.ToString("HH:mm:ss"))
+                        cmdInsert.ExecuteNonQuery()
+                    End Using
+                End Using
+
+                MessageBox.Show($"Raffle entry #{nextRaffleNumber} added for {fullName}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Else
+                MessageBox.Show("Raffle entry cancelled.", "Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
 
         Catch ex As Exception
             MessageBox.Show("Error adding raffle entry: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
