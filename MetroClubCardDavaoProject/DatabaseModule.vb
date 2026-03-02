@@ -111,8 +111,21 @@ Module DatabaseModule
                 Using createCashflowCmd As New SQLiteCommand(sql, conn)
                     createCashflowCmd.ExecuteNonQuery()
                 End Using
+                sql = "
+            CREATE TABLE IF NOT EXISTS raffle (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                registration_id INTEGER NOT NULL,
+                raffle_number INTEGER,
+                full_name TEXT NOT NULL,
+                raffle_date TEXT,
+                raffle_time TEXT,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (registration_id) REFERENCES registrations(id) ON DELETE CASCADE
+            );"
 
-            End Using
+                Using createRaffleCmd As New SQLiteCommand(sql, conn)
+                    createRaffleCmd.ExecuteNonQuery()
+                End Using
 
         Catch ex As Exception
             MessageBox.Show("Error initializing database: " & ex.Message,
