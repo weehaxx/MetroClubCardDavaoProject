@@ -20,7 +20,7 @@ Module DatabaseModule
                 SQLiteConnection.CreateFile(dbPath)
             End If
 
-            Using conn = New SQLiteConnection("Data Source=" & dbPath & ";Version=3;")
+            Using conn As New SQLiteConnection("Data Source=" & dbPath & ";Version=3;")
                 conn.Open()
 
                 ' Enable WAL
@@ -60,7 +60,6 @@ Module DatabaseModule
                     insertCmd.ExecuteNonQuery()
                 End Using
 
-
                 ' ================= REGISTRATIONS TABLE =================
                 sql =
             "CREATE TABLE IF NOT EXISTS registrations (
@@ -88,7 +87,6 @@ Module DatabaseModule
                     createRegCmd.ExecuteNonQuery()
                 End Using
 
-
                 ' ================= CASHFLOWS TABLE =================
                 sql =
             "CREATE TABLE IF NOT EXISTS cashflows (
@@ -102,7 +100,6 @@ Module DatabaseModule
                 session_date TEXT NOT NULL,
                 created_by TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-
                 FOREIGN KEY (registration_id)
                     REFERENCES registrations(id)
                     ON DELETE CASCADE
@@ -111,8 +108,10 @@ Module DatabaseModule
                 Using createCashflowCmd As New SQLiteCommand(sql, conn)
                     createCashflowCmd.ExecuteNonQuery()
                 End Using
-                sql = "
-            CREATE TABLE IF NOT EXISTS raffle (
+
+                ' ================= RAFFLE TABLE =================
+                sql =
+            "CREATE TABLE IF NOT EXISTS raffle (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 registration_id INTEGER NOT NULL,
                 raffle_number INTEGER,
@@ -120,12 +119,15 @@ Module DatabaseModule
                 raffle_date TEXT,
                 raffle_time TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (registration_id) REFERENCES registrations(id) ON DELETE CASCADE
+                FOREIGN KEY (registration_id)
+                    REFERENCES registrations(id) ON DELETE CASCADE
             );"
 
                 Using createRaffleCmd As New SQLiteCommand(sql, conn)
                     createRaffleCmd.ExecuteNonQuery()
                 End Using
+
+            End Using ' ✅ THIS WAS MISSING
 
         Catch ex As Exception
             MessageBox.Show("Error initializing database: " & ex.Message,
