@@ -736,7 +736,7 @@ Public Class Members
             ' --- Inline dialog to edit date & time ---
             Dim promptForm As New Form() With {
             .Text = "Edit Raffle Date & Time",
-            .Size = New Size(300, 180),
+            .Size = New Size(300, 200),
             .StartPosition = FormStartPosition.CenterParent,
             .FormBorderStyle = FormBorderStyle.FixedDialog,
             .MaximizeBox = False,
@@ -805,7 +805,7 @@ Public Class Members
                         cmdInsert.Parameters.AddWithValue("@regid", memberID)
                         cmdInsert.Parameters.AddWithValue("@name", fullName)
                         cmdInsert.Parameters.AddWithValue("@date", selectedDate)
-                        cmdInsert.Parameters.AddWithValue("@time", selectedDateTime.ToString("HH:mm:ss"))
+                        cmdInsert.Parameters.AddWithValue("@time", selectedDateTime.ToString("hh:mm tt"))
                         cmdInsert.ExecuteNonQuery()
                     End Using
                 End Using
@@ -820,5 +820,7 @@ Public Class Members
         End Try
     End Sub
 
+    Private Sub dgvRegistrations_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvRegistrations.CellContentClick
 
+    End Sub
 End Class

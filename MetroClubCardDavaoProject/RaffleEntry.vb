@@ -5,6 +5,8 @@ Imports System.Drawing.Printing
 
 Public Class RaffleEntry
 
+    Private dtRaffleEntries As DataTable ' Stores all raffle entries
+
     Private Sub RaffleEntry_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadRaffleEntries()
         UpdateTotalRaffleEntries()
@@ -44,22 +46,17 @@ Public Class RaffleEntry
 
                 Using cmd As New SQLiteCommand(sql, conn)
                     Using adapter As New SQLiteDataAdapter(cmd)
-                        Dim dt As New DataTable()
-                        adapter.Fill(dt)
-                        dgvRaffleEntries.DataSource = dt
-                    End Using
-                    Using adapter As New SQLiteDataAdapter(cmd)
-                        Dim dt As New DataTable()
-                        adapter.Fill(dt)
-                        dgvRaffleEntries.DataSource = dt
-
-                        ' <- Add this line here to remove the extra blank row
+                        dtRaffleEntries = New DataTable()
+                        adapter.Fill(dtRaffleEntries)
+                        dgvRaffleEntries.DataSource = dtRaffleEntries
                         dgvRaffleEntries.AllowUserToAddRows = False
                     End Using
                 End Using
             End Using
+
             dgvRaffleEntries.Columns("RaffleID").Visible = False
-            ' Set column headers and format
+
+            ' Set column headers and formatting
             With dgvRaffleEntries
                 .Columns("RaffleNumber").HeaderText = "Raffle #"
                 .Columns("MemberName").HeaderText = "Member Name"
@@ -72,34 +69,23 @@ Public Class RaffleEntry
                 .AutoResizeColumns()
                 .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
 
-                ' Remove old Edit/Delete columns if they exist
-                If .Columns.Contains("Edit") Then .Columns.Remove("Edit")
-                If .Columns.Contains("Delete") Then .Columns.Remove("Delete")
+                ' ===== Remove old Edit/Delete columns =====
+                If dgvRaffleEntries.Columns.Contains("Edit") Then dgvRaffleEntries.Columns.Remove("Edit")
+                If dgvRaffleEntries.Columns.Contains("Delete") Then dgvRaffleEntries.Columns.Remove("Delete")
+                If dgvRaffleEntries.Columns.Contains("Action") Then dgvRaffleEntries.Columns.Remove("Action")
 
-                ' Add Edit button
-                ' Add Edit button once
-                If dgvRaffleEntries.Columns("Edit") Is Nothing Then
-                    Dim editBtn As New DataGridViewButtonColumn()
-                    editBtn.Name = "Edit"
-                    editBtn.HeaderText = "Edit"
-                    editBtn.Text = "Edit"
-                    editBtn.UseColumnTextForButtonValue = True
-                    editBtn.Width = 60
-                    editBtn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-                    dgvRaffleEntries.Columns.Add(editBtn)
-                End If
+                ' ===== Add Action column =====
+                Dim actionCol As New DataGridViewTextBoxColumn()
+                actionCol.Name = "Action"
+                actionCol.HeaderText = "Action"
+                actionCol.ReadOnly = True
+                dgvRaffleEntries.Columns.Add(actionCol)
 
-                ' Add Delete button once
-                If dgvRaffleEntries.Columns("Delete") Is Nothing Then
-                    Dim delBtn As New DataGridViewButtonColumn()
-                    delBtn.Name = "Delete"
-                    delBtn.HeaderText = "Delete"
-                    delBtn.Text = "Delete"
-                    delBtn.UseColumnTextForButtonValue = True
-                    delBtn.Width = 60
-                    delBtn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-                    dgvRaffleEntries.Columns.Add(delBtn)
-                End If
+                ' ===== Ensure Action column is last =====
+                dgvRaffleEntries.Columns("Action").DisplayIndex = dgvRaffleEntries.Columns.Count - 1
+
+
+
             End With
 
         Catch ex As Exception
@@ -107,6 +93,46 @@ Public Class RaffleEntry
         End Try
     End Sub
 
+    Private Sub dgvRaffleEntries_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvRaffleEntries.CellMouseClick
+        If e.RowIndex < 0 Then Exit Sub
+        If e.ColumnIndex <> dgvRaffleEntries.Columns("Action").Index Then Exit Sub
+
+        Dim cellRect As Rectangle = dgvRaffleEntries.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, True)
+        Dim clickX As Integer = e.Location.X
+
+        Dim btnWidth As Integer = (cellRect.Width - 10) \ 2
+
+        Dim raffleID As Integer = Convert.ToInt32(dgvRaffleEntries.Rows(e.RowIndex).Cells("RaffleID").Value)
+
+        If clickX <= btnWidth + 2 Then
+            ' Edit clicked
+            EditRaffleEntry(raffleID)
+        Else
+            ' Delete clicked
+            DeleteRaffleEntry(raffleID)
+        End If
+    End Sub
+
+    Private Sub dgvRaffleEntries_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles dgvRaffleEntries.CellPainting
+        If e.ColumnIndex = dgvRaffleEntries.Columns("Action").Index AndAlso e.RowIndex >= 0 Then
+            e.PaintBackground(e.CellBounds, True)
+
+            ' Button sizes
+            Dim btnWidth As Integer = (e.CellBounds.Width - 10) \ 2
+            Dim btnHeight As Integer = e.CellBounds.Height - 6
+
+            ' Edit button rectangle
+            Dim editRect As New Rectangle(e.CellBounds.Left + 2, e.CellBounds.Top + 3, btnWidth, btnHeight)
+            ' Delete button rectangle
+            Dim delRect As New Rectangle(editRect.Right + 5, e.CellBounds.Top + 3, btnWidth, btnHeight)
+
+            ' Draw buttons
+            ButtonRenderer.DrawButton(e.Graphics, editRect, "Edit", dgvRaffleEntries.Font, False, System.Windows.Forms.VisualStyles.PushButtonState.Default)
+            ButtonRenderer.DrawButton(e.Graphics, delRect, "Delete", dgvRaffleEntries.Font, False, System.Windows.Forms.VisualStyles.PushButtonState.Default)
+
+            e.Handled = True
+        End If
+    End Sub
 
     ' ================= TOTAL RAFFLE ENTRIES =================
     Private Sub UpdateTotalRaffleEntries()
@@ -482,5 +508,111 @@ Public Class RaffleEntry
         If printDlg.ShowDialog() = DialogResult.OK Then
             pd.Print()
         End If
+    End Sub
+
+    Private Sub tbSearch_TextChanged(sender As Object, e As EventArgs) Handles tbSearch.TextChanged
+        If dtRaffleEntries Is Nothing Then Exit Sub
+
+        Dim filterText As String = tbSearch.Text.Trim().Replace("'", "''") ' Escape quotes
+
+        Dim dv As New DataView(dtRaffleEntries)
+        If String.IsNullOrEmpty(filterText) Then
+            dv.RowFilter = ""
+        Else
+            dv.RowFilter = $"MemberName LIKE '%{filterText}%' OR RegistrationID LIKE '%{filterText}%'"
+        End If
+
+        dgvRaffleEntries.DataSource = dv
+    End Sub
+
+    ' ================= EDIT RAFFLE ENTRY =================
+    Private Sub EditRaffleEntry(raffleID As Integer)
+        ' Find the row for this raffleID
+        Dim row As DataGridViewRow = dgvRaffleEntries.Rows.Cast(Of DataGridViewRow)() _
+            .FirstOrDefault(Function(r) Convert.ToInt32(r.Cells("RaffleID").Value) = raffleID)
+        If row Is Nothing Then Return
+
+        Dim currentDate As String = row.Cells("RaffleDate").Value.ToString()
+        Dim currentTime As String = row.Cells("RaffleTime").Value.ToString()
+
+        ' ===== Create dialog =====
+        Dim editForm As New Form() With {
+            .Text = "Edit Raffle Entry",
+            .Size = New Size(300, 220),
+            .StartPosition = FormStartPosition.CenterParent,
+            .FormBorderStyle = FormBorderStyle.FixedDialog,
+            .MaximizeBox = False,
+            .MinimizeBox = False
+        }
+
+        Dim lblDate As New Label() With {.Text = "Raffle Date:", .Location = New Point(20, 20)}
+        Dim dtpDate As New DateTimePicker() With {
+            .Location = New Point(20, 45),
+            .Width = 240,
+            .Format = DateTimePickerFormat.Custom,
+            .CustomFormat = "yyyy-MM-dd"
+        }
+        DateTime.TryParse(currentDate, dtpDate.Value)
+
+        Dim lblTime As New Label() With {.Text = "Raffle Time:", .Location = New Point(20, 80)}
+        Dim dtpTime As New DateTimePicker() With {
+            .Location = New Point(20, 105),
+            .Width = 240,
+            .Format = DateTimePickerFormat.Time,
+            .ShowUpDown = True
+        }
+        DateTime.TryParse(currentTime, dtpTime.Value)
+
+        Dim btnSave As New Button() With {.Text = "Save", .Location = New Point(50, 145), .DialogResult = DialogResult.OK}
+        Dim btnCancel As New Button() With {.Text = "Cancel", .Location = New Point(150, 145), .DialogResult = DialogResult.Cancel}
+
+        editForm.Controls.AddRange({lblDate, dtpDate, lblTime, dtpTime, btnSave, btnCancel})
+        editForm.AcceptButton = btnSave
+        editForm.CancelButton = btnCancel
+
+        If editForm.ShowDialog() = DialogResult.OK Then
+            Dim newDate As String = dtpDate.Value.ToString("yyyy-MM-dd")
+            Dim newTime As String = dtpTime.Value.ToString("HH:mm:ss")
+
+            ' Update DB
+            Try
+                Dim dbPath As String = GetDatabasePath()
+                Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+                    conn.Open()
+                    Dim sql As String = "UPDATE raffle SET raffle_date=@date, raffle_time=@time WHERE id=@id"
+                    Using cmd As New SQLiteCommand(sql, conn)
+                        cmd.Parameters.AddWithValue("@date", newDate)
+                        cmd.Parameters.AddWithValue("@time", newTime)
+                        cmd.Parameters.AddWithValue("@id", raffleID)
+                        cmd.ExecuteNonQuery()
+                    End Using
+                End Using
+
+                MessageBox.Show("Raffle entry updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                LoadRaffleEntries()
+            Catch ex As Exception
+                MessageBox.Show("Error updating raffle entry: " & ex.Message)
+            End Try
+        End If
+    End Sub
+
+    ' ================= DELETE RAFFLE ENTRY =================
+    Private Sub DeleteRaffleEntry(raffleID As Integer)
+        Dim confirm = MessageBox.Show("Delete this raffle entry?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+        If confirm = DialogResult.No Then Exit Sub
+
+        Dim dbPath As String = GetDatabasePath()
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+            Dim sql As String = "DELETE FROM raffle WHERE id=@id"
+            Using cmd As New SQLiteCommand(sql, conn)
+                cmd.Parameters.AddWithValue("@id", raffleID)
+                cmd.ExecuteNonQuery()
+            End Using
+        End Using
+
+        RenumberRaffleNumbers()
+        LoadRaffleEntries()
+        UpdateTotalRaffleEntries()
     End Sub
 End Class

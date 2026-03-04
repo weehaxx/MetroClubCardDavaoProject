@@ -29,6 +29,8 @@ Partial Class RaffleEntry
         Dim CustomizableEdges2 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges3 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges4 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges5 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges6 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Label25 = New Label()
         dgvRaffleEntries = New Guna.UI2.WinForms.Guna2DataGridView()
         btnprint = New Guna.UI2.WinForms.Guna2Button()
@@ -36,6 +38,7 @@ Partial Class RaffleEntry
         lblTotalRaffleEntries = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Guna2HtmlLabel13 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         btnReset = New Guna.UI2.WinForms.Guna2Button()
+        tbSearch = New Guna.UI2.WinForms.Guna2TextBox()
         CType(dgvRaffleEntries, ComponentModel.ISupportInitialize).BeginInit()
         Panel2.SuspendLayout()
         SuspendLayout()
@@ -44,11 +47,11 @@ Partial Class RaffleEntry
         ' 
         Label25.AutoSize = True
         Label25.BackColor = Color.Transparent
-        Label25.Font = New Font("Microsoft Sans Serif", 19.8000011F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label25.Font = New Font("Arial Rounded MT Bold", 20.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label25.ForeColor = Color.Black
         Label25.Location = New Point(21, 21)
         Label25.Name = "Label25"
-        Label25.Size = New Size(245, 31)
+        Label25.Size = New Size(244, 32)
         Label25.TabIndex = 52
         Label25.Text = "RAFFLE ENTRIES"
         ' 
@@ -112,7 +115,6 @@ Partial Class RaffleEntry
         ' btnprint
         ' 
         btnprint.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        btnprint.BorderRadius = 10
         btnprint.CustomizableEdges = CustomizableEdges1
         btnprint.DisabledState.BorderColor = Color.DarkGray
         btnprint.DisabledState.CustomBorderColor = Color.DarkGray
@@ -156,11 +158,11 @@ Partial Class RaffleEntry
         ' 
         Guna2HtmlLabel13.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
         Guna2HtmlLabel13.BackColor = Color.Transparent
-        Guna2HtmlLabel13.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel13.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel13.ForeColor = Color.White
         Guna2HtmlLabel13.Location = New Point(14, 10)
         Guna2HtmlLabel13.Name = "Guna2HtmlLabel13"
-        Guna2HtmlLabel13.Size = New Size(131, 22)
+        Guna2HtmlLabel13.Size = New Size(139, 20)
         Guna2HtmlLabel13.TabIndex = 75
         Guna2HtmlLabel13.Text = "TOTAL ENTRIES:"
         ' 
@@ -183,10 +185,34 @@ Partial Class RaffleEntry
         btnReset.TabIndex = 89
         btnReset.Text = "RESET RAFFLE"
         ' 
+        ' tbSearch
+        ' 
+        tbSearch.CustomizableEdges = CustomizableEdges5
+        tbSearch.DefaultText = ""
+        tbSearch.DisabledState.BorderColor = Color.FromArgb(CByte(208), CByte(208), CByte(208))
+        tbSearch.DisabledState.FillColor = Color.FromArgb(CByte(226), CByte(226), CByte(226))
+        tbSearch.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
+        tbSearch.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
+        tbSearch.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        tbSearch.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbSearch.ForeColor = Color.Black
+        tbSearch.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        tbSearch.IconLeft = My.Resources.Resources.find
+        tbSearch.Location = New Point(997, 127)
+        tbSearch.Margin = New Padding(4, 5, 4, 5)
+        tbSearch.Name = "tbSearch"
+        tbSearch.PlaceholderForeColor = Color.Silver
+        tbSearch.PlaceholderText = "Find Member"
+        tbSearch.SelectedText = ""
+        tbSearch.ShadowDecoration.CustomizableEdges = CustomizableEdges6
+        tbSearch.Size = New Size(338, 35)
+        tbSearch.TabIndex = 90
+        ' 
         ' RaffleEntry
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
+        Controls.Add(tbSearch)
         Controls.Add(btnReset)
         Controls.Add(Panel2)
         Controls.Add(btnprint)
@@ -208,5 +234,6 @@ Partial Class RaffleEntry
     Friend WithEvents lblTotalRaffleEntries As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents Guna2HtmlLabel13 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents btnReset As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents tbSearch As Guna.UI2.WinForms.Guna2TextBox
 
 End Class
