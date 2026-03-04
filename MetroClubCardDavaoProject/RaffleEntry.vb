@@ -69,6 +69,8 @@ Public Class RaffleEntry
                 .AutoResizeColumns()
                 .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
 
+
+
                 ' ===== Remove old Edit/Delete columns =====
                 If dgvRaffleEntries.Columns.Contains("Edit") Then dgvRaffleEntries.Columns.Remove("Edit")
                 If dgvRaffleEntries.Columns.Contains("Delete") Then dgvRaffleEntries.Columns.Remove("Delete")
@@ -100,35 +102,109 @@ Public Class RaffleEntry
         Dim cellRect As Rectangle = dgvRaffleEntries.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, True)
         Dim clickX As Integer = e.Location.X
 
-        Dim btnWidth As Integer = (cellRect.Width - 10) \ 2
+        Dim btnWidth As Integer = (cellRect.Width - 12) \ 3
 
         Dim raffleID As Integer = Convert.ToInt32(dgvRaffleEntries.Rows(e.RowIndex).Cells("RaffleID").Value)
+        Dim memberName As String = dgvRaffleEntries.Rows(e.RowIndex).Cells("MemberName").Value.ToString()
 
         If clickX <= btnWidth + 2 Then
             ' Edit clicked
             EditRaffleEntry(raffleID)
-        Else
+        ElseIf clickX <= (btnWidth * 2) + 6 Then
             ' Delete clicked
             DeleteRaffleEntry(raffleID)
+        Else
+            ' Print clicked → print raffle tickets for this member only
+            PrintRaffleForMember(memberName)
         End If
     End Sub
+
+    Private Sub PrintRaffleForMember(memberName As String)
+        Dim dbPath As String = GetDatabasePath()
+        Dim dtTickets As New DataTable()
+
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+            Dim sql As String = "SELECT raffle_number FROM raffle WHERE full_name=@name ORDER BY raffle_number ASC"
+            Using cmd As New SQLiteCommand(sql, conn)
+                cmd.Parameters.AddWithValue("@name", memberName)
+                Using adapter As New SQLiteDataAdapter(cmd)
+                    adapter.Fill(dtTickets)
+                End Using
+            End Using
+        End Using
+
+        If dtTickets.Rows.Count = 0 Then
+            MessageBox.Show("No raffle entries found for this member.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+
+        Dim ticketIndex As Integer = 0
+        Dim pd As New PrintDocument()
+        pd.DefaultPageSettings.Landscape = False
+        pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
+
+        ' Ticket size
+        Dim ticketWidth As Integer = 200
+        Dim ticketHeight As Integer = 100
+        Dim padding As Integer = 10
+
+        AddHandler pd.PrintPage, Sub(sender2, e2)
+                                     Dim g As Graphics = e2.Graphics
+                                     g.Clear(Color.White)
+
+                                     Dim ticketsPerRow As Integer = Math.Floor((e2.MarginBounds.Width + padding) / (ticketWidth + padding))
+                                     Dim ticketsPerColumn As Integer = Math.Floor((e2.MarginBounds.Height + padding) / (ticketHeight + padding))
+                                     Dim ticketsPerPage As Integer = ticketsPerRow * ticketsPerColumn
+
+                                     Dim fontTitle As New Font("Arial", 12, FontStyle.Bold)
+                                     Dim fontText As New Font("Arial", 10)
+
+                                     For i As Integer = 0 To ticketsPerPage - 1
+                                         If ticketIndex >= dtTickets.Rows.Count Then Exit For
+
+                                         Dim rowNum As Integer = Math.Floor(i / ticketsPerRow)
+                                         Dim colNum As Integer = i Mod ticketsPerRow
+                                         Dim x As Integer = e2.MarginBounds.Left + colNum * (ticketWidth + padding)
+                                         Dim y As Integer = e2.MarginBounds.Top + rowNum * (ticketHeight + padding)
+
+                                         g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
+
+                                         Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
+
+                                         g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
+                                         g.DrawString("Member: " & memberName, fontText, Brushes.Black, New RectangleF(x + 10, y + 30, ticketWidth - 20, 40))
+                                         g.DrawString("Raffle #: " & raffleNumber, fontText, Brushes.Black, New RectangleF(x + 10, y + 70, ticketWidth - 20, 20))
+
+                                         ticketIndex += 1
+                                     Next
+
+                                     e2.HasMorePages = ticketIndex < dtTickets.Rows.Count
+                                 End Sub
+
+        Dim printDlg As New PrintDialog()
+        printDlg.Document = pd
+        If printDlg.ShowDialog() = DialogResult.OK Then
+            pd.Print()
+        End If
+    End Sub
+
 
     Private Sub dgvRaffleEntries_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles dgvRaffleEntries.CellPainting
         If e.ColumnIndex = dgvRaffleEntries.Columns("Action").Index AndAlso e.RowIndex >= 0 Then
             e.PaintBackground(e.CellBounds, True)
 
-            ' Button sizes
-            Dim btnWidth As Integer = (e.CellBounds.Width - 10) \ 2
+            ' 3 buttons: Edit, Delete, Print
+            Dim btnWidth As Integer = (e.CellBounds.Width - 12) \ 3
             Dim btnHeight As Integer = e.CellBounds.Height - 6
 
-            ' Edit button rectangle
             Dim editRect As New Rectangle(e.CellBounds.Left + 2, e.CellBounds.Top + 3, btnWidth, btnHeight)
-            ' Delete button rectangle
-            Dim delRect As New Rectangle(editRect.Right + 5, e.CellBounds.Top + 3, btnWidth, btnHeight)
+            Dim delRect As New Rectangle(editRect.Right + 4, e.CellBounds.Top + 3, btnWidth, btnHeight)
+            Dim printRect As New Rectangle(delRect.Right + 4, e.CellBounds.Top + 3, btnWidth, btnHeight)
 
-            ' Draw buttons
             ButtonRenderer.DrawButton(e.Graphics, editRect, "Edit", dgvRaffleEntries.Font, False, System.Windows.Forms.VisualStyles.PushButtonState.Default)
             ButtonRenderer.DrawButton(e.Graphics, delRect, "Delete", dgvRaffleEntries.Font, False, System.Windows.Forms.VisualStyles.PushButtonState.Default)
+            ButtonRenderer.DrawButton(e.Graphics, printRect, "Print", dgvRaffleEntries.Font, False, System.Windows.Forms.VisualStyles.PushButtonState.Default)
 
             e.Handled = True
         End If
@@ -352,74 +428,14 @@ Public Class RaffleEntry
     End Sub
 
     Private Sub btnprint_Click(sender As Object, e As EventArgs) Handles btnprint.Click
-        ' ===== Get members with raffle entries =====
         Dim dbPath As String = GetDatabasePath()
-        Dim dtMembers As New DataTable()
-        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
-            conn.Open()
-            Dim sql As String = "SELECT DISTINCT full_name FROM raffle ORDER BY full_name ASC"
-            Using cmd As New SQLiteCommand(sql, conn)
-                Using adapter As New SQLiteDataAdapter(cmd)
-                    adapter.Fill(dtMembers)
-                End Using
-            End Using
-        End Using
 
-        If dtMembers.Rows.Count = 0 Then
-            MessageBox.Show("No members found in raffle entries.", "No Members", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Return
-        End If
-
-        ' ===== Let user select a member =====
-        Dim memberList As New List(Of String)
-        For Each row As DataRow In dtMembers.Rows
-            memberList.Add(row("full_name").ToString())
-        Next
-
-        Dim selectForm As New Form() With {
-        .Text = "Select Member to Print",
-        .Size = New Size(300, 150),
-        .StartPosition = FormStartPosition.CenterParent,
-        .FormBorderStyle = FormBorderStyle.FixedDialog,
-        .MaximizeBox = False,
-        .MinimizeBox = False
-    }
-
-        Dim combo As New ComboBox() With {
-        .Location = New Point(20, 20),
-        .Width = 240,
-        .DropDownStyle = ComboBoxStyle.DropDownList
-    }
-        combo.Items.AddRange(memberList.ToArray())
-        combo.SelectedIndex = 0
-
-        Dim btnOK As New Button() With {
-        .Text = "OK",
-        .DialogResult = DialogResult.OK,
-        .Location = New Point(50, 60)
-    }
-        Dim btnCancel As New Button() With {
-        .Text = "Cancel",
-        .DialogResult = DialogResult.Cancel,
-        .Location = New Point(150, 60)
-    }
-
-        selectForm.Controls.Add(combo)
-        selectForm.Controls.Add(btnOK)
-        selectForm.Controls.Add(btnCancel)
-        selectForm.AcceptButton = btnOK
-        selectForm.CancelButton = btnCancel
-
-        If selectForm.ShowDialog() <> DialogResult.OK Then Return
-        Dim selectedMember As String = combo.SelectedItem.ToString()
-
-        ' ===== Get raffle entries for that member =====
+        ' Get all raffle entries ordered by member name then raffle number
         Dim dtTickets As New DataTable()
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
-            Dim sql As String = "SELECT raffle_number FROM raffle WHERE full_name = @name ORDER BY raffle_number ASC"
+            Dim sql As String = "SELECT full_name, raffle_number FROM raffle ORDER BY full_name ASC, CAST(raffle_number AS INTEGER) ASC"
             Using cmd As New SQLiteCommand(sql, conn)
-                cmd.Parameters.AddWithValue("@name", selectedMember)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(dtTickets)
                 End Using
@@ -427,17 +443,16 @@ Public Class RaffleEntry
         End Using
 
         If dtTickets.Rows.Count = 0 Then
-            MessageBox.Show("No raffle entries found for this member.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("No raffle entries found.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
         End If
 
-        ' ===== Prepare PrintDocument =====
-        Dim ticketIndex As Integer = 0
+        ' Prepare PrintDocument
+        Dim ticketIndex As Integer = 0 ' Persist across pages
         Dim pd As New PrintDocument()
         pd.DefaultPageSettings.Landscape = False
         pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
 
-        ' Ticket size and padding
         Dim ticketWidth As Integer = 200
         Dim ticketHeight As Integer = 100
         Dim padding As Integer = 10
@@ -457,7 +472,6 @@ Public Class RaffleEntry
                                      For i As Integer = 0 To ticketsPerPage - 1
                                          If ticketIndex >= dtTickets.Rows.Count Then Exit For
 
-                                         ' Calculate position
                                          Dim rowNum As Integer = Math.Floor(i / ticketsPerRow)
                                          Dim colNum As Integer = i Mod ticketsPerRow
                                          Dim x As Integer = e2.MarginBounds.Left + colNum * (ticketWidth + padding)
@@ -466,25 +480,24 @@ Public Class RaffleEntry
                                          ' Draw ticket rectangle
                                          g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
 
-                                         ' Draw ticket text
+                                         ' Draw text
                                          Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
+                                         Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
 
-                                         ' Title
                                          g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
 
-                                         ' ===== Member name with word wrap and dynamic font =====
+                                         ' Member name
                                          Dim nameRect As New RectangleF(x + 10, y + 30, ticketWidth - 20, 40)
                                          Dim nameFont As Font = baseFontText
-                                         Dim nameText As String = "Member: " & selectedMember
+                                         Dim nameText As String = "Member: " & memberName
+                                         Dim sf As New StringFormat() With {
+                                         .Alignment = StringAlignment.Near,
+                                         .LineAlignment = StringAlignment.Near,
+                                         .Trimming = StringTrimming.EllipsisCharacter,
+                                         .FormatFlags = StringFormatFlags.LineLimit
+                                     }
 
-                                         ' StringFormat for wrapping and trimming
-                                         Dim sf As New StringFormat()
-                                         sf.Alignment = StringAlignment.Near
-                                         sf.LineAlignment = StringAlignment.Near
-                                         sf.Trimming = StringTrimming.EllipsisCharacter
-                                         sf.FormatFlags = StringFormatFlags.LineLimit
-
-                                         ' Reduce font size until it fits height
+                                         ' Auto shrink font if needed
                                          Do While g.MeasureString(nameText, nameFont, nameRect.Size, sf).Height > nameRect.Height AndAlso nameFont.Size > 6
                                              nameFont = New Font(nameFont.FontFamily, nameFont.Size - 0.5F, nameFont.Style)
                                          Loop
@@ -492,8 +505,7 @@ Public Class RaffleEntry
                                          g.DrawString(nameText, nameFont, Brushes.Black, nameRect, sf)
 
                                          ' Raffle number
-                                         Dim raffleRect As New RectangleF(x + 10, y + 70, ticketWidth - 20, 20)
-                                         g.DrawString("Raffle #: " & raffleNumber, baseFontText, Brushes.Black, raffleRect, sf)
+                                         g.DrawString("Raffle #: " & raffleNumber, baseFontText, Brushes.Black, x + 10, y + 70, sf)
 
                                          ticketIndex += 1
                                      Next
@@ -502,9 +514,8 @@ Public Class RaffleEntry
                                      e2.HasMorePages = ticketIndex < dtTickets.Rows.Count
                                  End Sub
 
-        ' ===== Show Print Dialog =====
-        Dim printDlg As New PrintDialog()
-        printDlg.Document = pd
+        ' Show Print Dialog
+        Dim printDlg As New PrintDialog() With {.Document = pd}
         If printDlg.ShowDialog() = DialogResult.OK Then
             pd.Print()
         End If
