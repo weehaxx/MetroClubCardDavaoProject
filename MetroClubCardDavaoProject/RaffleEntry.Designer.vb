@@ -31,6 +31,8 @@ Partial Class RaffleEntry
         Dim CustomizableEdges4 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges5 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges6 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges7 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges8 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Label25 = New Label()
         dgvRaffleEntries = New Guna.UI2.WinForms.Guna2DataGridView()
         btnprint = New Guna.UI2.WinForms.Guna2Button()
@@ -39,6 +41,7 @@ Partial Class RaffleEntry
         Guna2HtmlLabel13 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         btnReset = New Guna.UI2.WinForms.Guna2Button()
         tbSearch = New Guna.UI2.WinForms.Guna2TextBox()
+        btnPrintPlayer = New Guna.UI2.WinForms.Guna2Button()
         CType(dgvRaffleEntries, ComponentModel.ISupportInitialize).BeginInit()
         Panel2.SuspendLayout()
         SuspendLayout()
@@ -129,7 +132,7 @@ Partial Class RaffleEntry
         btnprint.ShadowDecoration.CustomizableEdges = CustomizableEdges2
         btnprint.Size = New Size(173, 32)
         btnprint.TabIndex = 71
-        btnprint.Text = "PRINT"
+        btnprint.Text = "PRINT ALL"
         ' 
         ' Panel2
         ' 
@@ -208,10 +211,30 @@ Partial Class RaffleEntry
         tbSearch.Size = New Size(338, 35)
         tbSearch.TabIndex = 90
         ' 
+        ' btnPrintPlayer
+        ' 
+        btnPrintPlayer.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        btnPrintPlayer.CustomizableEdges = CustomizableEdges7
+        btnPrintPlayer.DisabledState.BorderColor = Color.DarkGray
+        btnPrintPlayer.DisabledState.CustomBorderColor = Color.DarkGray
+        btnPrintPlayer.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
+        btnPrintPlayer.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
+        btnPrintPlayer.FillColor = Color.Black
+        btnPrintPlayer.Font = New Font("Microsoft Sans Serif", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnPrintPlayer.ForeColor = Color.White
+        btnPrintPlayer.Location = New Point(956, 800)
+        btnPrintPlayer.Margin = New Padding(3, 2, 3, 2)
+        btnPrintPlayer.Name = "btnPrintPlayer"
+        btnPrintPlayer.ShadowDecoration.CustomizableEdges = CustomizableEdges8
+        btnPrintPlayer.Size = New Size(173, 32)
+        btnPrintPlayer.TabIndex = 91
+        btnPrintPlayer.Text = "PRINT PLAYER"
+        ' 
         ' RaffleEntry
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
+        Controls.Add(btnPrintPlayer)
         Controls.Add(tbSearch)
         Controls.Add(btnReset)
         Controls.Add(Panel2)
@@ -235,5 +258,6 @@ Partial Class RaffleEntry
     Friend WithEvents Guna2HtmlLabel13 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents btnReset As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents tbSearch As Guna.UI2.WinForms.Guna2TextBox
+    Friend WithEvents btnPrintPlayer As Guna.UI2.WinForms.Guna2Button
 
 End Class

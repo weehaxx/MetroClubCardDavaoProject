@@ -20,7 +20,88 @@ Public Class RaffleEntry
         Return Path.Combine(appDataPath, "metrocarddavaodb.db")
 
     End Function
+    Private Sub PrintSingleRaffle(raffleID As Integer)
 
+        Dim dbPath As String = GetDatabasePath()
+        Dim dtTicket As New DataTable()
+
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+
+            Dim sql As String = "
+            SELECT full_name, raffle_number 
+            FROM raffle 
+            WHERE id = @id
+        "
+
+            Using cmd As New SQLiteCommand(sql, conn)
+                cmd.Parameters.AddWithValue("@id", raffleID)
+                Using adapter As New SQLiteDataAdapter(cmd)
+                    adapter.Fill(dtTicket)
+                End Using
+            End Using
+        End Using
+
+        If dtTicket.Rows.Count = 0 Then
+            MessageBox.Show("Raffle entry not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Dim memberName As String = dtTicket.Rows(0)("full_name").ToString()
+        Dim raffleNumber As String = dtTicket.Rows(0)("raffle_number").ToString()
+
+        Dim pd As New PrintDocument()
+        pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
+
+        AddHandler pd.PrintPage, Sub(sender2, e2)
+                                     Dim g As Graphics = e2.Graphics
+                                     g.Clear(Color.White)
+
+                                     Dim ticketWidth As Integer = 200
+                                     Dim ticketHeight As Integer = 100
+
+                                     Dim x As Integer = e2.MarginBounds.Left
+                                     Dim y As Integer = e2.MarginBounds.Top
+
+                                     Dim fontTitle As New Font("Arial", 12, FontStyle.Bold)
+                                     Dim fontText As New Font("Arial", 10)
+
+                                     g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
+
+                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
+
+                                     Dim baseFontText As New Font("Arial", 10)
+                                     Dim nameRect As New RectangleF(x + 10, y + 30, ticketWidth - 20, 35)
+
+                                     Dim nameFont As Font = baseFontText
+                                     Dim nameText As String = "Member: " & memberName
+
+                                     Dim sf As New StringFormat() With {
+    .Alignment = StringAlignment.Near,
+    .LineAlignment = StringAlignment.Near,
+    .Trimming = StringTrimming.EllipsisCharacter,
+    .FormatFlags = StringFormatFlags.LineLimit
+}
+
+                                     ' Auto shrink font if too big
+                                     Do While g.MeasureString(nameText, nameFont, nameRect.Size, sf).Height > nameRect.Height AndAlso nameFont.Size > 6
+                                         nameFont = New Font(nameFont.FontFamily, nameFont.Size - 0.5F, nameFont.Style)
+                                     Loop
+
+                                     g.DrawString(nameText, nameFont, Brushes.Black, nameRect, sf)
+
+                                     ' Raffle number (safe position)
+                                     g.DrawString("Raffle #: " & raffleNumber, baseFontText, Brushes.Black, x + 10, y + 70, sf)
+
+                                     e2.HasMorePages = False
+                                 End Sub
+
+        Dim printDlg As New PrintDialog() With {.Document = pd}
+        If printDlg.ShowDialog() = DialogResult.OK Then
+            pd.Print()
+        End If
+
+    End Sub
     ' ================= LOAD RAFFLE ENTRIES =================
     Private Sub LoadRaffleEntries()
         Try
@@ -48,11 +129,27 @@ Public Class RaffleEntry
                     Using adapter As New SQLiteDataAdapter(cmd)
                         dtRaffleEntries = New DataTable()
                         adapter.Fill(dtRaffleEntries)
+                        ' ✅ Force proper time formatting
+                        For Each row As DataRow In dtRaffleEntries.Rows
+                            If Not IsDBNull(row("RaffleTime")) Then
+                                Dim parsedTime As DateTime
+                                If DateTime.TryParse(row("RaffleTime").ToString(), parsedTime) Then
+                                    row("RaffleTime") = parsedTime.ToString("hh:mm tt")
+                                End If
+                            End If
+                        Next
                         dgvRaffleEntries.DataSource = dtRaffleEntries
                         dgvRaffleEntries.AllowUserToAddRows = False
                     End Using
                 End Using
             End Using
+            dgvRaffleEntries.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
+
+            dgvRaffleEntries.Columns("RaffleNumber").Width = 60
+            dgvRaffleEntries.Columns("MemberName").Width = 200
+            dgvRaffleEntries.Columns("RegistrationID").Width = 120
+            dgvRaffleEntries.Columns("RaffleDate").Width = 110
+            dgvRaffleEntries.Columns("RaffleTime").Width = 90
 
             dgvRaffleEntries.Columns("RaffleID").Visible = False
 
@@ -65,26 +162,25 @@ Public Class RaffleEntry
                 .Columns("RaffleTime").HeaderText = "Time"
 
                 .Columns("RaffleDate").DefaultCellStyle.Format = "yyyy-MM-dd"
-                .Columns("RaffleTime").DefaultCellStyle.Format = "hh:mm tt"
                 .AutoResizeColumns()
-                .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
 
 
+                dgvRaffleEntries.DataSource = dtRaffleEntries
+                dgvRaffleEntries.AllowUserToAddRows = False
 
-                ' ===== Remove old Edit/Delete columns =====
-                If dgvRaffleEntries.Columns.Contains("Edit") Then dgvRaffleEntries.Columns.Remove("Edit")
-                If dgvRaffleEntries.Columns.Contains("Delete") Then dgvRaffleEntries.Columns.Remove("Delete")
-                If dgvRaffleEntries.Columns.Contains("Action") Then dgvRaffleEntries.Columns.Remove("Action")
+                ' ✅ Add Action column only if it does not exist
+                If Not dgvRaffleEntries.Columns.Contains("Action") Then
+                    Dim actionCol As New DataGridViewTextBoxColumn()
+                    actionCol.Name = "Action"
+                    actionCol.HeaderText = "Action"
+                    actionCol.ReadOnly = True
+                    dgvRaffleEntries.Columns.Add(actionCol)
+                End If
 
-                ' ===== Add Action column =====
-                Dim actionCol As New DataGridViewTextBoxColumn()
-                actionCol.Name = "Action"
-                actionCol.HeaderText = "Action"
-                actionCol.ReadOnly = True
-                dgvRaffleEntries.Columns.Add(actionCol)
-
-                ' ===== Ensure Action column is last =====
-                dgvRaffleEntries.Columns("Action").DisplayIndex = dgvRaffleEntries.Columns.Count - 1
+                ' Force Action column to fixed width
+                dgvRaffleEntries.Columns("Action").AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+                dgvRaffleEntries.Columns("Action").Width = 220
 
 
 
@@ -115,7 +211,8 @@ Public Class RaffleEntry
             DeleteRaffleEntry(raffleID)
         Else
             ' Print clicked → print raffle tickets for this member only
-            PrintRaffleForMember(memberName)
+            ' Print only this specific entry
+            PrintSingleRaffle(raffleID)
         End If
     End Sub
 
@@ -368,8 +465,7 @@ Public Class RaffleEntry
             If editForm.ShowDialog() = DialogResult.OK Then
 
                 Dim newDate As String = dtpDate.Value.ToString("yyyy-MM-dd")
-                Dim newTime As String = dtpTime.Value.ToString("HH:mm:ss")
-
+                Dim newTime As String = dtpTime.Value.ToString("hh:mm tt")
                 ' ===== Update database =====
                 Try
                     Dim dbPath As String = GetDatabasePath()
@@ -434,7 +530,10 @@ Public Class RaffleEntry
         Dim dtTickets As New DataTable()
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
-            Dim sql As String = "SELECT full_name, raffle_number FROM raffle ORDER BY full_name ASC, CAST(raffle_number AS INTEGER) ASC"
+            Dim sql As String = "
+                            SELECT full_name, raffle_number 
+                            FROM raffle 
+                            ORDER BY CAST(raffle_number AS INTEGER) ASC"
             Using cmd As New SQLiteCommand(sql, conn)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(dtTickets)
@@ -625,5 +724,93 @@ Public Class RaffleEntry
         RenumberRaffleNumbers()
         LoadRaffleEntries()
         UpdateTotalRaffleEntries()
+    End Sub
+
+    Private Sub btnPrintPlayer_Click(sender As Object, e As EventArgs) Handles btnPrintPlayer.Click
+
+        ' ===== Create Dialog Form =====
+        Dim pickForm As New Form() With {
+        .Text = "Select Player to Print",
+        .Size = New Size(400, 400),
+        .StartPosition = FormStartPosition.CenterParent,
+        .FormBorderStyle = FormBorderStyle.FixedDialog,
+        .MaximizeBox = False,
+        .MinimizeBox = False
+    }
+
+        Dim txtSearch As New TextBox() With {
+        .PlaceholderText = "Search player...",
+        .Location = New Point(20, 20),
+        .Width = 340
+    }
+
+        Dim lstPlayers As New ListBox() With {
+        .Location = New Point(20, 55),
+        .Size = New Size(340, 220)
+    }
+
+        Dim btnPrint As New Button() With {
+        .Text = "Print",
+        .Location = New Point(80, 300),
+        .Width = 100
+    }
+
+        Dim btnCancel As New Button() With {
+        .Text = "Cancel",
+        .Location = New Point(200, 300),
+        .Width = 100,
+        .DialogResult = DialogResult.Cancel
+    }
+
+        pickForm.Controls.AddRange({txtSearch, lstPlayers, btnPrint, btnCancel})
+        pickForm.AcceptButton = btnPrint
+        pickForm.CancelButton = btnCancel
+
+        ' ===== Load Unique Players =====
+        Dim dbPath As String = GetDatabasePath()
+        Dim dtPlayers As New DataTable()
+
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+            Dim sql As String = "SELECT DISTINCT full_name FROM raffle ORDER BY full_name ASC"
+            Using cmd As New SQLiteCommand(sql, conn)
+                Using adapter As New SQLiteDataAdapter(cmd)
+                    adapter.Fill(dtPlayers)
+                End Using
+            End Using
+        End Using
+
+        For Each row As DataRow In dtPlayers.Rows
+            lstPlayers.Items.Add(row("full_name").ToString())
+        Next
+
+        ' ===== Search Filter =====
+        AddHandler txtSearch.TextChanged, Sub()
+                                              Dim filter = txtSearch.Text.ToLower()
+                                              lstPlayers.Items.Clear()
+
+                                              For Each row As DataRow In dtPlayers.Rows
+                                                  Dim name = row("full_name").ToString()
+                                                  If name.ToLower().Contains(filter) Then
+                                                      lstPlayers.Items.Add(name)
+                                                  End If
+                                              Next
+                                          End Sub
+
+        ' ===== Print Button Click =====
+        AddHandler btnPrint.Click, Sub()
+                                       If lstPlayers.SelectedItem Is Nothing Then
+                                           MessageBox.Show("Please select a player first.")
+                                           Return
+                                       End If
+
+                                       Dim selectedPlayer As String = lstPlayers.SelectedItem.ToString()
+
+                                       pickForm.Close()
+                                       PrintRaffleForMember(selectedPlayer)
+                                   End Sub
+
+        pickForm.ShowDialog()
+
     End Sub
 End Class
