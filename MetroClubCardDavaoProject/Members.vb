@@ -707,16 +707,6 @@ Public Class Members
             Dim memberID As Long = Convert.ToInt64(selectedRowView.Row("id"))
             Dim fullName As String = $"{selectedRowView.Row("lastname")} {selectedRowView.Row("firstname")} {selectedRowView.Row("middlename")}".Trim()
 
-            ' Confirmation dialog
-            Dim confirmResult = MessageBox.Show(
-            $"Are you sure you want to add a raffle entry for {fullName}?",
-            "Confirm Raffle Entry",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question
-        )
-
-            If confirmResult = DialogResult.No Then Exit Sub
-
             ' Determine next sequential raffle number for this member
             Dim dbPath As String = GetDatabasePath()
             Dim nextRaffleNumber As Integer = 1
@@ -724,6 +714,7 @@ Public Class Members
             Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                 conn.Open()
 
+                ' Get max raffle number
                 Dim sqlMax As String = "SELECT MAX(CAST(raffle_number AS INTEGER)) FROM raffle"
                 Using cmdMax As New SQLiteCommand(sqlMax, conn)
                     Dim result = cmdMax.ExecuteScalar()
@@ -731,6 +722,28 @@ Public Class Members
                         nextRaffleNumber = Convert.ToInt32(result) + 1
                     End If
                 End Using
+
+                ' Check if player already has an entry today
+                Dim today As DateTime = DateTime.Now.Date
+                Dim checkSql As String = "SELECT COUNT(*) FROM raffle WHERE registration_id = @regid AND date(raffle_date) = date(@date)"
+                Dim entryCount As Integer
+                Using cmdCheck As New SQLiteCommand(checkSql, conn)
+                    cmdCheck.Parameters.AddWithValue("@regid", memberID)
+                    cmdCheck.Parameters.AddWithValue("@date", today)
+                    entryCount = Convert.ToInt32(cmdCheck.ExecuteScalar())
+                End Using
+
+                ' If entry exists, ask user if they want to proceed
+                If entryCount > 0 Then
+                    Dim proceed = MessageBox.Show(
+                    $"{fullName} already has a raffle entry for today ({today:yyyy-MM-dd})." & Environment.NewLine &
+                    "Do you still want to add another entry and edit date/time?",
+                    "Entry Already Exists",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                )
+                    If proceed = DialogResult.No Then Exit Sub
+                End If
             End Using
 
             ' --- Inline dialog to edit date & time ---
@@ -743,21 +756,18 @@ Public Class Members
             .MinimizeBox = False
         }
 
-            ' Name label
             Dim lblName As New Label() With {
             .Text = $"Member: {fullName}",
             .AutoSize = True,
             .Location = New Point(10, 10)
         }
 
-            ' Date picker
             Dim dtpDate As New DateTimePicker() With {
             .Format = DateTimePickerFormat.Short,
             .Value = DateTime.Now.Date,
             .Location = New Point(10, 40)
         }
 
-            ' Time picker
             Dim dtpTime As New DateTimePicker() With {
             .Format = DateTimePickerFormat.Time,
             .ShowUpDown = True,
@@ -765,14 +775,12 @@ Public Class Members
             .Location = New Point(10, 70)
         }
 
-            ' OK button
             Dim btnOK As New Button() With {
             .Text = "OK",
             .DialogResult = DialogResult.OK,
             .Location = New Point(50, 110)
         }
 
-            ' Cancel button
             Dim btnCancel As New Button() With {
             .Text = "Cancel",
             .DialogResult = DialogResult.Cancel,
@@ -787,25 +795,27 @@ Public Class Members
             promptForm.AcceptButton = btnOK
             promptForm.CancelButton = btnCancel
 
-            ' Show dialog
+            ' Show dialog and insert
             If promptForm.ShowDialog() = DialogResult.OK Then
                 Dim selectedDate As DateTime = dtpDate.Value.Date
                 Dim selectedTime As DateTime = dtpTime.Value
                 Dim selectedDateTime As DateTime = selectedDate.Add(selectedTime.TimeOfDay)
 
-                ' Insert into DB
                 Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                     conn.Open()
+
                     Dim sqlInsert As String = "
                     INSERT INTO raffle (raffle_number, registration_id, full_name, raffle_date, raffle_time)
                     VALUES (@num, @regid, @name, @date, @time)
                 "
+
                     Using cmdInsert As New SQLiteCommand(sqlInsert, conn)
                         cmdInsert.Parameters.AddWithValue("@num", nextRaffleNumber)
                         cmdInsert.Parameters.AddWithValue("@regid", memberID)
                         cmdInsert.Parameters.AddWithValue("@name", fullName)
                         cmdInsert.Parameters.AddWithValue("@date", selectedDate)
-                        cmdInsert.Parameters.AddWithValue("@time", selectedDateTime.ToString("hh:mm tt"))
+                        cmdInsert.Parameters.AddWithValue("@time", selectedTime)
+
                         cmdInsert.ExecuteNonQuery()
                     End Using
                 End Using
@@ -819,7 +829,6 @@ Public Class Members
             MessageBox.Show("Error adding raffle entry: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-
     Private Sub dgvRegistrations_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvRegistrations.CellContentClick
 
     End Sub

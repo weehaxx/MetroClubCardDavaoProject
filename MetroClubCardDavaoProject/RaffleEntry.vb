@@ -130,15 +130,8 @@ Public Class RaffleEntry
                         dtRaffleEntries = New DataTable()
                         adapter.Fill(dtRaffleEntries)
                         ' ✅ Force proper time formatting
-                        For Each row As DataRow In dtRaffleEntries.Rows
-                            If Not IsDBNull(row("RaffleTime")) Then
-                                Dim parsedTime As DateTime
-                                If DateTime.TryParse(row("RaffleTime").ToString(), parsedTime) Then
-                                    row("RaffleTime") = parsedTime.ToString("hh:mm tt")
-                                End If
-                            End If
-                        Next
                         dgvRaffleEntries.DataSource = dtRaffleEntries
+                        dgvRaffleEntries.Columns("RaffleTime").DefaultCellStyle.Format = "hh:mm tt"
                         dgvRaffleEntries.AllowUserToAddRows = False
                     End Using
                 End Using
@@ -162,11 +155,17 @@ Public Class RaffleEntry
                 .Columns("RaffleTime").HeaderText = "Time"
 
                 .Columns("RaffleDate").DefaultCellStyle.Format = "yyyy-MM-dd"
+                .Columns("RaffleTime").DefaultCellStyle.Format = "hh:mm tt"
                 .AutoResizeColumns()
-                .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-
+                .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
 
                 dgvRaffleEntries.DataSource = dtRaffleEntries
+                dgvRaffleEntries.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                dgvRaffleEntries.Columns("RaffleNumber").FillWeight = 10
+                dgvRaffleEntries.Columns("MemberName").FillWeight = 35
+                dgvRaffleEntries.Columns("RegistrationID").FillWeight = 20
+                dgvRaffleEntries.Columns("RaffleDate").FillWeight = 15
+                dgvRaffleEntries.Columns("RaffleTime").FillWeight = 10
                 dgvRaffleEntries.AllowUserToAddRows = False
 
                 ' ✅ Add Action column only if it does not exist
@@ -404,124 +403,7 @@ Public Class RaffleEntry
             MessageBox.Show("Error renumbering raffle entries: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-    Private Sub dgvRaffleEntries_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvRaffleEntries.CellContentClick
 
-        If e.RowIndex < 0 Then Exit Sub
-
-        Dim raffleID As Integer = Convert.ToInt32(dgvRaffleEntries.Rows(e.RowIndex).Cells("RaffleID").Value)
-
-        ' ================= EDIT =================
-        If dgvRaffleEntries.Columns(e.ColumnIndex).Name = "Edit" Then
-
-            Dim currentDate As String = dgvRaffleEntries.Rows(e.RowIndex).Cells("RaffleDate").Value.ToString()
-            Dim currentTime As String = dgvRaffleEntries.Rows(e.RowIndex).Cells("RaffleTime").Value.ToString()
-
-            ' ===== Create dialog =====
-            Dim editForm As New Form() With {
-                .Text = "Edit Raffle Entry",
-                .Size = New Size(300, 220),
-                .StartPosition = FormStartPosition.CenterParent,
-                .FormBorderStyle = FormBorderStyle.FixedDialog,
-                .MaximizeBox = False,
-                .MinimizeBox = False
-            }
-
-            Dim lblDate As New Label() With {.Text = "Raffle Date:", .Location = New Point(20, 20)}
-            Dim dtpDate As New DateTimePicker() With {
-                .Location = New Point(20, 45),
-                .Width = 240,
-                .Format = DateTimePickerFormat.Custom,
-                .CustomFormat = "yyyy-MM-dd"
-            }
-
-            DateTime.TryParse(currentDate, dtpDate.Value)
-
-            Dim lblTime As New Label() With {.Text = "Raffle Time:", .Location = New Point(20, 80)}
-            Dim dtpTime As New DateTimePicker() With {
-                .Location = New Point(20, 105),
-                .Width = 240,
-                .Format = DateTimePickerFormat.Time,
-                .ShowUpDown = True
-            }
-
-            DateTime.TryParse(currentTime, dtpTime.Value)
-
-            Dim btnSave As New Button() With {
-                .Text = "Save",
-                .Location = New Point(50, 145),
-                .DialogResult = DialogResult.OK
-            }
-
-            Dim btnCancel As New Button() With {
-                .Text = "Cancel",
-                .Location = New Point(150, 145),
-                .DialogResult = DialogResult.Cancel
-            }
-
-            editForm.Controls.AddRange({lblDate, dtpDate, lblTime, dtpTime, btnSave, btnCancel})
-            editForm.AcceptButton = btnSave
-            editForm.CancelButton = btnCancel
-
-            If editForm.ShowDialog() = DialogResult.OK Then
-
-                Dim newDate As String = dtpDate.Value.ToString("yyyy-MM-dd")
-                Dim newTime As String = dtpTime.Value.ToString("hh:mm tt")
-                ' ===== Update database =====
-                Try
-                    Dim dbPath As String = GetDatabasePath()
-
-                    Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
-                        conn.Open()
-
-                        Dim sql As String = "
-                        UPDATE raffle 
-                        SET raffle_date = @date,
-                            raffle_time = @time
-                        WHERE id = @id
-                    "
-
-                        Using cmd As New SQLiteCommand(sql, conn)
-                            cmd.Parameters.AddWithValue("@date", newDate)
-                            cmd.Parameters.AddWithValue("@time", newTime)
-                            cmd.Parameters.AddWithValue("@id", raffleID)
-                            cmd.ExecuteNonQuery()
-                        End Using
-                    End Using
-
-                    MessageBox.Show("Raffle entry updated successfully.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-                    LoadRaffleEntries()
-
-                Catch ex As Exception
-                    MessageBox.Show("Error updating raffle entry: " & ex.Message)
-                End Try
-            End If
-        End If
-
-        ' ================= DELETE =================
-        If dgvRaffleEntries.Columns(e.ColumnIndex).Name = "Delete" Then
-
-            Dim confirm = MessageBox.Show("Delete this raffle entry?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
-            If confirm = DialogResult.No Then Exit Sub
-
-            Dim dbPath As String = GetDatabasePath()
-
-            Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
-                conn.Open()
-
-                Dim sql As String = "DELETE FROM raffle WHERE id = @id"
-                Using cmd As New SQLiteCommand(sql, conn)
-                    cmd.Parameters.AddWithValue("@id", raffleID)
-                    cmd.ExecuteNonQuery()
-                End Using
-            End Using
-
-            RenumberRaffleNumbers()
-            LoadRaffleEntries()
-            UpdateTotalRaffleEntries()
-        End If
-
-    End Sub
 
     Private Sub btnprint_Click(sender As Object, e As EventArgs) Handles btnprint.Click
         Dim dbPath As String = GetDatabasePath()
@@ -682,8 +564,7 @@ Public Class RaffleEntry
 
         If editForm.ShowDialog() = DialogResult.OK Then
             Dim newDate As String = dtpDate.Value.ToString("yyyy-MM-dd")
-            Dim newTime As String = dtpTime.Value.ToString("HH:mm:ss")
-
+            Dim newTime As String = dtpTime.Value.ToString("hh:mm tt")
             ' Update DB
             Try
                 Dim dbPath As String = GetDatabasePath()
