@@ -119,7 +119,7 @@ Public Class RaffleEntry
                        r.full_name AS MemberName,
                        reg.registration_id AS RegistrationID,
                        r.raffle_date AS RaffleDate,
-                       r.raffle_time AS RaffleTime
+                       strftime('%I:%M %p', r.raffle_time) AS RaffleTime
                 FROM raffle r
                 INNER JOIN registrations reg ON r.registration_id = reg.id
                 ORDER BY CAST(r.raffle_number AS INTEGER) ASC
@@ -131,7 +131,6 @@ Public Class RaffleEntry
                         adapter.Fill(dtRaffleEntries)
                         ' ✅ Force proper time formatting
                         dgvRaffleEntries.DataSource = dtRaffleEntries
-                        dgvRaffleEntries.Columns("RaffleTime").DefaultCellStyle.Format = "hh:mm tt"
                         dgvRaffleEntries.AllowUserToAddRows = False
                     End Using
                 End Using
@@ -155,7 +154,7 @@ Public Class RaffleEntry
                 .Columns("RaffleTime").HeaderText = "Time"
 
                 .Columns("RaffleDate").DefaultCellStyle.Format = "yyyy-MM-dd"
-                .Columns("RaffleTime").DefaultCellStyle.Format = "hh:mm tt"
+
                 .AutoResizeColumns()
                 .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
 
@@ -544,7 +543,6 @@ Public Class RaffleEntry
             .Format = DateTimePickerFormat.Custom,
             .CustomFormat = "yyyy-MM-dd"
         }
-        DateTime.TryParse(currentDate, dtpDate.Value)
 
         Dim lblTime As New Label() With {.Text = "Raffle Time:", .Location = New Point(20, 80)}
         Dim dtpTime As New DateTimePicker() With {
@@ -553,7 +551,15 @@ Public Class RaffleEntry
             .Format = DateTimePickerFormat.Time,
             .ShowUpDown = True
         }
-        DateTime.TryParse(currentTime, dtpTime.Value)
+        Dim parsedTime As DateTime
+        If DateTime.TryParse(currentTime, parsedTime) Then
+            dtpTime.Value = parsedTime
+        End If
+
+        Dim parsedDate As DateTime
+        If DateTime.TryParse(currentDate, parsedDate) Then
+            dtpDate.Value = parsedDate
+        End If
 
         Dim btnSave As New Button() With {.Text = "Save", .Location = New Point(50, 145), .DialogResult = DialogResult.OK}
         Dim btnCancel As New Button() With {.Text = "Cancel", .Location = New Point(150, 145), .DialogResult = DialogResult.Cancel}
@@ -564,7 +570,7 @@ Public Class RaffleEntry
 
         If editForm.ShowDialog() = DialogResult.OK Then
             Dim newDate As String = dtpDate.Value.ToString("yyyy-MM-dd")
-            Dim newTime As String = dtpTime.Value.ToString("hh:mm tt")
+            Dim newTime As String = dtpTime.Value.ToString("HH:mm:ss")
             ' Update DB
             Try
                 Dim dbPath As String = GetDatabasePath()
@@ -602,7 +608,6 @@ Public Class RaffleEntry
             End Using
         End Using
 
-        RenumberRaffleNumbers()
         LoadRaffleEntries()
         UpdateTotalRaffleEntries()
     End Sub
@@ -639,21 +644,23 @@ Public Class RaffleEntry
         Dim btnCancel As New Button() With {
         .Text = "Cancel",
         .Location = New Point(200, 300),
-        .Width = 100,
-        .DialogResult = DialogResult.Cancel
+        .Width = 100
     }
 
         pickForm.Controls.AddRange({txtSearch, lstPlayers, btnPrint, btnCancel})
-        pickForm.AcceptButton = btnPrint
-        pickForm.CancelButton = btnCancel
 
-        ' ===== Load Unique Players =====
+        ' ===== Load players from database =====
         Dim dbPath As String = GetDatabasePath()
         Dim dtPlayers As New DataTable()
 
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
-            Dim sql As String = "SELECT DISTINCT full_name FROM raffle ORDER BY full_name ASC"
+
+            Dim sql As String = "
+        SELECT DISTINCT full_name 
+        FROM raffle 
+        ORDER BY full_name ASC"
+
             Using cmd As New SQLiteCommand(sql, conn)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(dtPlayers)
@@ -661,35 +668,49 @@ Public Class RaffleEntry
             End Using
         End Using
 
+        ' Fill listbox
         For Each row As DataRow In dtPlayers.Rows
             lstPlayers.Items.Add(row("full_name").ToString())
         Next
 
-        ' ===== Search Filter =====
-        AddHandler txtSearch.TextChanged, Sub()
-                                              Dim filter = txtSearch.Text.ToLower()
-                                              lstPlayers.Items.Clear()
+        ' ===== Search filter =====
+        AddHandler txtSearch.TextChanged,
+        Sub()
+            lstPlayers.Items.Clear()
 
-                                              For Each row As DataRow In dtPlayers.Rows
-                                                  Dim name = row("full_name").ToString()
-                                                  If name.ToLower().Contains(filter) Then
-                                                      lstPlayers.Items.Add(name)
-                                                  End If
-                                              Next
-                                          End Sub
+            Dim filter As String = txtSearch.Text.ToLower()
 
-        ' ===== Print Button Click =====
-        AddHandler btnPrint.Click, Sub()
-                                       If lstPlayers.SelectedItem Is Nothing Then
-                                           MessageBox.Show("Please select a player first.")
-                                           Return
-                                       End If
+            For Each row As DataRow In dtPlayers.Rows
+                Dim name As String = row("full_name").ToString()
 
-                                       Dim selectedPlayer As String = lstPlayers.SelectedItem.ToString()
+                If name.ToLower().Contains(filter) Then
+                    lstPlayers.Items.Add(name)
+                End If
+            Next
+        End Sub
 
-                                       pickForm.Close()
-                                       PrintRaffleForMember(selectedPlayer)
-                                   End Sub
+        ' ===== Print button =====
+        AddHandler btnPrint.Click,
+        Sub()
+            If lstPlayers.SelectedItem Is Nothing Then
+                MessageBox.Show("Please select a player.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+
+            Dim selectedPlayer As String = lstPlayers.SelectedItem.ToString()
+
+            pickForm.Close()
+
+            ' Call your existing function
+            PrintRaffleForMember(selectedPlayer)
+
+        End Sub
+
+        ' Cancel
+        AddHandler btnCancel.Click,
+        Sub()
+            pickForm.Close()
+        End Sub
 
         pickForm.ShowDialog()
 

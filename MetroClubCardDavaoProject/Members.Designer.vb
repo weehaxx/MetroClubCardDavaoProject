@@ -152,6 +152,7 @@ Partial Class Members
         lblTotalMembers = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Panel1 = New Panel()
         btnAddRaffleEntry = New Guna.UI2.WinForms.Guna2Button()
+        lblentrycount = New Guna.UI2.WinForms.Guna2HtmlLabel()
         gpPoliticalExpose.SuspendLayout()
         CType(dgvRegistrations, ComponentModel.ISupportInitialize).BeginInit()
         Guna2Panel1.SuspendLayout()
@@ -169,29 +170,28 @@ Partial Class Members
         tbSearch.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbSearch.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbSearch.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbSearch.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbSearch.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbSearch.ForeColor = Color.Black
         tbSearch.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbSearch.IconLeft = My.Resources.Resources.find
-        tbSearch.Location = New Point(21, 156)
-        tbSearch.Margin = New Padding(5, 7, 5, 7)
+        tbSearch.Location = New Point(18, 117)
+        tbSearch.Margin = New Padding(4, 5, 4, 5)
         tbSearch.Name = "tbSearch"
         tbSearch.PlaceholderForeColor = Color.Silver
         tbSearch.PlaceholderText = "Find Member Name"
         tbSearch.SelectedText = ""
         tbSearch.ShadowDecoration.CustomizableEdges = CustomizableEdges2
-        tbSearch.Size = New Size(386, 47)
+        tbSearch.Size = New Size(338, 35)
         tbSearch.TabIndex = 0
         ' 
         ' Guna2HtmlLabel2
         ' 
         Guna2HtmlLabel2.BackColor = Color.Transparent
-        Guna2HtmlLabel2.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel2.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel2.ForeColor = Color.Black
-        Guna2HtmlLabel2.Location = New Point(664, 41)
-        Guna2HtmlLabel2.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel2.Location = New Point(581, 31)
         Guna2HtmlLabel2.Name = "Guna2HtmlLabel2"
-        Guna2HtmlLabel2.Size = New Size(113, 25)
+        Guna2HtmlLabel2.Size = New Size(84, 22)
         Guna2HtmlLabel2.TabIndex = 5
         Guna2HtmlLabel2.Text = "Last Name:"
         ' 
@@ -205,18 +205,18 @@ Partial Class Members
         tbLastName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbLastName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbLastName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbLastName.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbLastName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbLastName.ForeColor = Color.Black
         tbLastName.HideSelection = False
         tbLastName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbLastName.Location = New Point(875, 19)
-        tbLastName.Margin = New Padding(5, 7, 5, 7)
+        tbLastName.Location = New Point(766, 14)
+        tbLastName.Margin = New Padding(4, 5, 4, 5)
         tbLastName.Name = "tbLastName"
         tbLastName.PlaceholderText = ""
         tbLastName.ReadOnly = True
         tbLastName.SelectedText = ""
         tbLastName.ShadowDecoration.CustomizableEdges = CustomizableEdges4
-        tbLastName.Size = New Size(250, 48)
+        tbLastName.Size = New Size(219, 36)
         tbLastName.TabIndex = 6
         ' 
         ' tbFIrstName
@@ -228,17 +228,17 @@ Partial Class Members
         tbFIrstName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbFIrstName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbFIrstName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbFIrstName.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbFIrstName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbFIrstName.ForeColor = Color.Black
         tbFIrstName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbFIrstName.Location = New Point(875, 83)
-        tbFIrstName.Margin = New Padding(5, 7, 5, 7)
+        tbFIrstName.Location = New Point(766, 62)
+        tbFIrstName.Margin = New Padding(4, 5, 4, 5)
         tbFIrstName.Name = "tbFIrstName"
         tbFIrstName.PlaceholderText = ""
         tbFIrstName.ReadOnly = True
         tbFIrstName.SelectedText = ""
         tbFIrstName.ShadowDecoration.CustomizableEdges = CustomizableEdges6
-        tbFIrstName.Size = New Size(250, 48)
+        tbFIrstName.Size = New Size(219, 36)
         tbFIrstName.TabIndex = 7
         ' 
         ' tbMiddleName
@@ -250,52 +250,49 @@ Partial Class Members
         tbMiddleName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbMiddleName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbMiddleName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbMiddleName.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbMiddleName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbMiddleName.ForeColor = Color.Black
         tbMiddleName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbMiddleName.Location = New Point(875, 144)
-        tbMiddleName.Margin = New Padding(5, 7, 5, 7)
+        tbMiddleName.Location = New Point(766, 108)
+        tbMiddleName.Margin = New Padding(4, 5, 4, 5)
         tbMiddleName.Name = "tbMiddleName"
         tbMiddleName.PlaceholderText = ""
         tbMiddleName.ReadOnly = True
         tbMiddleName.SelectedText = ""
         tbMiddleName.ShadowDecoration.CustomizableEdges = CustomizableEdges8
-        tbMiddleName.Size = New Size(250, 48)
+        tbMiddleName.Size = New Size(219, 36)
         tbMiddleName.TabIndex = 9
         ' 
         ' Guna2HtmlLabel3
         ' 
         Guna2HtmlLabel3.BackColor = Color.Transparent
-        Guna2HtmlLabel3.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel3.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel3.ForeColor = Color.Black
-        Guna2HtmlLabel3.Location = New Point(664, 107)
-        Guna2HtmlLabel3.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel3.Location = New Point(581, 80)
         Guna2HtmlLabel3.Name = "Guna2HtmlLabel3"
-        Guna2HtmlLabel3.Size = New Size(115, 25)
+        Guna2HtmlLabel3.Size = New Size(84, 22)
         Guna2HtmlLabel3.TabIndex = 10
         Guna2HtmlLabel3.Text = "First Name:"
         ' 
         ' Guna2HtmlLabel4
         ' 
         Guna2HtmlLabel4.BackColor = Color.Transparent
-        Guna2HtmlLabel4.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel4.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel4.ForeColor = Color.Black
-        Guna2HtmlLabel4.Location = New Point(664, 167)
-        Guna2HtmlLabel4.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel4.Location = New Point(581, 125)
         Guna2HtmlLabel4.Name = "Guna2HtmlLabel4"
-        Guna2HtmlLabel4.Size = New Size(136, 25)
+        Guna2HtmlLabel4.Size = New Size(99, 22)
         Guna2HtmlLabel4.TabIndex = 11
         Guna2HtmlLabel4.Text = "Middle Name:"
         ' 
         ' Guna2HtmlLabel5
         ' 
         Guna2HtmlLabel5.BackColor = Color.Transparent
-        Guna2HtmlLabel5.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel5.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel5.ForeColor = Color.Black
-        Guna2HtmlLabel5.Location = New Point(663, 223)
-        Guna2HtmlLabel5.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel5.Location = New Point(580, 167)
         Guna2HtmlLabel5.Name = "Guna2HtmlLabel5"
-        Guna2HtmlLabel5.Size = New Size(177, 25)
+        Guna2HtmlLabel5.Size = New Size(128, 22)
         Guna2HtmlLabel5.TabIndex = 12
         Guna2HtmlLabel5.Text = "Alternative Name:"
         ' 
@@ -308,28 +305,27 @@ Partial Class Members
         tbAlternativeName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbAlternativeName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbAlternativeName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbAlternativeName.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbAlternativeName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbAlternativeName.ForeColor = Color.Black
         tbAlternativeName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbAlternativeName.Location = New Point(875, 207)
-        tbAlternativeName.Margin = New Padding(5, 7, 5, 7)
+        tbAlternativeName.Location = New Point(766, 155)
+        tbAlternativeName.Margin = New Padding(4, 5, 4, 5)
         tbAlternativeName.Name = "tbAlternativeName"
         tbAlternativeName.PlaceholderText = ""
         tbAlternativeName.ReadOnly = True
         tbAlternativeName.SelectedText = ""
         tbAlternativeName.ShadowDecoration.CustomizableEdges = CustomizableEdges10
-        tbAlternativeName.Size = New Size(327, 48)
+        tbAlternativeName.Size = New Size(286, 36)
         tbAlternativeName.TabIndex = 13
         ' 
         ' Guna2HtmlLabel6
         ' 
         Guna2HtmlLabel6.BackColor = Color.Transparent
-        Guna2HtmlLabel6.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel6.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel6.ForeColor = Color.Black
-        Guna2HtmlLabel6.Location = New Point(663, 291)
-        Guna2HtmlLabel6.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel6.Location = New Point(580, 218)
         Guna2HtmlLabel6.Name = "Guna2HtmlLabel6"
-        Guna2HtmlLabel6.Size = New Size(117, 25)
+        Guna2HtmlLabel6.Size = New Size(85, 22)
         Guna2HtmlLabel6.TabIndex = 14
         Guna2HtmlLabel6.Text = "Civil Status:"
         ' 
@@ -342,28 +338,27 @@ Partial Class Members
         tbCivilStatus.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbCivilStatus.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbCivilStatus.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbCivilStatus.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbCivilStatus.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbCivilStatus.ForeColor = Color.Black
         tbCivilStatus.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbCivilStatus.Location = New Point(875, 269)
-        tbCivilStatus.Margin = New Padding(5, 7, 5, 7)
+        tbCivilStatus.Location = New Point(766, 202)
+        tbCivilStatus.Margin = New Padding(4, 5, 4, 5)
         tbCivilStatus.Name = "tbCivilStatus"
         tbCivilStatus.PlaceholderText = ""
         tbCivilStatus.ReadOnly = True
         tbCivilStatus.SelectedText = ""
         tbCivilStatus.ShadowDecoration.CustomizableEdges = CustomizableEdges12
-        tbCivilStatus.Size = New Size(123, 48)
+        tbCivilStatus.Size = New Size(108, 36)
         tbCivilStatus.TabIndex = 15
         ' 
         ' Guna2HtmlLabel7
         ' 
         Guna2HtmlLabel7.BackColor = Color.Transparent
-        Guna2HtmlLabel7.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel7.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel7.ForeColor = Color.Black
-        Guna2HtmlLabel7.Location = New Point(663, 353)
-        Guna2HtmlLabel7.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel7.Location = New Point(580, 265)
         Guna2HtmlLabel7.Name = "Guna2HtmlLabel7"
-        Guna2HtmlLabel7.Size = New Size(173, 25)
+        Guna2HtmlLabel7.Size = New Size(125, 22)
         Guna2HtmlLabel7.TabIndex = 16
         Guna2HtmlLabel7.Text = "Present Address:"
         ' 
@@ -377,28 +372,27 @@ Partial Class Members
         tbPresentAddress.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPresentAddress.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPresentAddress.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPresentAddress.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbPresentAddress.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbPresentAddress.ForeColor = Color.Black
         tbPresentAddress.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPresentAddress.Location = New Point(875, 331)
-        tbPresentAddress.Margin = New Padding(5, 7, 5, 7)
+        tbPresentAddress.Location = New Point(766, 248)
+        tbPresentAddress.Margin = New Padding(4, 5, 4, 5)
         tbPresentAddress.Name = "tbPresentAddress"
         tbPresentAddress.PlaceholderText = ""
         tbPresentAddress.ReadOnly = True
         tbPresentAddress.SelectedText = ""
         tbPresentAddress.ShadowDecoration.CustomizableEdges = CustomizableEdges14
-        tbPresentAddress.Size = New Size(670, 48)
+        tbPresentAddress.Size = New Size(586, 36)
         tbPresentAddress.TabIndex = 17
         ' 
         ' Guna2HtmlLabel8
         ' 
         Guna2HtmlLabel8.BackColor = Color.Transparent
-        Guna2HtmlLabel8.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel8.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel8.ForeColor = Color.Black
-        Guna2HtmlLabel8.Location = New Point(664, 421)
-        Guna2HtmlLabel8.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel8.Location = New Point(581, 316)
         Guna2HtmlLabel8.Name = "Guna2HtmlLabel8"
-        Guna2HtmlLabel8.Size = New Size(204, 25)
+        Guna2HtmlLabel8.Size = New Size(148, 22)
         Guna2HtmlLabel8.TabIndex = 18
         Guna2HtmlLabel8.Text = "Permanent Address:"
         ' 
@@ -412,40 +406,38 @@ Partial Class Members
         tbPermanentAddress.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPermanentAddress.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPermanentAddress.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPermanentAddress.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbPermanentAddress.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbPermanentAddress.ForeColor = Color.Black
         tbPermanentAddress.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPermanentAddress.Location = New Point(875, 393)
-        tbPermanentAddress.Margin = New Padding(5, 7, 5, 7)
+        tbPermanentAddress.Location = New Point(766, 295)
+        tbPermanentAddress.Margin = New Padding(4, 5, 4, 5)
         tbPermanentAddress.Name = "tbPermanentAddress"
         tbPermanentAddress.PlaceholderText = ""
         tbPermanentAddress.ReadOnly = True
         tbPermanentAddress.SelectedText = ""
         tbPermanentAddress.ShadowDecoration.CustomizableEdges = CustomizableEdges16
-        tbPermanentAddress.Size = New Size(670, 55)
+        tbPermanentAddress.Size = New Size(586, 41)
         tbPermanentAddress.TabIndex = 19
         ' 
         ' Guna2HtmlLabel1
         ' 
         Guna2HtmlLabel1.BackColor = Color.Transparent
-        Guna2HtmlLabel1.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel1.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel1.ForeColor = Color.Black
-        Guna2HtmlLabel1.Location = New Point(664, 481)
-        Guna2HtmlLabel1.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel1.Location = New Point(581, 361)
         Guna2HtmlLabel1.Name = "Guna2HtmlLabel1"
-        Guna2HtmlLabel1.Size = New Size(92, 25)
+        Guna2HtmlLabel1.Size = New Size(65, 22)
         Guna2HtmlLabel1.TabIndex = 20
         Guna2HtmlLabel1.Text = "Birthday:"
         ' 
         ' Guna2HtmlLabel9
         ' 
         Guna2HtmlLabel9.BackColor = Color.Transparent
-        Guna2HtmlLabel9.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel9.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel9.ForeColor = Color.Black
-        Guna2HtmlLabel9.Location = New Point(666, 541)
-        Guna2HtmlLabel9.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel9.Location = New Point(583, 406)
         Guna2HtmlLabel9.Name = "Guna2HtmlLabel9"
-        Guna2HtmlLabel9.Size = New Size(115, 25)
+        Guna2HtmlLabel9.Size = New Size(83, 22)
         Guna2HtmlLabel9.TabIndex = 22
         Guna2HtmlLabel9.Text = "Birth Place:"
         ' 
@@ -458,28 +450,27 @@ Partial Class Members
         tbBirthPlace.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBirthPlace.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBirthPlace.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBirthPlace.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbBirthPlace.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbBirthPlace.ForeColor = Color.Black
         tbBirthPlace.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBirthPlace.Location = New Point(875, 520)
-        tbBirthPlace.Margin = New Padding(5, 7, 5, 7)
+        tbBirthPlace.Location = New Point(766, 390)
+        tbBirthPlace.Margin = New Padding(4, 5, 4, 5)
         tbBirthPlace.Name = "tbBirthPlace"
         tbBirthPlace.PlaceholderText = ""
         tbBirthPlace.ReadOnly = True
         tbBirthPlace.SelectedText = ""
         tbBirthPlace.ShadowDecoration.CustomizableEdges = CustomizableEdges18
-        tbBirthPlace.Size = New Size(334, 47)
+        tbBirthPlace.Size = New Size(292, 35)
         tbBirthPlace.TabIndex = 23
         ' 
         ' Guna2HtmlLabel10
         ' 
         Guna2HtmlLabel10.BackColor = Color.Transparent
-        Guna2HtmlLabel10.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel10.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel10.ForeColor = Color.Black
-        Guna2HtmlLabel10.Location = New Point(667, 721)
-        Guna2HtmlLabel10.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel10.Location = New Point(584, 541)
         Guna2HtmlLabel10.Name = "Guna2HtmlLabel10"
-        Guna2HtmlLabel10.Size = New Size(112, 25)
+        Guna2HtmlLabel10.Size = New Size(80, 22)
         Guna2HtmlLabel10.TabIndex = 24
         Guna2HtmlLabel10.Text = "Nationality:"
         ' 
@@ -492,40 +483,38 @@ Partial Class Members
         tbNationality.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbNationality.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbNationality.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbNationality.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbNationality.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbNationality.ForeColor = Color.Black
         tbNationality.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbNationality.Location = New Point(875, 699)
-        tbNationality.Margin = New Padding(5, 7, 5, 7)
+        tbNationality.Location = New Point(766, 524)
+        tbNationality.Margin = New Padding(4, 5, 4, 5)
         tbNationality.Name = "tbNationality"
         tbNationality.PlaceholderText = ""
         tbNationality.ReadOnly = True
         tbNationality.SelectedText = ""
         tbNationality.ShadowDecoration.CustomizableEdges = CustomizableEdges20
-        tbNationality.Size = New Size(176, 47)
+        tbNationality.Size = New Size(154, 35)
         tbNationality.TabIndex = 25
         ' 
         ' Guna2HtmlLabel11
         ' 
         Guna2HtmlLabel11.BackColor = Color.Transparent
-        Guna2HtmlLabel11.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel11.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel11.ForeColor = Color.Black
-        Guna2HtmlLabel11.Location = New Point(666, 601)
-        Guna2HtmlLabel11.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel11.Location = New Point(583, 451)
         Guna2HtmlLabel11.Name = "Guna2HtmlLabel11"
-        Guna2HtmlLabel11.Size = New Size(62, 25)
+        Guna2HtmlLabel11.Size = New Size(46, 22)
         Guna2HtmlLabel11.TabIndex = 26
         Guna2HtmlLabel11.Text = "Email:"
         ' 
         ' Guna2HtmlLabel12
         ' 
         Guna2HtmlLabel12.BackColor = Color.Transparent
-        Guna2HtmlLabel12.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel12.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel12.ForeColor = Color.Black
-        Guna2HtmlLabel12.Location = New Point(666, 661)
-        Guna2HtmlLabel12.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel12.Location = New Point(583, 496)
         Guna2HtmlLabel12.Name = "Guna2HtmlLabel12"
-        Guna2HtmlLabel12.Size = New Size(89, 25)
+        Guna2HtmlLabel12.Size = New Size(66, 22)
         Guna2HtmlLabel12.TabIndex = 28
         Guna2HtmlLabel12.Text = "Mobile #:"
         ' 
@@ -538,17 +527,17 @@ Partial Class Members
         tbMobileNum.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbMobileNum.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbMobileNum.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbMobileNum.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbMobileNum.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbMobileNum.ForeColor = Color.Black
         tbMobileNum.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbMobileNum.Location = New Point(875, 639)
-        tbMobileNum.Margin = New Padding(5, 7, 5, 7)
+        tbMobileNum.Location = New Point(766, 479)
+        tbMobileNum.Margin = New Padding(4, 5, 4, 5)
         tbMobileNum.Name = "tbMobileNum"
         tbMobileNum.PlaceholderText = ""
         tbMobileNum.ReadOnly = True
         tbMobileNum.SelectedText = ""
         tbMobileNum.ShadowDecoration.CustomizableEdges = CustomizableEdges22
-        tbMobileNum.Size = New Size(176, 47)
+        tbMobileNum.Size = New Size(154, 35)
         tbMobileNum.TabIndex = 29
         ' 
         ' tbEmail
@@ -560,17 +549,17 @@ Partial Class Members
         tbEmail.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbEmail.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbEmail.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbEmail.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbEmail.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbEmail.ForeColor = Color.Black
         tbEmail.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbEmail.Location = New Point(875, 581)
-        tbEmail.Margin = New Padding(5, 7, 5, 7)
+        tbEmail.Location = New Point(766, 436)
+        tbEmail.Margin = New Padding(4, 5, 4, 5)
         tbEmail.Name = "tbEmail"
         tbEmail.PlaceholderText = ""
         tbEmail.ReadOnly = True
         tbEmail.SelectedText = ""
         tbEmail.ShadowDecoration.CustomizableEdges = CustomizableEdges24
-        tbEmail.Size = New Size(334, 47)
+        tbEmail.Size = New Size(292, 35)
         tbEmail.TabIndex = 27
         ' 
         ' btnViewID
@@ -581,12 +570,13 @@ Partial Class Members
         btnViewID.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnViewID.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnViewID.FillColor = Color.White
-        btnViewID.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnViewID.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnViewID.ForeColor = Color.Black
-        btnViewID.Location = New Point(427, 263)
+        btnViewID.Location = New Point(374, 197)
+        btnViewID.Margin = New Padding(3, 2, 3, 2)
         btnViewID.Name = "btnViewID"
         btnViewID.ShadowDecoration.CustomizableEdges = CustomizableEdges26
-        btnViewID.Size = New Size(217, 41)
+        btnViewID.Size = New Size(190, 31)
         btnViewID.TabIndex = 41
         btnViewID.Text = "VIEW ID"
         ' 
@@ -595,11 +585,10 @@ Partial Class Members
         gpPoliticalExpose.Controls.Add(rbNo)
         gpPoliticalExpose.Controls.Add(rbYes)
         gpPoliticalExpose.CustomizableEdges = CustomizableEdges27
-        gpPoliticalExpose.Location = New Point(9, 41)
-        gpPoliticalExpose.Margin = New Padding(3, 4, 3, 4)
+        gpPoliticalExpose.Location = New Point(8, 31)
         gpPoliticalExpose.Name = "gpPoliticalExpose"
         gpPoliticalExpose.ShadowDecoration.CustomizableEdges = CustomizableEdges28
-        gpPoliticalExpose.Size = New Size(125, 47)
+        gpPoliticalExpose.Size = New Size(109, 35)
         gpPoliticalExpose.TabIndex = 57
         ' 
         ' rbNo
@@ -612,12 +601,11 @@ Partial Class Members
         rbNo.CheckedState.InnerColor = Color.White
         rbNo.CheckedState.InnerOffset = -4
         rbNo.Enabled = False
-        rbNo.Font = New Font("Arial Rounded MT Bold", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        rbNo.Font = New Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         rbNo.ForeColor = Color.Black
-        rbNo.Location = New Point(5, 12)
-        rbNo.Margin = New Padding(3, 4, 3, 4)
+        rbNo.Location = New Point(4, 9)
         rbNo.Name = "rbNo"
-        rbNo.Size = New Size(53, 24)
+        rbNo.Size = New Size(43, 20)
         rbNo.TabIndex = 40
         rbNo.Text = "No"
         rbNo.UncheckedState.BorderColor = Color.FromArgb(CByte(125), CByte(137), CByte(149))
@@ -636,12 +624,11 @@ Partial Class Members
         rbYes.CheckedState.InnerColor = Color.White
         rbYes.CheckedState.InnerOffset = -4
         rbYes.Enabled = False
-        rbYes.Font = New Font("Arial Rounded MT Bold", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        rbYes.Font = New Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         rbYes.ForeColor = Color.Black
-        rbYes.Location = New Point(61, 12)
-        rbYes.Margin = New Padding(3, 4, 3, 4)
+        rbYes.Location = New Point(53, 9)
         rbYes.Name = "rbYes"
-        rbYes.Size = New Size(60, 24)
+        rbYes.Size = New Size(49, 20)
         rbYes.TabIndex = 39
         rbYes.Text = "Yes"
         rbYes.UncheckedState.BorderColor = Color.FromArgb(CByte(125), CByte(137), CByte(149))
@@ -654,11 +641,11 @@ Partial Class Members
         ' 
         Label20.AutoSize = True
         Label20.BackColor = Color.Transparent
-        Label20.Font = New Font("Arial Rounded MT Bold", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label20.Font = New Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label20.ForeColor = Color.Black
-        Label20.Location = New Point(153, 55)
+        Label20.Location = New Point(134, 41)
         Label20.Name = "Label20"
-        Label20.Size = New Size(129, 22)
+        Label20.Size = New Size(93, 18)
         Label20.TabIndex = 55
         Label20.Text = "Relationship:"
         ' 
@@ -666,11 +653,11 @@ Partial Class Members
         ' 
         Label19.AutoSize = True
         Label19.BackColor = Color.Transparent
-        Label19.Font = New Font("Arial Rounded MT Bold", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label19.Font = New Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label19.ForeColor = Color.Black
-        Label19.Location = New Point(9, 11)
+        Label19.Location = New Point(8, 8)
         Label19.Name = "Label19"
-        Label19.Size = New Size(458, 22)
+        Label19.Size = New Size(333, 18)
         Label19.TabIndex = 54
         Label19.Text = "Have family member/s who are political exposed?"
         ' 
@@ -683,28 +670,28 @@ Partial Class Members
         tbRelationshipPol.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbRelationshipPol.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbRelationshipPol.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbRelationshipPol.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbRelationshipPol.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbRelationshipPol.ForeColor = Color.Black
         tbRelationshipPol.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbRelationshipPol.Location = New Point(288, 48)
-        tbRelationshipPol.Margin = New Padding(3, 5, 3, 5)
+        tbRelationshipPol.Location = New Point(252, 36)
+        tbRelationshipPol.Margin = New Padding(3, 4, 3, 4)
         tbRelationshipPol.Name = "tbRelationshipPol"
         tbRelationshipPol.PlaceholderText = ""
         tbRelationshipPol.ReadOnly = True
         tbRelationshipPol.SelectedText = ""
         tbRelationshipPol.ShadowDecoration.CustomizableEdges = CustomizableEdges30
-        tbRelationshipPol.Size = New Size(190, 40)
+        tbRelationshipPol.Size = New Size(166, 30)
         tbRelationshipPol.TabIndex = 58
         ' 
         ' Label21
         ' 
         Label21.AutoSize = True
         Label21.BackColor = Color.Transparent
-        Label21.Font = New Font("Arial Rounded MT Bold", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label21.Font = New Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label21.ForeColor = Color.Black
-        Label21.Location = New Point(9, 93)
+        Label21.Location = New Point(8, 70)
         Label21.Name = "Label21"
-        Label21.Size = New Size(348, 22)
+        Label21.Size = New Size(255, 18)
         Label21.TabIndex = 59
         Label21.Text = "Contact person in case of emergency"
         ' 
@@ -717,28 +704,28 @@ Partial Class Members
         tbContactEmergency.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbContactEmergency.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbContactEmergency.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbContactEmergency.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbContactEmergency.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbContactEmergency.ForeColor = Color.Black
         tbContactEmergency.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbContactEmergency.Location = New Point(406, 159)
-        tbContactEmergency.Margin = New Padding(3, 5, 3, 5)
+        tbContactEmergency.Location = New Point(355, 119)
+        tbContactEmergency.Margin = New Padding(3, 4, 3, 4)
         tbContactEmergency.Name = "tbContactEmergency"
         tbContactEmergency.PlaceholderText = ""
         tbContactEmergency.ReadOnly = True
         tbContactEmergency.SelectedText = ""
         tbContactEmergency.ShadowDecoration.CustomizableEdges = CustomizableEdges32
-        tbContactEmergency.Size = New Size(183, 41)
+        tbContactEmergency.Size = New Size(160, 31)
         tbContactEmergency.TabIndex = 65
         ' 
         ' Label22
         ' 
         Label22.AutoSize = True
         Label22.BackColor = Color.Transparent
-        Label22.Font = New Font("Arial Rounded MT Bold", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label22.Font = New Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label22.ForeColor = Color.Black
-        Label22.Location = New Point(405, 129)
+        Label22.Location = New Point(354, 97)
         Label22.Name = "Label22"
-        Label22.Size = New Size(103, 22)
+        Label22.Size = New Size(76, 18)
         Label22.TabIndex = 64
         Label22.Text = "Contact #:"
         ' 
@@ -751,28 +738,28 @@ Partial Class Members
         tbRelationShipEmergency.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbRelationShipEmergency.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbRelationShipEmergency.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbRelationShipEmergency.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbRelationShipEmergency.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbRelationShipEmergency.ForeColor = Color.Black
         tbRelationShipEmergency.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbRelationShipEmergency.Location = New Point(231, 159)
-        tbRelationShipEmergency.Margin = New Padding(3, 5, 3, 5)
+        tbRelationShipEmergency.Location = New Point(202, 119)
+        tbRelationShipEmergency.Margin = New Padding(3, 4, 3, 4)
         tbRelationShipEmergency.Name = "tbRelationShipEmergency"
         tbRelationShipEmergency.PlaceholderText = ""
         tbRelationShipEmergency.ReadOnly = True
         tbRelationShipEmergency.SelectedText = ""
         tbRelationShipEmergency.ShadowDecoration.CustomizableEdges = CustomizableEdges34
-        tbRelationShipEmergency.Size = New Size(168, 41)
+        tbRelationShipEmergency.Size = New Size(147, 31)
         tbRelationShipEmergency.TabIndex = 63
         ' 
         ' Label23
         ' 
         Label23.AutoSize = True
         Label23.BackColor = Color.Transparent
-        Label23.Font = New Font("Arial Rounded MT Bold", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label23.Font = New Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label23.ForeColor = Color.Black
-        Label23.Location = New Point(233, 129)
+        Label23.Location = New Point(204, 97)
         Label23.Name = "Label23"
-        Label23.Size = New Size(129, 22)
+        Label23.Size = New Size(93, 18)
         Label23.TabIndex = 62
         Label23.Text = "Relationship:"
         ' 
@@ -785,28 +772,28 @@ Partial Class Members
         tbNameEmergency.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbNameEmergency.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbNameEmergency.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbNameEmergency.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbNameEmergency.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbNameEmergency.ForeColor = Color.Black
         tbNameEmergency.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbNameEmergency.Location = New Point(14, 159)
-        tbNameEmergency.Margin = New Padding(3, 5, 3, 5)
+        tbNameEmergency.Location = New Point(12, 119)
+        tbNameEmergency.Margin = New Padding(3, 4, 3, 4)
         tbNameEmergency.Name = "tbNameEmergency"
         tbNameEmergency.PlaceholderText = ""
         tbNameEmergency.ReadOnly = True
         tbNameEmergency.SelectedText = ""
         tbNameEmergency.ShadowDecoration.CustomizableEdges = CustomizableEdges36
-        tbNameEmergency.Size = New Size(210, 40)
+        tbNameEmergency.Size = New Size(184, 30)
         tbNameEmergency.TabIndex = 61
         ' 
         ' Label24
         ' 
         Label24.AutoSize = True
         Label24.BackColor = Color.Transparent
-        Label24.Font = New Font("Arial Rounded MT Bold", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label24.Font = New Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label24.ForeColor = Color.Black
-        Label24.Location = New Point(9, 129)
+        Label24.Location = New Point(8, 97)
         Label24.Name = "Label24"
-        Label24.Size = New Size(69, 22)
+        Label24.Size = New Size(52, 18)
         Label24.TabIndex = 60
         Label24.Text = "Name:"
         ' 
@@ -819,17 +806,17 @@ Partial Class Members
         tbBirthday.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBirthday.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBirthday.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBirthday.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbBirthday.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbBirthday.ForeColor = Color.Black
         tbBirthday.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBirthday.Location = New Point(875, 461)
-        tbBirthday.Margin = New Padding(5, 7, 5, 7)
+        tbBirthday.Location = New Point(766, 346)
+        tbBirthday.Margin = New Padding(4, 5, 4, 5)
         tbBirthday.Name = "tbBirthday"
         tbBirthday.PlaceholderText = ""
         tbBirthday.ReadOnly = True
         tbBirthday.SelectedText = ""
         tbBirthday.ShadowDecoration.CustomizableEdges = CustomizableEdges38
-        tbBirthday.Size = New Size(151, 47)
+        tbBirthday.Size = New Size(132, 35)
         tbBirthday.TabIndex = 68
         ' 
         ' dgvRegistrations
@@ -840,7 +827,7 @@ Partial Class Members
         dgvRegistrations.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText
         DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = Color.White
-        DataGridViewCellStyle2.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle2.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         DataGridViewCellStyle2.ForeColor = Color.Black
         DataGridViewCellStyle2.SelectionBackColor = SystemColors.ActiveCaption
         DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
@@ -850,19 +837,21 @@ Partial Class Members
         dgvRegistrations.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
         DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
-        DataGridViewCellStyle3.Font = New Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle3.Font = New Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         DataGridViewCellStyle3.ForeColor = Color.Black
         DataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(CByte(239), CByte(241), CByte(243))
         DataGridViewCellStyle3.SelectionForeColor = Color.Black
         DataGridViewCellStyle3.WrapMode = DataGridViewTriState.False
         dgvRegistrations.DefaultCellStyle = DataGridViewCellStyle3
         dgvRegistrations.GridColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
-        dgvRegistrations.Location = New Point(21, 217)
+        dgvRegistrations.Location = New Point(18, 163)
+        dgvRegistrations.Margin = New Padding(3, 2, 3, 2)
         dgvRegistrations.Name = "dgvRegistrations"
         dgvRegistrations.ReadOnly = True
         dgvRegistrations.RowHeadersVisible = False
         dgvRegistrations.RowHeadersWidth = 51
-        dgvRegistrations.Size = New Size(386, 836)
+        dgvRegistrations.RowTemplate.Height = 29
+        dgvRegistrations.Size = New Size(338, 627)
         dgvRegistrations.TabIndex = 69
         dgvRegistrations.Theme = Guna.UI2.WinForms.Enums.DataGridViewPresetThemes.White
         dgvRegistrations.ThemeStyle.AlternatingRowsStyle.BackColor = Color.White
@@ -874,14 +863,14 @@ Partial Class Members
         dgvRegistrations.ThemeStyle.GridColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
         dgvRegistrations.ThemeStyle.HeaderStyle.BackColor = Color.White
         dgvRegistrations.ThemeStyle.HeaderStyle.BorderStyle = DataGridViewHeaderBorderStyle.None
-        dgvRegistrations.ThemeStyle.HeaderStyle.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        dgvRegistrations.ThemeStyle.HeaderStyle.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         dgvRegistrations.ThemeStyle.HeaderStyle.ForeColor = Color.Black
         dgvRegistrations.ThemeStyle.HeaderStyle.HeaightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
         dgvRegistrations.ThemeStyle.HeaderStyle.Height = 10
         dgvRegistrations.ThemeStyle.ReadOnly = True
         dgvRegistrations.ThemeStyle.RowsStyle.BackColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
         dgvRegistrations.ThemeStyle.RowsStyle.BorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-        dgvRegistrations.ThemeStyle.RowsStyle.Font = New Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        dgvRegistrations.ThemeStyle.RowsStyle.Font = New Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         dgvRegistrations.ThemeStyle.RowsStyle.ForeColor = Color.Black
         dgvRegistrations.ThemeStyle.RowsStyle.Height = 29
         dgvRegistrations.ThemeStyle.RowsStyle.SelectionBackColor = Color.FromArgb(CByte(239), CByte(241), CByte(243))
@@ -895,12 +884,13 @@ Partial Class Members
         gbPlayersLedger.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         gbPlayersLedger.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         gbPlayersLedger.FillColor = Color.White
-        gbPlayersLedger.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        gbPlayersLedger.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         gbPlayersLedger.ForeColor = Color.Black
-        gbPlayersLedger.Location = New Point(427, 393)
+        gbPlayersLedger.Location = New Point(374, 295)
+        gbPlayersLedger.Margin = New Padding(3, 2, 3, 2)
         gbPlayersLedger.Name = "gbPlayersLedger"
         gbPlayersLedger.ShadowDecoration.CustomizableEdges = CustomizableEdges40
-        gbPlayersLedger.Size = New Size(217, 43)
+        gbPlayersLedger.Size = New Size(190, 32)
         gbPlayersLedger.TabIndex = 71
         gbPlayersLedger.Text = "TRANSACTION"
         ' 
@@ -912,12 +902,13 @@ Partial Class Members
         btnViewAccount.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnViewAccount.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnViewAccount.FillColor = Color.White
-        btnViewAccount.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnViewAccount.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnViewAccount.ForeColor = Color.Black
-        btnViewAccount.Location = New Point(427, 325)
+        btnViewAccount.Location = New Point(374, 244)
+        btnViewAccount.Margin = New Padding(3, 2, 3, 2)
         btnViewAccount.Name = "btnViewAccount"
         btnViewAccount.ShadowDecoration.CustomizableEdges = CustomizableEdges42
-        btnViewAccount.Size = New Size(217, 43)
+        btnViewAccount.Size = New Size(190, 32)
         btnViewAccount.TabIndex = 66
         btnViewAccount.Text = "VIEW LEDGER"
         ' 
@@ -929,13 +920,13 @@ Partial Class Members
         btnEdit.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnEdit.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnEdit.FillColor = Color.White
-        btnEdit.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnEdit.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnEdit.ForeColor = Color.Black
-        btnEdit.Location = New Point(427, 461)
-        btnEdit.Margin = New Padding(3, 3, 23, 3)
+        btnEdit.Location = New Point(374, 346)
+        btnEdit.Margin = New Padding(3, 2, 20, 2)
         btnEdit.Name = "btnEdit"
         btnEdit.ShadowDecoration.CustomizableEdges = CustomizableEdges44
-        btnEdit.Size = New Size(217, 43)
+        btnEdit.Size = New Size(190, 32)
         btnEdit.TabIndex = 67
         btnEdit.Text = "UPDATE"
         ' 
@@ -948,12 +939,13 @@ Partial Class Members
         btnDelete.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnDelete.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnDelete.FillColor = Color.Red
-        btnDelete.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnDelete.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnDelete.ForeColor = Color.White
-        btnDelete.Location = New Point(427, 1011)
+        btnDelete.Location = New Point(374, 758)
+        btnDelete.Margin = New Padding(3, 2, 3, 2)
         btnDelete.Name = "btnDelete"
         btnDelete.ShadowDecoration.CustomizableEdges = CustomizableEdges46
-        btnDelete.Size = New Size(198, 43)
+        btnDelete.Size = New Size(173, 32)
         btnDelete.TabIndex = 68
         btnDelete.Text = "DELETE MEMBER"
         ' 
@@ -974,11 +966,11 @@ Partial Class Members
         Guna2Panel1.Controls.Add(Label20)
         Guna2Panel1.Controls.Add(Label19)
         Guna2Panel1.CustomizableEdges = CustomizableEdges47
-        Guna2Panel1.Location = New Point(907, 775)
-        Guna2Panel1.Margin = New Padding(3, 3, 23, 3)
+        Guna2Panel1.Location = New Point(794, 581)
+        Guna2Panel1.Margin = New Padding(3, 2, 20, 2)
         Guna2Panel1.Name = "Guna2Panel1"
         Guna2Panel1.ShadowDecoration.CustomizableEdges = CustomizableEdges48
-        Guna2Panel1.Size = New Size(598, 216)
+        Guna2Panel1.Size = New Size(523, 162)
         Guna2Panel1.TabIndex = 72
         ' 
         ' tbBusinessNature
@@ -991,17 +983,17 @@ Partial Class Members
         tbBusinessNature.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBusinessNature.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBusinessNature.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBusinessNature.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbBusinessNature.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbBusinessNature.ForeColor = Color.Black
         tbBusinessNature.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBusinessNature.Location = New Point(19, 157)
-        tbBusinessNature.Margin = New Padding(3, 5, 3, 5)
+        tbBusinessNature.Location = New Point(17, 118)
+        tbBusinessNature.Margin = New Padding(3, 4, 3, 4)
         tbBusinessNature.Name = "tbBusinessNature"
         tbBusinessNature.PlaceholderText = ""
         tbBusinessNature.ReadOnly = True
         tbBusinessNature.SelectedText = ""
         tbBusinessNature.ShadowDecoration.CustomizableEdges = CustomizableEdges50
-        tbBusinessNature.Size = New Size(193, 40)
+        tbBusinessNature.Size = New Size(169, 30)
         tbBusinessNature.TabIndex = 38
         ' 
         ' tbBusinessName
@@ -1014,17 +1006,17 @@ Partial Class Members
         tbBusinessName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBusinessName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBusinessName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBusinessName.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbBusinessName.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbBusinessName.ForeColor = Color.Black
         tbBusinessName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBusinessName.Location = New Point(19, 84)
-        tbBusinessName.Margin = New Padding(3, 5, 3, 5)
+        tbBusinessName.Location = New Point(17, 63)
+        tbBusinessName.Margin = New Padding(3, 4, 3, 4)
         tbBusinessName.Name = "tbBusinessName"
         tbBusinessName.PlaceholderText = ""
         tbBusinessName.ReadOnly = True
         tbBusinessName.SelectedText = ""
         tbBusinessName.ShadowDecoration.CustomizableEdges = CustomizableEdges52
-        tbBusinessName.Size = New Size(193, 40)
+        tbBusinessName.Size = New Size(169, 30)
         tbBusinessName.TabIndex = 34
         ' 
         ' rbSelfEmployed
@@ -1038,12 +1030,11 @@ Partial Class Members
         rbSelfEmployed.CheckedState.InnerColor = Color.White
         rbSelfEmployed.CheckedState.InnerOffset = -4
         rbSelfEmployed.Enabled = False
-        rbSelfEmployed.Font = New Font("Arial Rounded MT Bold", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        rbSelfEmployed.Font = New Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         rbSelfEmployed.ForeColor = Color.Black
-        rbSelfEmployed.Location = New Point(37, 20)
-        rbSelfEmployed.Margin = New Padding(3, 4, 3, 4)
+        rbSelfEmployed.Location = New Point(50, 15)
         rbSelfEmployed.Name = "rbSelfEmployed"
-        rbSelfEmployed.Size = New Size(149, 24)
+        rbSelfEmployed.Size = New Size(113, 20)
         rbSelfEmployed.TabIndex = 31
         rbSelfEmployed.Text = "Self-employed"
         rbSelfEmployed.UncheckedState.BorderColor = Color.FromArgb(CByte(125), CByte(137), CByte(149))
@@ -1063,12 +1054,11 @@ Partial Class Members
         rbEmployed.CheckedState.InnerColor = Color.White
         rbEmployed.CheckedState.InnerOffset = -4
         rbEmployed.Enabled = False
-        rbEmployed.Font = New Font("Arial Rounded MT Bold", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        rbEmployed.Font = New Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         rbEmployed.ForeColor = Color.Black
-        rbEmployed.Location = New Point(247, 20)
-        rbEmployed.Margin = New Padding(3, 4, 3, 4)
+        rbEmployed.Location = New Point(227, 15)
         rbEmployed.Name = "rbEmployed"
-        rbEmployed.Size = New Size(112, 24)
+        rbEmployed.Size = New Size(87, 20)
         rbEmployed.TabIndex = 32
         rbEmployed.Text = "Employed"
         rbEmployed.UncheckedState.BorderColor = Color.FromArgb(CByte(125), CByte(137), CByte(149))
@@ -1087,17 +1077,17 @@ Partial Class Members
         tbEmployerName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbEmployerName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbEmployerName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbEmployerName.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbEmployerName.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbEmployerName.ForeColor = Color.Black
         tbEmployerName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbEmployerName.Location = New Point(234, 84)
-        tbEmployerName.Margin = New Padding(3, 5, 3, 5)
+        tbEmployerName.Location = New Point(205, 63)
+        tbEmployerName.Margin = New Padding(3, 4, 3, 4)
         tbEmployerName.Name = "tbEmployerName"
         tbEmployerName.PlaceholderText = ""
         tbEmployerName.ReadOnly = True
         tbEmployerName.SelectedText = ""
         tbEmployerName.ShadowDecoration.CustomizableEdges = CustomizableEdges54
-        tbEmployerName.Size = New Size(209, 40)
+        tbEmployerName.Size = New Size(183, 30)
         tbEmployerName.TabIndex = 36
         ' 
         ' tbWorkNature
@@ -1110,17 +1100,17 @@ Partial Class Members
         tbWorkNature.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbWorkNature.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbWorkNature.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbWorkNature.Font = New Font("Arial Rounded MT Bold", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbWorkNature.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbWorkNature.ForeColor = Color.Black
         tbWorkNature.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbWorkNature.Location = New Point(234, 157)
-        tbWorkNature.Margin = New Padding(3, 5, 3, 5)
+        tbWorkNature.Location = New Point(205, 118)
+        tbWorkNature.Margin = New Padding(3, 4, 3, 4)
         tbWorkNature.Name = "tbWorkNature"
         tbWorkNature.PlaceholderText = ""
         tbWorkNature.ReadOnly = True
         tbWorkNature.SelectedText = ""
         tbWorkNature.ShadowDecoration.CustomizableEdges = CustomizableEdges56
-        tbWorkNature.Size = New Size(209, 40)
+        tbWorkNature.Size = New Size(183, 30)
         tbWorkNature.TabIndex = 40
         ' 
         ' Guna2Panel2
@@ -1139,22 +1129,22 @@ Partial Class Members
         Guna2Panel2.Controls.Add(Guna2HtmlLabel14)
         Guna2Panel2.Controls.Add(Guna2HtmlLabel16)
         Guna2Panel2.CustomizableEdges = CustomizableEdges57
-        Guna2Panel2.Location = New Point(427, 775)
+        Guna2Panel2.Location = New Point(374, 581)
+        Guna2Panel2.Margin = New Padding(3, 2, 3, 2)
         Guna2Panel2.Name = "Guna2Panel2"
         Guna2Panel2.ShadowDecoration.CustomizableEdges = CustomizableEdges58
-        Guna2Panel2.Size = New Size(456, 216)
+        Guna2Panel2.Size = New Size(399, 162)
         Guna2Panel2.TabIndex = 73
         ' 
         ' Guna2HtmlLabel17
         ' 
         Guna2HtmlLabel17.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         Guna2HtmlLabel17.BackColor = Color.Transparent
-        Guna2HtmlLabel17.Font = New Font("Arial Rounded MT Bold", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel17.Font = New Font("Microsoft Sans Serif", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel17.ForeColor = Color.Black
-        Guna2HtmlLabel17.Location = New Point(234, 131)
-        Guna2HtmlLabel17.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel17.Location = New Point(205, 98)
         Guna2HtmlLabel17.Name = "Guna2HtmlLabel17"
-        Guna2HtmlLabel17.Size = New Size(143, 23)
+        Guna2HtmlLabel17.Size = New Size(103, 19)
         Guna2HtmlLabel17.TabIndex = 39
         Guna2HtmlLabel17.Text = "Nature of Work:"
         ' 
@@ -1162,12 +1152,11 @@ Partial Class Members
         ' 
         Guna2HtmlLabel15.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         Guna2HtmlLabel15.BackColor = Color.Transparent
-        Guna2HtmlLabel15.Font = New Font("Arial Rounded MT Bold", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel15.Font = New Font("Microsoft Sans Serif", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel15.ForeColor = Color.Black
-        Guna2HtmlLabel15.Location = New Point(234, 53)
-        Guna2HtmlLabel15.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel15.Location = New Point(205, 40)
         Guna2HtmlLabel15.Name = "Guna2HtmlLabel15"
-        Guna2HtmlLabel15.Size = New Size(172, 23)
+        Guna2HtmlLabel15.Size = New Size(123, 19)
         Guna2HtmlLabel15.TabIndex = 35
         Guna2HtmlLabel15.Text = "Name of Employer:"
         ' 
@@ -1175,12 +1164,11 @@ Partial Class Members
         ' 
         Guna2HtmlLabel14.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         Guna2HtmlLabel14.BackColor = Color.Transparent
-        Guna2HtmlLabel14.Font = New Font("Arial Rounded MT Bold", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel14.Font = New Font("Microsoft Sans Serif", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel14.ForeColor = Color.Black
-        Guna2HtmlLabel14.Location = New Point(19, 55)
-        Guna2HtmlLabel14.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel14.Location = New Point(17, 41)
         Guna2HtmlLabel14.Name = "Guna2HtmlLabel14"
-        Guna2HtmlLabel14.Size = New Size(169, 23)
+        Guna2HtmlLabel14.Size = New Size(121, 19)
         Guna2HtmlLabel14.TabIndex = 33
         Guna2HtmlLabel14.Text = "Name of Business:"
         ' 
@@ -1188,12 +1176,11 @@ Partial Class Members
         ' 
         Guna2HtmlLabel16.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         Guna2HtmlLabel16.BackColor = Color.Transparent
-        Guna2HtmlLabel16.Font = New Font("Arial Rounded MT Bold", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel16.Font = New Font("Microsoft Sans Serif", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel16.ForeColor = Color.Black
-        Guna2HtmlLabel16.Location = New Point(19, 131)
-        Guna2HtmlLabel16.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel16.Location = New Point(17, 98)
         Guna2HtmlLabel16.Name = "Guna2HtmlLabel16"
-        Guna2HtmlLabel16.Size = New Size(178, 23)
+        Guna2HtmlLabel16.Size = New Size(127, 19)
         Guna2HtmlLabel16.TabIndex = 37
         Guna2HtmlLabel16.Text = "Nature of Business:"
         ' 
@@ -1201,10 +1188,11 @@ Partial Class Members
         ' 
         Guna2PictureBox1.CustomizableEdges = CustomizableEdges59
         Guna2PictureBox1.ImageRotate = 0F
-        Guna2PictureBox1.Location = New Point(427, 16)
+        Guna2PictureBox1.Location = New Point(374, 12)
+        Guna2PictureBox1.Margin = New Padding(3, 2, 3, 2)
         Guna2PictureBox1.Name = "Guna2PictureBox1"
         Guna2PictureBox1.ShadowDecoration.CustomizableEdges = CustomizableEdges60
-        Guna2PictureBox1.Size = New Size(217, 232)
+        Guna2PictureBox1.Size = New Size(190, 174)
         Guna2PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
         Guna2PictureBox1.TabIndex = 4
         Guna2PictureBox1.TabStop = False
@@ -1217,13 +1205,13 @@ Partial Class Members
         btnPrintMember.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnPrintMember.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnPrintMember.FillColor = Color.White
-        btnPrintMember.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnPrintMember.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnPrintMember.ForeColor = Color.Black
-        btnPrintMember.Location = New Point(427, 699)
-        btnPrintMember.Margin = New Padding(3, 5, 3, 5)
+        btnPrintMember.Location = New Point(374, 524)
+        btnPrintMember.Margin = New Padding(3, 4, 3, 4)
         btnPrintMember.Name = "btnPrintMember"
         btnPrintMember.ShadowDecoration.CustomizableEdges = CustomizableEdges62
-        btnPrintMember.Size = New Size(217, 57)
+        btnPrintMember.Size = New Size(190, 43)
         btnPrintMember.TabIndex = 74
         btnPrintMember.Text = "ID CARD PREVIEW"
         ' 
@@ -1231,12 +1219,11 @@ Partial Class Members
         ' 
         Guna2HtmlLabel13.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
         Guna2HtmlLabel13.BackColor = Color.Transparent
-        Guna2HtmlLabel13.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel13.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel13.ForeColor = Color.White
-        Guna2HtmlLabel13.Location = New Point(16, 13)
-        Guna2HtmlLabel13.Margin = New Padding(3, 4, 3, 4)
+        Guna2HtmlLabel13.Location = New Point(14, 10)
         Guna2HtmlLabel13.Name = "Guna2HtmlLabel13"
-        Guna2HtmlLabel13.Size = New Size(183, 25)
+        Guna2HtmlLabel13.Size = New Size(143, 22)
         Guna2HtmlLabel13.TabIndex = 75
         Guna2HtmlLabel13.Text = "TOTAL MEMBERS:"
         ' 
@@ -1244,12 +1231,11 @@ Partial Class Members
         ' 
         lblTotalMembers.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
         lblTotalMembers.BackColor = Color.Transparent
-        lblTotalMembers.Font = New Font("Arial Rounded MT Bold", 19.8000011F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        lblTotalMembers.Font = New Font("Microsoft Sans Serif", 19.8000011F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         lblTotalMembers.ForeColor = Color.White
-        lblTotalMembers.Location = New Point(16, 45)
-        lblTotalMembers.Margin = New Padding(3, 4, 3, 4)
+        lblTotalMembers.Location = New Point(14, 34)
         lblTotalMembers.Name = "lblTotalMembers"
-        lblTotalMembers.Size = New Size(23, 40)
+        lblTotalMembers.Size = New Size(17, 32)
         lblTotalMembers.TabIndex = 76
         lblTotalMembers.Text = "0"
         ' 
@@ -1258,9 +1244,10 @@ Partial Class Members
         Panel1.BackColor = Color.DeepSkyBlue
         Panel1.Controls.Add(lblTotalMembers)
         Panel1.Controls.Add(Guna2HtmlLabel13)
-        Panel1.Location = New Point(17, 16)
+        Panel1.Location = New Point(15, 12)
+        Panel1.Margin = New Padding(3, 2, 3, 2)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(387, 115)
+        Panel1.Size = New Size(339, 86)
         Panel1.TabIndex = 77
         ' 
         ' btnAddRaffleEntry
@@ -1271,20 +1258,31 @@ Partial Class Members
         btnAddRaffleEntry.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnAddRaffleEntry.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnAddRaffleEntry.FillColor = Color.White
-        btnAddRaffleEntry.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnAddRaffleEntry.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnAddRaffleEntry.ForeColor = Color.Black
-        btnAddRaffleEntry.Location = New Point(427, 520)
-        btnAddRaffleEntry.Margin = New Padding(3, 3, 23, 3)
+        btnAddRaffleEntry.Location = New Point(374, 390)
+        btnAddRaffleEntry.Margin = New Padding(3, 2, 20, 2)
         btnAddRaffleEntry.Name = "btnAddRaffleEntry"
         btnAddRaffleEntry.ShadowDecoration.CustomizableEdges = CustomizableEdges64
-        btnAddRaffleEntry.Size = New Size(217, 43)
+        btnAddRaffleEntry.Size = New Size(190, 32)
         btnAddRaffleEntry.TabIndex = 78
         btnAddRaffleEntry.Text = "+ RAFFLE ENTRY"
         ' 
+        ' lblentrycount
+        ' 
+        lblentrycount.BackColor = Color.Transparent
+        lblentrycount.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        lblentrycount.Location = New Point(391, 460)
+        lblentrycount.Name = "lblentrycount"
+        lblentrycount.Size = New Size(124, 27)
+        lblentrycount.TabIndex = 80
+        lblentrycount.Text = "Raffle Entries:"
+        ' 
         ' Members
         ' 
-        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
+        Controls.Add(lblentrycount)
         Controls.Add(btnAddRaffleEntry)
         Controls.Add(Panel1)
         Controls.Add(btnPrintMember)
@@ -1323,9 +1321,8 @@ Partial Class Members
         Controls.Add(tbSearch)
         Controls.Add(Guna2Panel2)
         ForeColor = Color.Black
-        Margin = New Padding(3, 4, 3, 4)
         Name = "Members"
-        Size = New Size(1799, 1081)
+        Size = New Size(1574, 811)
         gpPoliticalExpose.ResumeLayout(False)
         gpPoliticalExpose.PerformLayout()
         CType(dgvRegistrations, ComponentModel.ISupportInitialize).EndInit()
@@ -1403,5 +1400,6 @@ Partial Class Members
     Friend WithEvents lblTotalMembers As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents Panel1 As Panel
     Friend WithEvents btnAddRaffleEntry As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents lblentrycount As Guna.UI2.WinForms.Guna2HtmlLabel
 
 End Class

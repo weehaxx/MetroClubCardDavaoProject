@@ -692,7 +692,40 @@ Public Class Members
     Private Sub lblTotalMembers_Click(sender As Object, e As EventArgs) Handles lblTotalMembers.Click
         UpdateTotalMembers()
     End Sub
+    ' Call this function whenever you want to update the entry count
+    Private Sub UpdateRaffleEntryCount()
+        Try
+            ' Make sure a member is selected
+            If dgvRegistrations.SelectedRows.Count = 0 Then
+                lblentrycount.Text = "Raffle Entries: 0"
+                Exit Sub
+            End If
 
+            ' Get selected member ID
+            Dim selectedRowView = TryCast(dgvRegistrations.SelectedRows(0).DataBoundItem, DataRowView)
+            If selectedRowView Is Nothing Then
+                lblentrycount.Text = "Raffle Entries: 0"
+                Exit Sub
+            End If
+
+            Dim memberID As Long = Convert.ToInt64(selectedRowView.Row("id"))
+            Dim dbPath As String = GetDatabasePath()
+            Dim totalEntries As Integer = 0
+
+            Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+                conn.Open()
+                Dim sql As String = "SELECT COUNT(*) FROM raffle WHERE registration_id = @regid"
+                Using cmd As New SQLiteCommand(sql, conn)
+                    cmd.Parameters.AddWithValue("@regid", memberID)
+                    totalEntries = Convert.ToInt32(cmd.ExecuteScalar())
+                End Using
+            End Using
+
+            lblentrycount.Text = $"Raffle Entries: {totalEntries}"
+        Catch ex As Exception
+            MessageBox.Show("Error fetching raffle entries: " & ex.Message)
+        End Try
+    End Sub
     Private Sub btnAddRaffleEntry_Click(sender As Object, e As EventArgs) Handles btnAddRaffleEntry.Click
         Try
             ' Ensure a member is selected
@@ -819,6 +852,7 @@ Public Class Members
                         cmdInsert.ExecuteNonQuery()
                     End Using
                 End Using
+                UpdateRaffleEntryCount()
 
                 MessageBox.Show($"Raffle entry #{nextRaffleNumber} added for {fullName}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
@@ -830,6 +864,6 @@ Public Class Members
         End Try
     End Sub
     Private Sub dgvRegistrations_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvRegistrations.CellContentClick
-
+        UpdateRaffleEntryCount()
     End Sub
 End Class
