@@ -150,10 +150,11 @@ Public Class Members
                 Dim keyword As String = tbSearch.Text.Replace("'", "''")
 
                 dv.RowFilter =
-                $"Convert(registration_id, 'System.String') LIKE '%{keyword}%' OR " &
-                $"lastname LIKE '%{keyword}%' OR " &
-                $"firstname LIKE '%{keyword}%' OR " &
-                $"middlename LIKE '%{keyword}%'"
+            $"Convert(registration_id, 'System.String') LIKE '%{keyword}%' OR " &
+            $"lastname LIKE '%{keyword}%' OR " &
+            $"firstname LIKE '%{keyword}%' OR " &
+            $"middlename LIKE '%{keyword}%' OR " &
+            $"alternativename LIKE '%{keyword}%'"   ' <-- added alternative name
 
                 dgvRegistrations.DataSource = dv
             End If
