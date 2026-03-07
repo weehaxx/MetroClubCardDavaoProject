@@ -23,7 +23,7 @@ Public Class RaffleEntry
     Private Sub PrintSingleRaffle(raffleID As Integer)
 
         Dim dbPath As String = GetDatabasePath()
-        Dim dtTicket As New DataTable()
+            Dim dtTicket As New DataTable()
 
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
@@ -98,7 +98,13 @@ Public Class RaffleEntry
 
         Dim printDlg As New PrintDialog() With {.Document = pd}
         If printDlg.ShowDialog() = DialogResult.OK Then
-            pd.Print()
+            Try
+                pd.Print()
+            Catch ex As System.ComponentModel.Win32Exception
+                MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Catch ex As Exception
+                MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End If
 
     End Sub
@@ -280,7 +286,13 @@ Public Class RaffleEntry
         Dim printDlg As New PrintDialog()
         printDlg.Document = pd
         If printDlg.ShowDialog() = DialogResult.OK Then
-            pd.Print()
+            Try
+                pd.Print()
+            Catch ex As System.ComponentModel.Win32Exception
+                MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Catch ex As Exception
+                MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End If
     End Sub
 
@@ -497,7 +509,13 @@ Public Class RaffleEntry
         ' Show Print Dialog
         Dim printDlg As New PrintDialog() With {.Document = pd}
         If printDlg.ShowDialog() = DialogResult.OK Then
-            pd.Print()
+            Try
+                pd.Print()
+            Catch ex As System.ComponentModel.Win32Exception
+                MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Catch ex As Exception
+                MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End If
     End Sub
 
@@ -615,7 +633,7 @@ Public Class RaffleEntry
     Private Sub btnPrintPlayer_Click(sender As Object, e As EventArgs) Handles btnPrintPlayer.Click
 
         ' ===== Create Dialog Form =====
-        Dim pickForm As New Form() With {
+        Dim pickForm As New Form With {
         .Text = "Select Player to Print",
         .Size = New Size(400, 400),
         .StartPosition = FormStartPosition.CenterParent,
@@ -624,24 +642,23 @@ Public Class RaffleEntry
         .MinimizeBox = False
     }
 
-        Dim txtSearch As New TextBox() With {
-        .PlaceholderText = "Search player...",
+        Dim txtSearch As New TextBox With {
         .Location = New Point(20, 20),
         .Width = 340
     }
 
-        Dim lstPlayers As New ListBox() With {
+        Dim lstPlayers As New ListBox With {
         .Location = New Point(20, 55),
         .Size = New Size(340, 220)
     }
 
-        Dim btnPrint As New Button() With {
+        Dim btnPrint As New Button With {
         .Text = "Print",
         .Location = New Point(80, 300),
         .Width = 100
     }
 
-        Dim btnCancel As New Button() With {
+        Dim btnCancel As New Button With {
         .Text = "Cancel",
         .Location = New Point(200, 300),
         .Width = 100
@@ -650,13 +667,13 @@ Public Class RaffleEntry
         pickForm.Controls.AddRange({txtSearch, lstPlayers, btnPrint, btnCancel})
 
         ' ===== Load players from database =====
-        Dim dbPath As String = GetDatabasePath()
-        Dim dtPlayers As New DataTable()
+        Dim dbPath = GetDatabasePath()
+        Dim dtPlayers As New DataTable
 
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
 
-            Dim sql As String = "
+            Dim sql = "
         SELECT DISTINCT full_name 
         FROM raffle 
         ORDER BY full_name ASC"
@@ -675,44 +692,222 @@ Public Class RaffleEntry
 
         ' ===== Search filter =====
         AddHandler txtSearch.TextChanged,
-        Sub()
-            lstPlayers.Items.Clear()
+    Sub()
+        lstPlayers.Items.Clear()
 
-            Dim filter As String = txtSearch.Text.ToLower()
+        Dim filter = txtSearch.Text.ToLower()
 
-            For Each row As DataRow In dtPlayers.Rows
-                Dim name As String = row("full_name").ToString()
+        For Each row As DataRow In dtPlayers.Rows
+            Dim name = row("full_name").ToString()
 
-                If name.ToLower().Contains(filter) Then
-                    lstPlayers.Items.Add(name)
-                End If
-            Next
-        End Sub
+            If name.ToLower().Contains(filter) Then
+                lstPlayers.Items.Add(name)
+            End If
+        Next
+    End Sub
 
         ' ===== Print button =====
         AddHandler btnPrint.Click,
-        Sub()
-            If lstPlayers.SelectedItem Is Nothing Then
-                MessageBox.Show("Please select a player.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Return
-            End If
+    Sub()
+        If lstPlayers.SelectedItem Is Nothing Then
+            MessageBox.Show("Please select a player.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
 
-            Dim selectedPlayer As String = lstPlayers.SelectedItem.ToString()
+        Dim selectedPlayer = lstPlayers.SelectedItem.ToString()
 
-            pickForm.Close()
-
-            ' Call your existing function
+        ' Don't close the popup yet
+        Try
             PrintRaffleForMember(selectedPlayer)
+            ' Only close if printing succeeds
+            pickForm.Close()
+        Catch ex As IOException
+            MessageBox.Show("Cannot print now. Database is in use. Please try again.", "File In Use", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        Catch ex As Exception
+            MessageBox.Show("Error printing: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
 
-        End Sub
+    End Sub
 
         ' Cancel
         AddHandler btnCancel.Click,
-        Sub()
-            pickForm.Close()
-        End Sub
+    Sub()
+        pickForm.Close()
+    End Sub
 
         pickForm.ShowDialog()
+
+    End Sub
+
+    Private Sub BtnPrintByDate_Click(sender As Object, e As EventArgs) Handles BtnPrintByDate.Click
+
+        ' ===== Create popup form =====
+        Dim dateForm As New Form With {
+        .Text = "Print by Date",
+        .Size = New Size(300, 250),
+        .StartPosition = FormStartPosition.CenterParent,
+        .FormBorderStyle = FormBorderStyle.FixedDialog,
+        .MaximizeBox = False,
+        .MinimizeBox = False
+    }
+
+        Dim lblFrom As New Label With {
+        .Text = "From Date:",
+        .Location = New Point(20, 20)
+    }
+
+        Dim dtFrom As New DateTimePicker With {
+        .Location = New Point(20, 45),
+        .Width = 240,
+        .Format = DateTimePickerFormat.Custom,
+        .CustomFormat = "yyyy-MM-dd"
+    }
+
+        Dim lblTo As New Label With {
+        .Text = "To Date:",
+        .Location = New Point(20, 80)
+    }
+
+        Dim dtTo As New DateTimePicker With {
+        .Location = New Point(20, 105),
+        .Width = 240,
+        .Format = DateTimePickerFormat.Custom,
+        .CustomFormat = "yyyy-MM-dd"
+    }
+
+        Dim btnPrint As New Button With {
+        .Text = "Print",
+        .Location = New Point(50, 140),
+        .Width = 80
+    }
+
+        Dim btnCancel As New Button With {
+        .Text = "Cancel",
+        .Location = New Point(150, 140),
+        .Width = 80
+    }
+
+        dateForm.Controls.AddRange({lblFrom, dtFrom, lblTo, dtTo, btnPrint, btnCancel})
+
+        ' ===== Print button =====
+        AddHandler btnPrint.Click,
+    Sub()
+
+        Dim fromDate As String = dtFrom.Value.ToString("yyyy-MM-dd")
+        Dim toDate As String = dtTo.Value.ToString("yyyy-MM-dd")
+
+        dateForm.Close()
+
+        PrintRaffleByDate(fromDate, toDate)
+
+    End Sub
+
+        AddHandler btnCancel.Click,
+    Sub()
+        dateForm.Close()
+    End Sub
+
+        dateForm.ShowDialog()
+
+    End Sub
+
+    Private Sub PrintRaffleByDate(fromDate As String, toDate As String)
+
+        Dim dbPath As String = GetDatabasePath()
+        Dim dtTickets As New DataTable()
+
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+
+            Dim sql As String = "
+        SELECT full_name, raffle_number 
+        FROM raffle 
+        WHERE raffle_date BETWEEN @from AND @to
+        ORDER BY CAST(raffle_number AS INTEGER) ASC"
+
+            Using cmd As New SQLiteCommand(sql, conn)
+                cmd.Parameters.AddWithValue("@from", fromDate)
+                cmd.Parameters.AddWithValue("@to", toDate)
+
+                Using adapter As New SQLiteDataAdapter(cmd)
+                    adapter.Fill(dtTickets)
+                End Using
+            End Using
+        End Using
+
+        If dtTickets.Rows.Count = 0 Then
+            MessageBox.Show("No raffle entries found for this date range.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+
+        Dim ticketIndex As Integer = 0
+        Dim pd As New PrintDocument()
+
+        pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
+
+        Dim ticketWidth As Integer = 200
+        Dim ticketHeight As Integer = 100
+        Dim padding As Integer = 10
+
+        AddHandler pd.PrintPage, Sub(sender2, e2)
+
+                                     Dim g As Graphics = e2.Graphics
+                                     g.Clear(Color.White)
+
+                                     Dim ticketsPerRow As Integer = Math.Floor((e2.MarginBounds.Width + padding) / (ticketWidth + padding))
+                                     Dim ticketsPerColumn As Integer = Math.Floor((e2.MarginBounds.Height + padding) / (ticketHeight + padding))
+                                     Dim ticketsPerPage As Integer = ticketsPerRow * ticketsPerColumn
+
+                                     Dim fontTitle As New Font("Arial", 11, FontStyle.Bold)
+                                     Dim fontText As New Font("Arial", 9)
+
+                                     For i As Integer = 0 To ticketsPerPage - 1
+
+                                         If ticketIndex >= dtTickets.Rows.Count Then Exit For
+
+                                         Dim rowNum As Integer = Math.Floor(i / ticketsPerRow)
+                                         Dim colNum As Integer = i Mod ticketsPerRow
+
+                                         Dim x As Integer = e2.MarginBounds.Left + colNum * (ticketWidth + padding)
+                                         Dim y As Integer = e2.MarginBounds.Top + rowNum * (ticketHeight + padding)
+
+                                         ' Draw border
+                                         g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
+
+                                         Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
+                                         Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
+
+                                         ' Title
+                                         g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
+
+                                         ' Member name (wrap automatically if long)
+                                         g.DrawString("Member: " & memberName,
+                     fontText,
+                     Brushes.Black,
+                     New RectangleF(x + 10, y + 30, ticketWidth - 20, 40))
+
+                                         ' Raffle number
+                                         g.DrawString("Raffle #: " & raffleNumber, fontText, Brushes.Black, x + 10, y + 70)
+
+                                         ticketIndex += 1
+
+                                     Next
+
+                                     e2.HasMorePages = ticketIndex < dtTickets.Rows.Count
+
+                                 End Sub
+
+        Dim printDlg As New PrintDialog With {.Document = pd}
+
+        If printDlg.ShowDialog() = DialogResult.OK Then
+            Try
+                pd.Print()
+            Catch ex As System.ComponentModel.Win32Exception
+                MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Catch ex As Exception
+                MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End If
 
     End Sub
 End Class

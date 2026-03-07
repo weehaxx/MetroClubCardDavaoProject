@@ -33,6 +33,8 @@ Partial Class RaffleEntry
         Dim CustomizableEdges6 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges7 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges8 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges9 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges10 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Label25 = New Label()
         dgvRaffleEntries = New Guna.UI2.WinForms.Guna2DataGridView()
         btnprint = New Guna.UI2.WinForms.Guna2Button()
@@ -42,6 +44,7 @@ Partial Class RaffleEntry
         btnReset = New Guna.UI2.WinForms.Guna2Button()
         tbSearch = New Guna.UI2.WinForms.Guna2TextBox()
         btnPrintPlayer = New Guna.UI2.WinForms.Guna2Button()
+        BtnPrintByDate = New Guna.UI2.WinForms.Guna2Button()
         CType(dgvRaffleEntries, ComponentModel.ISupportInitialize).BeginInit()
         Panel2.SuspendLayout()
         SuspendLayout()
@@ -230,10 +233,30 @@ Partial Class RaffleEntry
         btnPrintPlayer.TabIndex = 91
         btnPrintPlayer.Text = "PRINT PLAYER"
         ' 
+        ' BtnPrintByDate
+        ' 
+        BtnPrintByDate.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        BtnPrintByDate.CustomizableEdges = CustomizableEdges9
+        BtnPrintByDate.DisabledState.BorderColor = Color.DarkGray
+        BtnPrintByDate.DisabledState.CustomBorderColor = Color.DarkGray
+        BtnPrintByDate.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
+        BtnPrintByDate.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
+        BtnPrintByDate.FillColor = Color.Black
+        BtnPrintByDate.Font = New Font("Microsoft Sans Serif", 10.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        BtnPrintByDate.ForeColor = Color.White
+        BtnPrintByDate.Location = New Point(751, 800)
+        BtnPrintByDate.Margin = New Padding(3, 2, 3, 2)
+        BtnPrintByDate.Name = "BtnPrintByDate"
+        BtnPrintByDate.ShadowDecoration.CustomizableEdges = CustomizableEdges10
+        BtnPrintByDate.Size = New Size(173, 32)
+        BtnPrintByDate.TabIndex = 92
+        BtnPrintByDate.Text = "PRINT BY DATE"
+        ' 
         ' RaffleEntry
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
+        Controls.Add(BtnPrintByDate)
         Controls.Add(btnPrintPlayer)
         Controls.Add(tbSearch)
         Controls.Add(btnReset)
@@ -259,5 +282,6 @@ Partial Class RaffleEntry
     Friend WithEvents btnReset As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents tbSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents btnPrintPlayer As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents BtnPrintByDate As Guna.UI2.WinForms.Guna2Button
 
 End Class
