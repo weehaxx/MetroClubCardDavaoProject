@@ -756,33 +756,13 @@ Public Class Members
                     End If
                 End Using
 
-                ' Check if player already has an entry today
-                Dim today As DateTime = DateTime.Now.Date
-                Dim checkSql As String = "SELECT COUNT(*) FROM raffle WHERE registration_id = @regid AND date(raffle_date) = date(@date)"
-                Dim entryCount As Integer
-                Using cmdCheck As New SQLiteCommand(checkSql, conn)
-                    cmdCheck.Parameters.AddWithValue("@regid", memberID)
-                    cmdCheck.Parameters.AddWithValue("@date", today)
-                    entryCount = Convert.ToInt32(cmdCheck.ExecuteScalar())
-                End Using
 
-                ' If entry exists, ask user if they want to proceed
-                If entryCount > 0 Then
-                    Dim proceed = MessageBox.Show(
-                    $"{fullName} already has a raffle entry for today ({today:yyyy-MM-dd})." & Environment.NewLine &
-                    "Do you still want to add another entry and edit date/time?",
-                    "Entry Already Exists",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning
-                )
-                    If proceed = DialogResult.No Then Exit Sub
-                End If
             End Using
 
             ' --- Inline dialog to edit date & time ---
             Dim promptForm As New Form() With {
             .Text = "Edit Raffle Date & Time",
-            .Size = New Size(300, 200),
+            .Size = New Size(300, 260),
             .StartPosition = FormStartPosition.CenterParent,
             .FormBorderStyle = FormBorderStyle.FixedDialog,
             .MaximizeBox = False,
@@ -795,33 +775,54 @@ Public Class Members
             .Location = New Point(10, 10)
         }
 
+            Dim lblCurrentDate As New Label() With {
+    .Text = "Current Date: ",
+    .AutoSize = True,
+    .Location = New Point(10, 30),
+    .Font = New Font("Segoe UI", 9, FontStyle.Bold)
+}
             Dim dtpDate As New DateTimePicker() With {
             .Format = DateTimePickerFormat.Short,
             .Value = DateTime.Now.Date,
-            .Location = New Point(10, 40)
+            .Location = New Point(10, 50)
         }
+
+            Dim lblSession As New Label() With {
+    .Text = "Session Date:",
+    .AutoSize = True,
+    .Location = New Point(10, 90)
+}
+
+            Dim dtpSessionDate As New DateTimePicker() With {
+    .Format = DateTimePickerFormat.Short,
+    .Value = DateTime.Now.Date,
+    .Location = New Point(10, 110)
+}
 
             Dim dtpTime As New DateTimePicker() With {
             .Format = DateTimePickerFormat.Time,
             .ShowUpDown = True,
             .Value = DateTime.Now,
-            .Location = New Point(10, 70)
+            .Location = New Point(10, 140)
         }
 
             Dim btnOK As New Button() With {
             .Text = "OK",
             .DialogResult = DialogResult.OK,
-            .Location = New Point(50, 110)
+            .Location = New Point(50, 170)
         }
 
             Dim btnCancel As New Button() With {
             .Text = "Cancel",
             .DialogResult = DialogResult.Cancel,
-            .Location = New Point(150, 110)
+            .Location = New Point(150, 170)
         }
 
             promptForm.Controls.Add(lblName)
+            promptForm.Controls.Add(lblCurrentDate)
             promptForm.Controls.Add(dtpDate)
+            promptForm.Controls.Add(lblSession)
+            promptForm.Controls.Add(dtpSessionDate)
             promptForm.Controls.Add(dtpTime)
             promptForm.Controls.Add(btnOK)
             promptForm.Controls.Add(btnCancel)
@@ -830,17 +831,51 @@ Public Class Members
 
             ' Show dialog and insert
             If promptForm.ShowDialog() = DialogResult.OK Then
+
                 Dim selectedDate As DateTime = dtpDate.Value.Date
+                Dim sessionDate As DateTime = dtpSessionDate.Value.Date
                 Dim selectedTime As DateTime = dtpTime.Value
                 Dim selectedDateTime As DateTime = selectedDate.Add(selectedTime.TimeOfDay)
 
                 Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                     conn.Open()
 
+                    ' CHECK if player already has entry for the same session date
+                    Dim checkSql As String = "
+        SELECT COUNT(*) 
+        FROM raffle 
+        WHERE registration_id = @regid 
+        AND date(session_raffle_date) = date(@sessiondate)
+        "
+
+                    Dim entryCount As Integer
+
+                    Using cmdCheck As New SQLiteCommand(checkSql, conn)
+                        cmdCheck.Parameters.AddWithValue("@regid", memberID)
+                        cmdCheck.Parameters.AddWithValue("@sessiondate", sessionDate)
+
+                        entryCount = Convert.ToInt32(cmdCheck.ExecuteScalar())
+                    End Using
+
+                    ' If entry exists, ask user if they want to proceed
+                    If entryCount > 0 Then
+                        Dim proceed = MessageBox.Show(
+                $"{fullName} already has a raffle entry for session {sessionDate:yyyy-MM-dd}." & Environment.NewLine &
+                "Do you still want to add another entry?",
+                "Duplicate Session Entry",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning)
+
+                        If proceed = DialogResult.No Then
+                            Exit Sub
+                        End If
+                    End If
+
+                    ' INSERT raffle entry
                     Dim sqlInsert As String = "
-                    INSERT INTO raffle (raffle_number, registration_id, full_name, raffle_date, raffle_time)
-                    VALUES (@num, @regid, @name, @date, @time)
-                "
+        INSERT INTO raffle (raffle_number, registration_id, full_name, raffle_date, raffle_time, session_raffle_date)
+        VALUES (@num, @regid, @name, @date, @time, @sessiondate)
+        "
 
                     Using cmdInsert As New SQLiteCommand(sqlInsert, conn)
                         cmdInsert.Parameters.AddWithValue("@num", nextRaffleNumber)
@@ -848,13 +883,16 @@ Public Class Members
                         cmdInsert.Parameters.AddWithValue("@name", fullName)
                         cmdInsert.Parameters.AddWithValue("@date", selectedDate)
                         cmdInsert.Parameters.AddWithValue("@time", selectedTime)
+                        cmdInsert.Parameters.AddWithValue("@sessiondate", sessionDate)
 
                         cmdInsert.ExecuteNonQuery()
                     End Using
                 End Using
+
                 UpdateRaffleEntryCount()
 
                 MessageBox.Show($"Raffle entry #{nextRaffleNumber} added for {fullName}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
             Else
                 MessageBox.Show("Raffle entry cancelled.", "Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If

@@ -111,17 +111,18 @@ Module DatabaseModule
 
                 ' ================= RAFFLE TABLE =================
                 sql =
-            "CREATE TABLE IF NOT EXISTS raffle (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                registration_id INTEGER NOT NULL,
-                raffle_number INTEGER,
-                full_name TEXT NOT NULL,
-                raffle_date TEXT,
-                raffle_time TEXT,
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (registration_id)
-                    REFERENCES registrations(id) ON DELETE CASCADE
-            );"
+                    "CREATE TABLE IF NOT EXISTS raffle (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        registration_id INTEGER NOT NULL,
+                        raffle_number INTEGER,
+                        full_name TEXT NOT NULL,
+                        raffle_date TEXT,
+                        raffle_time TEXT,
+                        session_raffle_date TEXT,
+                        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (registration_id)
+                            REFERENCES registrations(id) ON DELETE CASCADE
+                    );"
 
                 Using createRaffleCmd As New SQLiteCommand(sql, conn)
                     createRaffleCmd.ExecuteNonQuery()

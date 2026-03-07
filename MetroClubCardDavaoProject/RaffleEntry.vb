@@ -120,16 +120,17 @@ Public Class RaffleEntry
             Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                 conn.Open()
                 Dim sql As String = "
-                SELECT r.id AS RaffleID,
-                       r.raffle_number AS RaffleNumber,
-                       r.full_name AS MemberName,
-                       reg.registration_id AS RegistrationID,
-                       r.raffle_date AS RaffleDate,
-                       strftime('%I:%M %p', r.raffle_time) AS RaffleTime
-                FROM raffle r
-                INNER JOIN registrations reg ON r.registration_id = reg.id
-                ORDER BY CAST(r.raffle_number AS INTEGER) ASC
-            "
+                    SELECT r.id AS RaffleID,
+                           r.raffle_number AS RaffleNumber,
+                           r.full_name AS MemberName,
+                           reg.registration_id AS RegistrationID,
+                           r.raffle_date AS RaffleDate,
+                           r.session_raffle_date AS SessionDate,
+                           strftime('%I:%M %p', r.raffle_time) AS RaffleTime
+                    FROM raffle r
+                    INNER JOIN registrations reg ON r.registration_id = reg.id
+                    ORDER BY CAST(r.raffle_number AS INTEGER) ASC
+                    "
 
                 Using cmd As New SQLiteCommand(sql, conn)
                     Using adapter As New SQLiteDataAdapter(cmd)
@@ -147,6 +148,7 @@ Public Class RaffleEntry
             dgvRaffleEntries.Columns("MemberName").Width = 200
             dgvRaffleEntries.Columns("RegistrationID").Width = 120
             dgvRaffleEntries.Columns("RaffleDate").Width = 110
+            dgvRaffleEntries.Columns("SessionDate").Width = 110
             dgvRaffleEntries.Columns("RaffleTime").Width = 90
 
             dgvRaffleEntries.Columns("RaffleID").Visible = False
@@ -157,10 +159,11 @@ Public Class RaffleEntry
                 .Columns("MemberName").HeaderText = "Member Name"
                 .Columns("RegistrationID").HeaderText = "Reg ID"
                 .Columns("RaffleDate").HeaderText = "Date"
+                .Columns("SessionDate").HeaderText = "Session Date"
                 .Columns("RaffleTime").HeaderText = "Time"
 
                 .Columns("RaffleDate").DefaultCellStyle.Format = "yyyy-MM-dd"
-
+                .Columns("SessionDate").DefaultCellStyle.Format = "yyyy-MM-dd"
                 .AutoResizeColumns()
                 .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
 
@@ -171,6 +174,7 @@ Public Class RaffleEntry
                 dgvRaffleEntries.Columns("RegistrationID").FillWeight = 20
                 dgvRaffleEntries.Columns("RaffleDate").FillWeight = 15
                 dgvRaffleEntries.Columns("RaffleTime").FillWeight = 10
+                dgvRaffleEntries.Columns("SessionDate").FillWeight = 15
                 dgvRaffleEntries.AllowUserToAddRows = False
 
                 ' ✅ Add Action column only if it does not exist
@@ -543,11 +547,12 @@ Public Class RaffleEntry
 
         Dim currentDate As String = row.Cells("RaffleDate").Value.ToString()
         Dim currentTime As String = row.Cells("RaffleTime").Value.ToString()
+        Dim currentSessionDate As String = row.Cells("SessionDate").Value.ToString()
 
         ' ===== Create dialog =====
         Dim editForm As New Form() With {
             .Text = "Edit Raffle Entry",
-            .Size = New Size(300, 220),
+            .Size = New Size(300, 300),
             .StartPosition = FormStartPosition.CenterParent,
             .FormBorderStyle = FormBorderStyle.FixedDialog,
             .MaximizeBox = False,
@@ -561,10 +566,17 @@ Public Class RaffleEntry
             .Format = DateTimePickerFormat.Custom,
             .CustomFormat = "yyyy-MM-dd"
         }
+        Dim lblSessionDate As New Label() With {.Text = "Session Date:", .Location = New Point(20, 80)}
 
-        Dim lblTime As New Label() With {.Text = "Raffle Time:", .Location = New Point(20, 80)}
+        Dim dtpSessionDate As New DateTimePicker() With {
+    .Location = New Point(20, 105),
+    .Width = 240,
+    .Format = DateTimePickerFormat.Custom,
+    .CustomFormat = "yyyy-MM-dd"
+}
+        Dim lblTime As New Label() With {.Text = "Raffle Time:", .Location = New Point(20, 140)}
         Dim dtpTime As New DateTimePicker() With {
-            .Location = New Point(20, 105),
+            .Location = New Point(20, 165),
             .Width = 240,
             .Format = DateTimePickerFormat.Time,
             .ShowUpDown = True
@@ -578,25 +590,41 @@ Public Class RaffleEntry
         If DateTime.TryParse(currentDate, parsedDate) Then
             dtpDate.Value = parsedDate
         End If
+        Dim parsedSessionDate As DateTime
+        If DateTime.TryParse(currentSessionDate, parsedSessionDate) Then
+            dtpSessionDate.Value = parsedSessionDate
+        End If
 
-        Dim btnSave As New Button() With {.Text = "Save", .Location = New Point(50, 145), .DialogResult = DialogResult.OK}
-        Dim btnCancel As New Button() With {.Text = "Cancel", .Location = New Point(150, 145), .DialogResult = DialogResult.Cancel}
+        Dim btnSave As New Button() With {.Text = "Save", .Location = New Point(50, 205), .DialogResult = DialogResult.OK}
+        Dim btnCancel As New Button() With {.Text = "Cancel", .Location = New Point(150, 205), .DialogResult = DialogResult.Cancel}
 
-        editForm.Controls.AddRange({lblDate, dtpDate, lblTime, dtpTime, btnSave, btnCancel})
+        editForm.Controls.AddRange({
+            lblDate, dtpDate,
+            lblSessionDate, dtpSessionDate,
+            lblTime, dtpTime,
+            btnSave, btnCancel
+        })
         editForm.AcceptButton = btnSave
         editForm.CancelButton = btnCancel
 
         If editForm.ShowDialog() = DialogResult.OK Then
             Dim newDate As String = dtpDate.Value.ToString("yyyy-MM-dd")
+            Dim newSessionDate As String = dtpSessionDate.Value.ToString("yyyy-MM-dd")
             Dim newTime As String = dtpTime.Value.ToString("HH:mm:ss")
             ' Update DB
             Try
                 Dim dbPath As String = GetDatabasePath()
                 Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                     conn.Open()
-                    Dim sql As String = "UPDATE raffle SET raffle_date=@date, raffle_time=@time WHERE id=@id"
+                    Dim sql As String = "
+                    UPDATE raffle 
+                    SET raffle_date=@date,
+                        session_raffle_date=@sessiondate,
+                        raffle_time=@time
+                    WHERE id=@id"
                     Using cmd As New SQLiteCommand(sql, conn)
                         cmd.Parameters.AddWithValue("@date", newDate)
+                        cmd.Parameters.AddWithValue("@sessiondate", newSessionDate)
                         cmd.Parameters.AddWithValue("@time", newTime)
                         cmd.Parameters.AddWithValue("@id", raffleID)
                         cmd.ExecuteNonQuery()
@@ -820,9 +848,9 @@ Public Class RaffleEntry
             conn.Open()
 
             Dim sql As String = "
-        SELECT full_name, raffle_number 
-        FROM raffle 
-        WHERE raffle_date BETWEEN @from AND @to
+        SELECT full_name, raffle_number
+        FROM raffle
+        WHERE DATE(session_raffle_date) BETWEEN DATE(@from) AND DATE(@to)
         ORDER BY CAST(raffle_number AS INTEGER) ASC"
 
             Using cmd As New SQLiteCommand(sql, conn)
@@ -836,7 +864,7 @@ Public Class RaffleEntry
         End Using
 
         If dtTickets.Rows.Count = 0 Then
-            MessageBox.Show("No raffle entries found for this date range.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("No raffle entries found for this session date range.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
         End If
 
@@ -849,61 +877,64 @@ Public Class RaffleEntry
         Dim ticketHeight As Integer = 100
         Dim padding As Integer = 10
 
-        AddHandler pd.PrintPage, Sub(sender2, e2)
+        AddHandler pd.PrintPage,
+        Sub(sender2, e2)
 
-                                     Dim g As Graphics = e2.Graphics
-                                     g.Clear(Color.White)
+            Dim g As Graphics = e2.Graphics
+            g.Clear(Color.White)
 
-                                     Dim ticketsPerRow As Integer = Math.Floor((e2.MarginBounds.Width + padding) / (ticketWidth + padding))
-                                     Dim ticketsPerColumn As Integer = Math.Floor((e2.MarginBounds.Height + padding) / (ticketHeight + padding))
-                                     Dim ticketsPerPage As Integer = ticketsPerRow * ticketsPerColumn
+            Dim ticketsPerRow As Integer = Math.Floor((e2.MarginBounds.Width + padding) / (ticketWidth + padding))
+            Dim ticketsPerColumn As Integer = Math.Floor((e2.MarginBounds.Height + padding) / (ticketHeight + padding))
+            Dim ticketsPerPage As Integer = ticketsPerRow * ticketsPerColumn
 
-                                     Dim fontTitle As New Font("Arial", 11, FontStyle.Bold)
-                                     Dim fontText As New Font("Arial", 9)
+            Dim fontTitle As New Font("Arial", 11, FontStyle.Bold)
+            Dim fontText As New Font("Arial", 9)
 
-                                     For i As Integer = 0 To ticketsPerPage - 1
+            For i As Integer = 0 To ticketsPerPage - 1
 
-                                         If ticketIndex >= dtTickets.Rows.Count Then Exit For
+                If ticketIndex >= dtTickets.Rows.Count Then Exit For
 
-                                         Dim rowNum As Integer = Math.Floor(i / ticketsPerRow)
-                                         Dim colNum As Integer = i Mod ticketsPerRow
+                Dim rowNum As Integer = Math.Floor(i / ticketsPerRow)
+                Dim colNum As Integer = i Mod ticketsPerRow
 
-                                         Dim x As Integer = e2.MarginBounds.Left + colNum * (ticketWidth + padding)
-                                         Dim y As Integer = e2.MarginBounds.Top + rowNum * (ticketHeight + padding)
+                Dim x As Integer = e2.MarginBounds.Left + colNum * (ticketWidth + padding)
+                Dim y As Integer = e2.MarginBounds.Top + rowNum * (ticketHeight + padding)
 
-                                         ' Draw border
-                                         g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
+                ' Draw border
+                g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
 
-                                         Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
-                                         Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
+                Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
+                Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
 
-                                         ' Title
-                                         g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
+                ' Title
+                g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
 
-                                         ' Member name (wrap automatically if long)
-                                         g.DrawString("Member: " & memberName,
-                     fontText,
-                     Brushes.Black,
-                     New RectangleF(x + 10, y + 30, ticketWidth - 20, 40))
+                ' Member name
+                g.DrawString("Member: " & memberName,
+                             fontText,
+                             Brushes.Black,
+                             New RectangleF(x + 10, y + 30, ticketWidth - 20, 40))
 
-                                         ' Raffle number
-                                         g.DrawString("Raffle #: " & raffleNumber, fontText, Brushes.Black, x + 10, y + 70)
+                ' Raffle number
+                g.DrawString("Raffle #: " & raffleNumber, fontText, Brushes.Black, x + 10, y + 70)
 
-                                         ticketIndex += 1
+                ticketIndex += 1
 
-                                     Next
+            Next
 
-                                     e2.HasMorePages = ticketIndex < dtTickets.Rows.Count
+            e2.HasMorePages = ticketIndex < dtTickets.Rows.Count
 
-                                 End Sub
+        End Sub
 
         Dim printDlg As New PrintDialog With {.Document = pd}
 
         If printDlg.ShowDialog() = DialogResult.OK Then
             Try
                 pd.Print()
+
             Catch ex As System.ComponentModel.Win32Exception
-                MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                MessageBox.Show("Cannot print because the printer is currently busy or unavailable.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
             Catch ex As Exception
                 MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
