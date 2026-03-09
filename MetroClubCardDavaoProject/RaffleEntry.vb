@@ -20,6 +20,26 @@ Public Class RaffleEntry
         Return Path.Combine(appDataPath, "metrocarddavaodb.db")
 
     End Function
+    Private Sub SendCutCommand()
+
+        Try
+            Dim printerName As String = (New Printing.PrintDocument()).PrinterSettings.PrinterName
+
+            Dim cutCommand As Byte() = {&H1D, &H56, &H1}
+
+            Dim pd As New Printing.PrintDocument()
+            pd.PrinterSettings.PrinterName = printerName
+
+            Using stream As New IO.MemoryStream(cutCommand)
+                Dim rawBytes = stream.ToArray()
+                RawPrinterHelper.SendBytesToPrinter(printerName, rawBytes)
+            End Using
+
+        Catch
+            ' Ignore if printer doesn't support raw command
+        End Try
+
+    End Sub
     Private Sub PrintSingleRaffle(raffleID As Integer)
 
         Dim dbPath As String = GetDatabasePath()
@@ -54,52 +74,54 @@ Public Class RaffleEntry
         pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
 
         AddHandler pd.PrintPage, Sub(sender2, e2)
+
                                      Dim g As Graphics = e2.Graphics
                                      g.Clear(Color.White)
 
-                                     Dim ticketWidth As Integer = 200
-                                     Dim ticketHeight As Integer = 100
-
-                                     Dim x As Integer = e2.MarginBounds.Left
-                                     Dim y As Integer = e2.MarginBounds.Top
-
-                                     Dim fontTitle As New Font("Arial", 12, FontStyle.Bold)
+                                     Dim fontTitle As New Font("Arial", 14, FontStyle.Bold)
+                                     Dim fontHeader As New Font("Arial", 11, FontStyle.Bold)
                                      Dim fontText As New Font("Arial", 10)
+                                     Dim fontBig As New Font("Arial", 20, FontStyle.Bold)
 
-                                     g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
+                                     Dim center As New StringFormat()
+                                     center.Alignment = StringAlignment.Center
 
-                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
+                                     Dim y As Integer = 10
+                                     Dim centerX As Single = e2.PageBounds.Width / 2
 
-                                     Dim baseFontText As New Font("Arial", 10)
-                                     Dim nameRect As New RectangleF(x + 10, y + 30, ticketWidth - 20, 35)
+                                     g.DrawString("METRO CARD CLUB DAVAO", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                     Dim nameFont As Font = baseFontText
-                                     Dim nameText As String = "Member: " & memberName
+                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                     Dim sf As New StringFormat() With {
-    .Alignment = StringAlignment.Near,
-    .LineAlignment = StringAlignment.Near,
-    .Trimming = StringTrimming.EllipsisCharacter,
-    .FormatFlags = StringFormatFlags.LineLimit
-}
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                     ' Auto shrink font if too big
-                                     Do While g.MeasureString(nameText, nameFont, nameRect.Size, sf).Height > nameRect.Height AndAlso nameFont.Size > 6
-                                         nameFont = New Font(nameFont.FontFamily, nameFont.Size - 0.5F, nameFont.Style)
-                                     Loop
+                                     g.DrawString("Member:", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 20
 
-                                     g.DrawString(nameText, nameFont, Brushes.Black, nameRect, sf)
+                                     g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
+                                     y += 30
 
-                                     ' Raffle number (safe position)
-                                     g.DrawString("Raffle #: " & raffleNumber, baseFontText, Brushes.Black, x + 10, y + 70, sf)
+                                     g.DrawString("Raffle Number", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
+
+                                     g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
+                                     y += 40
+
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
+                                     y += 40 ' extra space for cutter
 
                                      e2.HasMorePages = False
+
                                  End Sub
 
         Dim printDlg As New PrintDialog() With {.Document = pd}
         If printDlg.ShowDialog() = DialogResult.OK Then
             Try
                 pd.Print()
+                SendCutCommand()
             Catch ex As System.ComponentModel.Win32Exception
                 MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Catch ex As Exception
@@ -255,36 +277,58 @@ Public Class RaffleEntry
         Dim padding As Integer = 10
 
         AddHandler pd.PrintPage, Sub(sender2, e2)
+
                                      Dim g As Graphics = e2.Graphics
                                      g.Clear(Color.White)
 
-                                     Dim ticketsPerRow As Integer = Math.Floor((e2.MarginBounds.Width + padding) / (ticketWidth + padding))
-                                     Dim ticketsPerColumn As Integer = Math.Floor((e2.MarginBounds.Height + padding) / (ticketHeight + padding))
-                                     Dim ticketsPerPage As Integer = ticketsPerRow * ticketsPerColumn
-
-                                     Dim fontTitle As New Font("Arial", 12, FontStyle.Bold)
+                                     Dim fontTitle As New Font("Arial", 14, FontStyle.Bold)
+                                     Dim fontHeader As New Font("Arial", 11, FontStyle.Bold)
                                      Dim fontText As New Font("Arial", 10)
+                                     Dim fontBig As New Font("Arial", 20, FontStyle.Bold)
 
-                                     For i As Integer = 0 To ticketsPerPage - 1
-                                         If ticketIndex >= dtTickets.Rows.Count Then Exit For
+                                     Dim center As New StringFormat()
+                                     center.Alignment = StringAlignment.Center
 
-                                         Dim rowNum As Integer = Math.Floor(i / ticketsPerRow)
-                                         Dim colNum As Integer = i Mod ticketsPerRow
-                                         Dim x As Integer = e2.MarginBounds.Left + colNum * (ticketWidth + padding)
-                                         Dim y As Integer = e2.MarginBounds.Top + rowNum * (ticketHeight + padding)
+                                     Dim y As Integer = 10
+                                     Dim centerX As Single = e2.PageBounds.Width / 2
 
-                                         g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
+                                     Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
 
-                                         Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
+                                     ' Club name
+                                     g.DrawString("METRO CARD CLUB DAVAO", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                         g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
-                                         g.DrawString("Member: " & memberName, fontText, Brushes.Black, New RectangleF(x + 10, y + 30, ticketWidth - 20, 40))
-                                         g.DrawString("Raffle #: " & raffleNumber, fontText, Brushes.Black, New RectangleF(x + 10, y + 70, ticketWidth - 20, 20))
+                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                         ticketIndex += 1
-                                     Next
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                     e2.HasMorePages = ticketIndex < dtTickets.Rows.Count
+                                     g.DrawString("Member:", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 20
+
+                                     g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
+                                     y += 30
+
+                                     g.DrawString("Raffle Number", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
+
+                                     g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
+                                     y += 40
+
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
+
+                                     ticketIndex += 1
+
+                                     ' More pages?
+                                     If ticketIndex < dtTickets.Rows.Count Then
+                                         e2.HasMorePages = True
+                                     Else
+                                         e2.HasMorePages = False
+                                         ' Cut after the last ticket
+                                         SendCutCommand()
+                                     End If
+
                                  End Sub
 
         Dim printDlg As New PrintDialog()
@@ -292,6 +336,7 @@ Public Class RaffleEntry
         If printDlg.ShowDialog() = DialogResult.OK Then
             Try
                 pd.Print()
+                SendCutCommand()
             Catch ex As System.ComponentModel.Win32Exception
                 MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Catch ex As Exception
@@ -423,14 +468,14 @@ Public Class RaffleEntry
     Private Sub btnprint_Click(sender As Object, e As EventArgs) Handles btnprint.Click
         Dim dbPath As String = GetDatabasePath()
 
-        ' Get all raffle entries ordered by member name then raffle number
+        ' Get all raffle entries
         Dim dtTickets As New DataTable()
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
             Dim sql As String = "
-                            SELECT full_name, raffle_number 
-                            FROM raffle 
-                            ORDER BY CAST(raffle_number AS INTEGER) ASC"
+                        SELECT full_name, raffle_number 
+                        FROM raffle 
+                        ORDER BY CAST(raffle_number AS INTEGER) ASC"
             Using cmd As New SQLiteCommand(sql, conn)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(dtTickets)
@@ -444,70 +489,72 @@ Public Class RaffleEntry
         End If
 
         ' Prepare PrintDocument
-        Dim ticketIndex As Integer = 0 ' Persist across pages
+        Dim ticketIndex As Integer = 0
         Dim pd As New PrintDocument()
         pd.DefaultPageSettings.Landscape = False
-        pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
 
-        Dim ticketWidth As Integer = 200
-        Dim ticketHeight As Integer = 100
-        Dim padding As Integer = 10
+        ' Set custom page size for single ticket per page (width 200, height 180)
+        pd.DefaultPageSettings.PaperSize = New PaperSize("Ticket", 200, 180)
+        pd.DefaultPageSettings.Margins = New Margins(10, 10, 10, 10)
 
         AddHandler pd.PrintPage, Sub(sender2, e2)
                                      Dim g As Graphics = e2.Graphics
                                      g.Clear(Color.White)
 
-                                     ' Tickets per row/column
-                                     Dim ticketsPerRow As Integer = Math.Floor((e2.MarginBounds.Width + padding) / (ticketWidth + padding))
-                                     Dim ticketsPerColumn As Integer = Math.Floor((e2.MarginBounds.Height + padding) / (ticketHeight + padding))
-                                     Dim ticketsPerPage As Integer = ticketsPerRow * ticketsPerColumn
+                                     Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
+                                     Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
 
-                                     Dim fontTitle As New Font("Arial", 12, FontStyle.Bold)
-                                     Dim baseFontText As New Font("Arial", 10)
+                                     ' Fonts
+                                     Dim fontTitle As New Font("Arial", 14, FontStyle.Bold)
+                                     Dim fontHeader As New Font("Arial", 11, FontStyle.Bold)
+                                     Dim fontText As New Font("Arial", 10)
+                                     Dim fontBig As New Font("Arial", 20, FontStyle.Bold)
 
-                                     For i As Integer = 0 To ticketsPerPage - 1
-                                         If ticketIndex >= dtTickets.Rows.Count Then Exit For
+                                     ' Center alignment
+                                     Dim center As New StringFormat() With {.Alignment = StringAlignment.Center}
 
-                                         Dim rowNum As Integer = Math.Floor(i / ticketsPerRow)
-                                         Dim colNum As Integer = i Mod ticketsPerRow
-                                         Dim x As Integer = e2.MarginBounds.Left + colNum * (ticketWidth + padding)
-                                         Dim y As Integer = e2.MarginBounds.Top + rowNum * (ticketHeight + padding)
+                                     Dim y As Integer = 10
+                                     Dim centerX As Single = e2.PageBounds.Width / 2
 
-                                         ' Draw ticket rectangle
-                                         g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
+                                     ' Club Name
+                                     g.DrawString("METRO CARD CLUB DAVAO", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                         ' Draw text
-                                         Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
-                                         Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
+                                     ' Title
+                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                         g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
+                                     ' Divider
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
+                                     y += 20
 
-                                         ' Member name
-                                         Dim nameRect As New RectangleF(x + 10, y + 30, ticketWidth - 20, 40)
-                                         Dim nameFont As Font = baseFontText
-                                         Dim nameText As String = "Member: " & memberName
-                                         Dim sf As New StringFormat() With {
-                                         .Alignment = StringAlignment.Near,
-                                         .LineAlignment = StringAlignment.Near,
-                                         .Trimming = StringTrimming.EllipsisCharacter,
-                                         .FormatFlags = StringFormatFlags.LineLimit
-                                     }
+                                     ' Member Label
+                                     g.DrawString("Member:", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 20
 
-                                         ' Auto shrink font if needed
-                                         Do While g.MeasureString(nameText, nameFont, nameRect.Size, sf).Height > nameRect.Height AndAlso nameFont.Size > 6
-                                             nameFont = New Font(nameFont.FontFamily, nameFont.Size - 0.5F, nameFont.Style)
-                                         Loop
+                                     ' Member Name
+                                     g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                                         g.DrawString(nameText, nameFont, Brushes.Black, nameRect, sf)
+                                     ' Raffle Number
+                                     g.DrawString("Raffle Number", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
+                                     g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
+                                     y += 35
 
-                                         ' Raffle number
-                                         g.DrawString("Raffle #: " & raffleNumber, baseFontText, Brushes.Black, x + 10, y + 70, sf)
+                                     ' Bottom Divider
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
 
-                                         ticketIndex += 1
-                                     Next
+                                     ticketIndex += 1
 
                                      ' More pages?
-                                     e2.HasMorePages = ticketIndex < dtTickets.Rows.Count
+                                     If ticketIndex < dtTickets.Rows.Count Then
+                                         e2.HasMorePages = True
+                                     Else
+                                         e2.HasMorePages = False
+                                         ' Cut after the last ticket
+                                         SendCutCommand()
+                                     End If
                                  End Sub
 
         ' Show Print Dialog
@@ -515,6 +562,7 @@ Public Class RaffleEntry
         If printDlg.ShowDialog() = DialogResult.OK Then
             Try
                 pd.Print()
+                SendCutCommand()
             Catch ex As System.ComponentModel.Win32Exception
                 MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Catch ex As Exception
@@ -840,7 +888,6 @@ Public Class RaffleEntry
     End Sub
 
     Private Sub PrintRaffleByDate(fromDate As String, toDate As String)
-
         Dim dbPath As String = GetDatabasePath()
         Dim dtTickets As New DataTable()
 
@@ -848,10 +895,10 @@ Public Class RaffleEntry
             conn.Open()
 
             Dim sql As String = "
-        SELECT full_name, raffle_number
-        FROM raffle
-        WHERE DATE(session_raffle_date) BETWEEN DATE(@from) AND DATE(@to)
-        ORDER BY CAST(raffle_number AS INTEGER) ASC"
+            SELECT full_name, raffle_number
+            FROM raffle
+            WHERE DATE(session_raffle_date) BETWEEN DATE(@from) AND DATE(@to)
+            ORDER BY CAST(raffle_number AS INTEGER) ASC"
 
             Using cmd As New SQLiteCommand(sql, conn)
                 cmd.Parameters.AddWithValue("@from", fromDate)
@@ -871,74 +918,82 @@ Public Class RaffleEntry
         Dim ticketIndex As Integer = 0
         Dim pd As New PrintDocument()
 
-        pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
+        ' One ticket per page
+        pd.DefaultPageSettings.Landscape = False
+        pd.DefaultPageSettings.PaperSize = New PaperSize("Ticket", 200, 180)
+        pd.DefaultPageSettings.Margins = New Margins(10, 10, 10, 10)
 
-        Dim ticketWidth As Integer = 200
-        Dim ticketHeight As Integer = 100
-        Dim padding As Integer = 10
+        AddHandler pd.PrintPage, Sub(sender2, e2)
+                                     Dim g As Graphics = e2.Graphics
+                                     g.Clear(Color.White)
 
-        AddHandler pd.PrintPage,
-        Sub(sender2, e2)
+                                     Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
+                                     Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
 
-            Dim g As Graphics = e2.Graphics
-            g.Clear(Color.White)
+                                     ' Fonts
+                                     Dim fontTitle As New Font("Arial", 14, FontStyle.Bold)
+                                     Dim fontHeader As New Font("Arial", 11, FontStyle.Bold)
+                                     Dim fontText As New Font("Arial", 10)
+                                     Dim fontBig As New Font("Arial", 20, FontStyle.Bold)
 
-            Dim ticketsPerRow As Integer = Math.Floor((e2.MarginBounds.Width + padding) / (ticketWidth + padding))
-            Dim ticketsPerColumn As Integer = Math.Floor((e2.MarginBounds.Height + padding) / (ticketHeight + padding))
-            Dim ticketsPerPage As Integer = ticketsPerRow * ticketsPerColumn
+                                     ' Center alignment
+                                     Dim center As New StringFormat() With {.Alignment = StringAlignment.Center}
 
-            Dim fontTitle As New Font("Arial", 11, FontStyle.Bold)
-            Dim fontText As New Font("Arial", 9)
+                                     Dim y As Integer = 10
+                                     Dim centerX As Single = e2.PageBounds.Width / 2
 
-            For i As Integer = 0 To ticketsPerPage - 1
+                                     ' Club Name
+                                     g.DrawString("METRO CARD CLUB DAVAO", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                If ticketIndex >= dtTickets.Rows.Count Then Exit For
+                                     ' Title
+                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                Dim rowNum As Integer = Math.Floor(i / ticketsPerRow)
-                Dim colNum As Integer = i Mod ticketsPerRow
+                                     ' Divider
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
+                                     y += 20
 
-                Dim x As Integer = e2.MarginBounds.Left + colNum * (ticketWidth + padding)
-                Dim y As Integer = e2.MarginBounds.Top + rowNum * (ticketHeight + padding)
+                                     ' Member Label
+                                     g.DrawString("Member:", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 20
 
-                ' Draw border
-                g.DrawRectangle(Pens.Black, x, y, ticketWidth, ticketHeight)
+                                     ' Member Name
+                                     g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
+                                     y += 25
 
-                Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
-                Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
+                                     ' Raffle Number
+                                     g.DrawString("Raffle Number", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
+                                     g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
+                                     y += 35
 
-                ' Title
-                g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, x + 10, y + 5)
+                                     ' Bottom Divider for cut line
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
 
-                ' Member name
-                g.DrawString("Member: " & memberName,
-                             fontText,
-                             Brushes.Black,
-                             New RectangleF(x + 10, y + 30, ticketWidth - 20, 40))
+                                     ' Move to next ticket
+                                     ticketIndex += 1
 
-                ' Raffle number
-                g.DrawString("Raffle #: " & raffleNumber, fontText, Brushes.Black, x + 10, y + 70)
-
-                ticketIndex += 1
-
-            Next
-
-            e2.HasMorePages = ticketIndex < dtTickets.Rows.Count
-
-        End Sub
+                                     ' More pages?
+                                     If ticketIndex < dtTickets.Rows.Count Then
+                                         e2.HasMorePages = True
+                                     Else
+                                         e2.HasMorePages = False
+                                         ' Cut after the last ticket
+                                         SendCutCommand()
+                                     End If
+                                 End Sub
 
         Dim printDlg As New PrintDialog With {.Document = pd}
 
         If printDlg.ShowDialog() = DialogResult.OK Then
             Try
                 pd.Print()
-
             Catch ex As System.ComponentModel.Win32Exception
                 MessageBox.Show("Cannot print because the printer is currently busy or unavailable.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
             Catch ex As Exception
                 MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
-
     End Sub
 End Class
