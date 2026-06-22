@@ -83,7 +83,7 @@ Partial Class IDPrinting
         btnPrint.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnPrint.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnPrint.FillColor = Color.FromArgb(CByte(0), CByte(192), CByte(0))
-        btnPrint.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnPrint.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnPrint.ForeColor = Color.White
         btnPrint.Location = New Point(331, 539)
         btnPrint.Margin = New Padding(3, 4, 3, 4)
@@ -111,16 +111,16 @@ Partial Class IDPrinting
         ' pbBarcode
         ' 
         pbBarcode.BackColor = Color.White
-        pbBarcode.Location = New Point(70, 398)
+        pbBarcode.Location = New Point(163, 450)
         pbBarcode.Name = "pbBarcode"
-        pbBarcode.Size = New Size(734, 116)
+        pbBarcode.Size = New Size(542, 65)
         pbBarcode.SizeMode = PictureBoxSizeMode.Zoom
         pbBarcode.TabIndex = 9
         pbBarcode.TabStop = False
         ' 
         ' IDPrinting
         ' 
-        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
+        AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Black
         Controls.Add(pbBarcode)

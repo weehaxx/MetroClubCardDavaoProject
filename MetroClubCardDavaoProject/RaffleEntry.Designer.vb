@@ -69,7 +69,7 @@ Partial Class RaffleEntry
         dgvRaffleEntries.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText
         DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = Color.White
-        DataGridViewCellStyle2.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle2.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         DataGridViewCellStyle2.ForeColor = Color.Black
         DataGridViewCellStyle2.SelectionBackColor = SystemColors.ActiveCaption
         DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
@@ -105,7 +105,7 @@ Partial Class RaffleEntry
         dgvRaffleEntries.ThemeStyle.GridColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
         dgvRaffleEntries.ThemeStyle.HeaderStyle.BackColor = Color.White
         dgvRaffleEntries.ThemeStyle.HeaderStyle.BorderStyle = DataGridViewHeaderBorderStyle.None
-        dgvRaffleEntries.ThemeStyle.HeaderStyle.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        dgvRaffleEntries.ThemeStyle.HeaderStyle.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         dgvRaffleEntries.ThemeStyle.HeaderStyle.ForeColor = Color.Black
         dgvRaffleEntries.ThemeStyle.HeaderStyle.HeaightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
         dgvRaffleEntries.ThemeStyle.HeaderStyle.Height = 40
@@ -164,7 +164,7 @@ Partial Class RaffleEntry
         ' 
         Guna2HtmlLabel13.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
         Guna2HtmlLabel13.BackColor = Color.Transparent
-        Guna2HtmlLabel13.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel13.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel13.ForeColor = Color.White
         Guna2HtmlLabel13.Location = New Point(14, 10)
         Guna2HtmlLabel13.Name = "Guna2HtmlLabel13"
@@ -181,7 +181,7 @@ Partial Class RaffleEntry
         btnReset.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnReset.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnReset.FillColor = Color.Red
-        btnReset.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnReset.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnReset.ForeColor = Color.White
         btnReset.Location = New Point(21, 800)
         btnReset.Margin = New Padding(3, 2, 3, 2)
@@ -200,7 +200,7 @@ Partial Class RaffleEntry
         tbSearch.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbSearch.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbSearch.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbSearch.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbSearch.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbSearch.ForeColor = Color.Black
         tbSearch.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbSearch.IconLeft = My.Resources.Resources.find
@@ -254,7 +254,7 @@ Partial Class RaffleEntry
         ' 
         ' RaffleEntry
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         AutoScaleMode = AutoScaleMode.Font
         Controls.Add(BtnPrintByDate)
         Controls.Add(btnPrintPlayer)

@@ -21,29 +21,25 @@ Public Class RaffleEntry
 
     End Function
     Private Sub SendCutCommand()
-
         Try
-            Dim printerName As String = (New Printing.PrintDocument()).PrinterSettings.PrinterName
+            Dim printerName As String = "Your Printer Name"
 
-            Dim cutCommand As Byte() = {&H1D, &H56, &H1}
+            Dim cutCommand() As Byte = {29, 86, 65, 0} ' ESC/POS Full Cut
 
-            Dim pd As New Printing.PrintDocument()
-            pd.PrinterSettings.PrinterName = printerName
+            Dim printerPath As String = "\\.\\" & printerName
 
-            Using stream As New IO.MemoryStream(cutCommand)
-                Dim rawBytes = stream.ToArray()
-                RawPrinterHelper.SendBytesToPrinter(printerName, rawBytes)
+            Using fs As New FileStream(printerPath, FileMode.Open, FileAccess.Write)
+                fs.Write(cutCommand, 0, cutCommand.Length)
             End Using
 
-        Catch
-            ' Ignore if printer doesn't support raw command
+        Catch ex As Exception
+            ' Printer might not support cut
         End Try
-
     End Sub
     Private Sub PrintSingleRaffle(raffleID As Integer)
 
         Dim dbPath As String = GetDatabasePath()
-            Dim dtTicket As New DataTable()
+        Dim dtTicket As New DataTable()
 
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
@@ -104,7 +100,7 @@ Public Class RaffleEntry
                                      g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
                                      y += 30
 
-                                     g.DrawString("Raffle Number", fontHeader, Brushes.Black, centerX, y, center)
+                                     g.DrawString("Ticket Number", fontHeader, Brushes.Black, centerX, y, center)
                                      y += 25
 
                                      g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
@@ -247,14 +243,18 @@ Public Class RaffleEntry
     End Sub
 
     Private Sub PrintRaffleForMember(memberName As String)
+
         Dim dbPath As String = GetDatabasePath()
         Dim dtTickets As New DataTable()
 
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
+
             Dim sql As String = "SELECT raffle_number FROM raffle WHERE full_name=@name ORDER BY raffle_number ASC"
+
             Using cmd As New SQLiteCommand(sql, conn)
                 cmd.Parameters.AddWithValue("@name", memberName)
+
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(dtTickets)
                 End Using
@@ -262,23 +262,42 @@ Public Class RaffleEntry
         End Using
 
         If dtTickets.Rows.Count = 0 Then
-            MessageBox.Show("No raffle entries found for this member.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("No raffle entries found for this member.", "No Tickets")
             Return
         End If
 
-        Dim ticketIndex As Integer = 0
+        If MessageBox.Show($"Print {dtTickets.Rows.Count} raffle tickets for {memberName}?",
+                       "Print Confirmation",
+                       MessageBoxButtons.YesNo,
+                       MessageBoxIcon.Question) <> DialogResult.Yes Then
+            Return
+        End If
+
+
+        For Each row As DataRow In dtTickets.Rows
+
+            Dim raffleNumber As String = row("raffle_number").ToString()
+
+            PrintSingleTicket(memberName, raffleNumber)
+
+            Threading.Thread.Sleep(300)
+
+            SendCutCommand()
+
+        Next
+
+    End Sub
+
+    Private Sub PrintSingleTicket(memberName As String, raffleNumber As String)
+
         Dim pd As New PrintDocument()
+
         pd.DefaultPageSettings.Landscape = False
         pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
 
-        ' Ticket size
-        Dim ticketWidth As Integer = 200
-        Dim ticketHeight As Integer = 100
-        Dim padding As Integer = 10
+        AddHandler pd.PrintPage, Sub(sender, e)
 
-        AddHandler pd.PrintPage, Sub(sender2, e2)
-
-                                     Dim g As Graphics = e2.Graphics
+                                     Dim g As Graphics = e.Graphics
                                      g.Clear(Color.White)
 
                                      Dim fontTitle As New Font("Arial", 14, FontStyle.Bold)
@@ -290,11 +309,8 @@ Public Class RaffleEntry
                                      center.Alignment = StringAlignment.Center
 
                                      Dim y As Integer = 10
-                                     Dim centerX As Single = e2.PageBounds.Width / 2
+                                     Dim centerX As Single = e.PageBounds.Width / 2
 
-                                     Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
-
-                                     ' Club name
                                      g.DrawString("METRO CARD CLUB DAVAO", fontHeader, Brushes.Black, centerX, y, center)
                                      y += 25
 
@@ -310,7 +326,7 @@ Public Class RaffleEntry
                                      g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
                                      y += 30
 
-                                     g.DrawString("Raffle Number", fontHeader, Brushes.Black, centerX, y, center)
+                                     g.DrawString("Ticket Number", fontHeader, Brushes.Black, centerX, y, center)
                                      y += 25
 
                                      g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
@@ -318,31 +334,10 @@ Public Class RaffleEntry
 
                                      g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
 
-                                     ticketIndex += 1
-
-                                     ' More pages?
-                                     If ticketIndex < dtTickets.Rows.Count Then
-                                         e2.HasMorePages = True
-                                     Else
-                                         e2.HasMorePages = False
-                                         ' Cut after the last ticket
-                                         SendCutCommand()
-                                     End If
-
                                  End Sub
 
-        Dim printDlg As New PrintDialog()
-        printDlg.Document = pd
-        If printDlg.ShowDialog() = DialogResult.OK Then
-            Try
-                pd.Print()
-                SendCutCommand()
-            Catch ex As System.ComponentModel.Win32Exception
-                MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Catch ex As Exception
-                MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
-        End If
+        pd.Print()
+
     End Sub
 
 
@@ -466,16 +461,20 @@ Public Class RaffleEntry
 
 
     Private Sub btnprint_Click(sender As Object, e As EventArgs) Handles btnprint.Click
+
         Dim dbPath As String = GetDatabasePath()
 
         ' Get all raffle entries
         Dim dtTickets As New DataTable()
+
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
+
             Dim sql As String = "
-                        SELECT full_name, raffle_number 
-                        FROM raffle 
-                        ORDER BY CAST(raffle_number AS INTEGER) ASC"
+        SELECT full_name, raffle_number 
+        FROM raffle 
+        ORDER BY CAST(raffle_number AS INTEGER) ASC"
+
             Using cmd As New SQLiteCommand(sql, conn)
                 Using adapter As New SQLiteDataAdapter(cmd)
                     adapter.Fill(dtTickets)
@@ -488,87 +487,26 @@ Public Class RaffleEntry
             Return
         End If
 
-        ' Prepare PrintDocument
-        Dim ticketIndex As Integer = 0
-        Dim pd As New PrintDocument()
-        pd.DefaultPageSettings.Landscape = False
-
-        ' Set custom page size for single ticket per page (width 200, height 180)
-        pd.DefaultPageSettings.PaperSize = New PaperSize("Ticket", 200, 180)
-        pd.DefaultPageSettings.Margins = New Margins(10, 10, 10, 10)
-
-        AddHandler pd.PrintPage, Sub(sender2, e2)
-                                     Dim g As Graphics = e2.Graphics
-                                     g.Clear(Color.White)
-
-                                     Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
-                                     Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
-
-                                     ' Fonts
-                                     Dim fontTitle As New Font("Arial", 14, FontStyle.Bold)
-                                     Dim fontHeader As New Font("Arial", 11, FontStyle.Bold)
-                                     Dim fontText As New Font("Arial", 10)
-                                     Dim fontBig As New Font("Arial", 20, FontStyle.Bold)
-
-                                     ' Center alignment
-                                     Dim center As New StringFormat() With {.Alignment = StringAlignment.Center}
-
-                                     Dim y As Integer = 10
-                                     Dim centerX As Single = e2.PageBounds.Width / 2
-
-                                     ' Club Name
-                                     g.DrawString("METRO CARD CLUB DAVAO", fontHeader, Brushes.Black, centerX, y, center)
-                                     y += 25
-
-                                     ' Title
-                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, centerX, y, center)
-                                     y += 25
-
-                                     ' Divider
-                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
-                                     y += 20
-
-                                     ' Member Label
-                                     g.DrawString("Member:", fontHeader, Brushes.Black, centerX, y, center)
-                                     y += 20
-
-                                     ' Member Name
-                                     g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
-                                     y += 25
-
-                                     ' Raffle Number
-                                     g.DrawString("Raffle Number", fontHeader, Brushes.Black, centerX, y, center)
-                                     y += 25
-                                     g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
-                                     y += 35
-
-                                     ' Bottom Divider
-                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
-
-                                     ticketIndex += 1
-
-                                     ' More pages?
-                                     If ticketIndex < dtTickets.Rows.Count Then
-                                         e2.HasMorePages = True
-                                     Else
-                                         e2.HasMorePages = False
-                                         ' Cut after the last ticket
-                                         SendCutCommand()
-                                     End If
-                                 End Sub
-
-        ' Show Print Dialog
-        Dim printDlg As New PrintDialog() With {.Document = pd}
-        If printDlg.ShowDialog() = DialogResult.OK Then
-            Try
-                pd.Print()
-                SendCutCommand()
-            Catch ex As System.ComponentModel.Win32Exception
-                MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Catch ex As Exception
-                MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
+        ' CONFIRMATION BEFORE PRINT
+        If MessageBox.Show("Are you sure you want to print ALL raffle tickets?",
+                   "Print Confirmation",
+                   MessageBoxButtons.YesNo,
+                   MessageBoxIcon.Question) <> DialogResult.Yes Then
+            Return
         End If
+
+
+        For Each row As DataRow In dtTickets.Rows
+            Dim memberName As String = row("full_name").ToString()
+            Dim raffleNumber As String = row("raffle_number").ToString()
+
+            PrintSingleTicket(memberName, raffleNumber)
+
+            Threading.Thread.Sleep(300)
+
+            SendCutCommand()
+        Next
+
     End Sub
 
     Private Sub tbSearch_TextChanged(sender As Object, e As EventArgs) Handles tbSearch.TextChanged
@@ -888,6 +826,7 @@ Public Class RaffleEntry
     End Sub
 
     Private Sub PrintRaffleByDate(fromDate As String, toDate As String)
+
         Dim dbPath As String = GetDatabasePath()
         Dim dtTickets As New DataTable()
 
@@ -895,10 +834,10 @@ Public Class RaffleEntry
             conn.Open()
 
             Dim sql As String = "
-            SELECT full_name, raffle_number
-            FROM raffle
-            WHERE DATE(session_raffle_date) BETWEEN DATE(@from) AND DATE(@to)
-            ORDER BY CAST(raffle_number AS INTEGER) ASC"
+        SELECT full_name, raffle_number
+        FROM raffle
+        WHERE DATE(session_raffle_date) BETWEEN DATE(@from) AND DATE(@to)
+        ORDER BY CAST(raffle_number AS INTEGER) ASC"
 
             Using cmd As New SQLiteCommand(sql, conn)
                 cmd.Parameters.AddWithValue("@from", fromDate)
@@ -909,91 +848,35 @@ Public Class RaffleEntry
                 End Using
             End Using
         End Using
+        If dtTickets.Rows.Count = 0 Then
+            MessageBox.Show("No raffle entries found.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
 
+        ' CONFIRMATION BEFORE PRINT
         If dtTickets.Rows.Count = 0 Then
             MessageBox.Show("No raffle entries found for this session date range.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
         End If
 
-        Dim ticketIndex As Integer = 0
-        Dim pd As New PrintDocument()
-
-        ' One ticket per page
-        pd.DefaultPageSettings.Landscape = False
-        pd.DefaultPageSettings.PaperSize = New PaperSize("Ticket", 200, 180)
-        pd.DefaultPageSettings.Margins = New Margins(10, 10, 10, 10)
-
-        AddHandler pd.PrintPage, Sub(sender2, e2)
-                                     Dim g As Graphics = e2.Graphics
-                                     g.Clear(Color.White)
-
-                                     Dim raffleNumber As String = dtTickets.Rows(ticketIndex)("raffle_number").ToString()
-                                     Dim memberName As String = dtTickets.Rows(ticketIndex)("full_name").ToString()
-
-                                     ' Fonts
-                                     Dim fontTitle As New Font("Arial", 14, FontStyle.Bold)
-                                     Dim fontHeader As New Font("Arial", 11, FontStyle.Bold)
-                                     Dim fontText As New Font("Arial", 10)
-                                     Dim fontBig As New Font("Arial", 20, FontStyle.Bold)
-
-                                     ' Center alignment
-                                     Dim center As New StringFormat() With {.Alignment = StringAlignment.Center}
-
-                                     Dim y As Integer = 10
-                                     Dim centerX As Single = e2.PageBounds.Width / 2
-
-                                     ' Club Name
-                                     g.DrawString("METRO CARD CLUB DAVAO", fontHeader, Brushes.Black, centerX, y, center)
-                                     y += 25
-
-                                     ' Title
-                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, centerX, y, center)
-                                     y += 25
-
-                                     ' Divider
-                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
-                                     y += 20
-
-                                     ' Member Label
-                                     g.DrawString("Member:", fontHeader, Brushes.Black, centerX, y, center)
-                                     y += 20
-
-                                     ' Member Name
-                                     g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
-                                     y += 25
-
-                                     ' Raffle Number
-                                     g.DrawString("Raffle Number", fontHeader, Brushes.Black, centerX, y, center)
-                                     y += 25
-                                     g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
-                                     y += 35
-
-                                     ' Bottom Divider for cut line
-                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
-
-                                     ' Move to next ticket
-                                     ticketIndex += 1
-
-                                     ' More pages?
-                                     If ticketIndex < dtTickets.Rows.Count Then
-                                         e2.HasMorePages = True
-                                     Else
-                                         e2.HasMorePages = False
-                                         ' Cut after the last ticket
-                                         SendCutCommand()
-                                     End If
-                                 End Sub
-
-        Dim printDlg As New PrintDialog With {.Document = pd}
-
-        If printDlg.ShowDialog() = DialogResult.OK Then
-            Try
-                pd.Print()
-            Catch ex As System.ComponentModel.Win32Exception
-                MessageBox.Show("Cannot print because the printer is currently busy or unavailable.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Catch ex As Exception
-                MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
+        If MessageBox.Show("Print raffle tickets for this date range?",
+                   "Print Confirmation",
+                   MessageBoxButtons.YesNo,
+                   MessageBoxIcon.Question) <> DialogResult.Yes Then
+            Return
         End If
+
+
+        For Each row As DataRow In dtTickets.Rows
+            Dim memberName As String = row("full_name").ToString()
+            Dim raffleNumber As String = row("raffle_number").ToString()
+
+            PrintSingleTicket(memberName, raffleNumber)
+
+            Threading.Thread.Sleep(300)
+
+            SendCutCommand()
+        Next
+
     End Sub
 End Class
