@@ -540,8 +540,8 @@ Public Class Members
 
             ' ✅ Overlay
             Dim overlay As New OverlayForm(FindForm)
-            overlay.Show
-            overlay.Refresh
+            overlay.Show()
+            overlay.Refresh()
 
             ' ✅ Authentication popup (145 x 47)
             Dim authForm As New Form With {
@@ -558,13 +558,13 @@ Public Class Members
             AddHandler authControl.AuthSuccess,
             Sub()
                 authForm.DialogResult = DialogResult.OK
-                authForm.Close
+                authForm.Close()
             End Sub
 
             AddHandler authControl.AuthCancelled,
             Sub()
                 authForm.DialogResult = DialogResult.Cancel
-                authForm.Close
+                authForm.Close()
             End Sub
 
             authForm.Controls.Add(authControl)
@@ -593,13 +593,13 @@ Public Class Members
                 editControl.SelectedFullName = fullName
 
                 popup.Controls.Add(editControl)
-                popup.ShowDialog
+                popup.ShowDialog()
 
                 ' ✅ Refresh grid
-                LoadRegistrations
+                LoadRegistrations()
             End If
 
-            overlay.Close
+            overlay.Close()
 
         Catch ex As Exception
             MessageBox.Show("Error opening edit form: " & ex.Message)
