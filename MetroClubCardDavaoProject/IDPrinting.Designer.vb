@@ -22,10 +22,10 @@ Partial Class IDPrinting
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim CustomizableEdges1 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges2 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges3 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges4 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges5 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges6 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges7 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges8 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         pbIDphoto = New Guna.UI2.WinForms.Guna2PictureBox()
         lblName = New Guna.UI2.WinForms.Guna2HtmlLabel()
         btnPrint = New Guna.UI2.WinForms.Guna2Button()
@@ -37,12 +37,12 @@ Partial Class IDPrinting
         ' 
         ' pbIDphoto
         ' 
-        pbIDphoto.CustomizableEdges = CustomizableEdges1
+        pbIDphoto.CustomizableEdges = CustomizableEdges5
         pbIDphoto.ImageRotate = 0F
         pbIDphoto.Location = New Point(45, 142)
         pbIDphoto.Margin = New Padding(3, 4, 3, 4)
         pbIDphoto.Name = "pbIDphoto"
-        pbIDphoto.ShadowDecoration.CustomizableEdges = CustomizableEdges2
+        pbIDphoto.ShadowDecoration.CustomizableEdges = CustomizableEdges6
         pbIDphoto.Size = New Size(227, 236)
         pbIDphoto.SizeMode = PictureBoxSizeMode.StretchImage
         pbIDphoto.TabIndex = 1
@@ -62,7 +62,7 @@ Partial Class IDPrinting
         ' 
         ' btnPrint
         ' 
-        btnPrint.CustomizableEdges = CustomizableEdges3
+        btnPrint.CustomizableEdges = CustomizableEdges7
         btnPrint.DisabledState.BorderColor = Color.DarkGray
         btnPrint.DisabledState.CustomBorderColor = Color.DarkGray
         btnPrint.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
@@ -70,10 +70,10 @@ Partial Class IDPrinting
         btnPrint.FillColor = Color.FromArgb(CByte(0), CByte(192), CByte(0))
         btnPrint.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnPrint.ForeColor = Color.White
-        btnPrint.Location = New Point(330, 513)
+        btnPrint.Location = New Point(331, 516)
         btnPrint.Margin = New Padding(3, 4, 3, 4)
         btnPrint.Name = "btnPrint"
-        btnPrint.ShadowDecoration.CustomizableEdges = CustomizableEdges4
+        btnPrint.ShadowDecoration.CustomizableEdges = CustomizableEdges8
         btnPrint.Size = New Size(206, 42)
         btnPrint.TabIndex = 7
         btnPrint.Text = "PRINT"
@@ -97,7 +97,7 @@ Partial Class IDPrinting
         pbBarcode.BackColor = Color.White
         pbBarcode.Location = New Point(246, 445)
         pbBarcode.Name = "pbBarcode"
-        pbBarcode.Size = New Size(383, 53)
+        pbBarcode.Size = New Size(383, 54)
         pbBarcode.SizeMode = PictureBoxSizeMode.Zoom
         pbBarcode.TabIndex = 9
         pbBarcode.TabStop = False
