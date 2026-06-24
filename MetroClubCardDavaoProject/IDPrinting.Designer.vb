@@ -108,7 +108,7 @@ Partial Class IDPrinting
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Transparent
         BackgroundImage = My.Resources.Resources.Membership_ID_Back_CR80_size___Blank_01
-        BackgroundImageLayout = ImageLayout.Zoom
+        BackgroundImageLayout = ImageLayout.Stretch
         Controls.Add(pbBarcode)
         Controls.Add(pbIDphoto)
         Controls.Add(lblMemberID)
