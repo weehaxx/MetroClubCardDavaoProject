@@ -1,5 +1,7 @@
 ﻿Imports System.Data.SQLite
 Imports System.IO
+Imports AForge.Video
+Imports AForge.Video.DirectShow
 
 Public Class EditInfo
     ' ✅ Public properties to receive selected member details
@@ -7,6 +9,12 @@ Public Class EditInfo
     Public Property SelectedFullName As String
 
     Private isDirty As Boolean = False ' Track changes
+    Private selectedPhotoBytes As Byte() = Nothing
+    Private videoDevices As FilterInfoCollection
+    Private videoSource As VideoCaptureDevice
+    Private capturedImage As Bitmap
+    Private webcamRunning As Boolean = False
+    Private photoCaptured As Boolean = False
 
     ' ✅ Safe database path inside AppData
     Private ReadOnly dbPath As String = Path.Combine(
@@ -84,6 +92,7 @@ Public Class EditInfo
                             ' Photo
                             If Not IsDBNull(reader("photo")) Then
                                 Dim photoData As Byte() = DirectCast(reader("photo"), Byte())
+                                selectedPhotoBytes = photoData
                                 Using ms As New MemoryStream(photoData)
                                     pbCameraDisplay.Image = Image.FromStream(ms)
                                 End Using
@@ -95,12 +104,57 @@ Public Class EditInfo
 
             btnSave.Enabled = False
             AddHandlerForAllInputs(Me)
-
+            LoadCameras()
         Catch ex As Exception
             MessageBox.Show("Error loading member info for edit: " & ex.Message)
         End Try
     End Sub
+    Private Sub StopCamera()
 
+        If videoSource IsNot Nothing AndAlso videoSource.IsRunning Then
+            videoSource.SignalToStop()
+            videoSource.WaitForStop()
+        End If
+
+    End Sub
+    Private Sub Video_NewFrame(sender As Object, eventArgs As NewFrameEventArgs)
+
+        Dim frame As Bitmap = DirectCast(eventArgs.Frame.Clone(), Bitmap)
+
+        If pbCameraDisplay.InvokeRequired Then
+
+            pbCameraDisplay.Invoke(
+            New MethodInvoker(
+                Sub()
+
+                    If pbCameraDisplay.Image IsNot Nothing Then
+                        pbCameraDisplay.Image.Dispose()
+                    End If
+
+                    pbCameraDisplay.Image = DirectCast(frame.Clone(), Bitmap)
+
+                End Sub))
+
+        End If
+
+    End Sub
+    Private Sub LoadCameras()
+
+        cbCamera.Items.Clear()
+
+        videoDevices = New FilterInfoCollection(FilterCategory.VideoInputDevice)
+
+        For Each device As FilterInfo In videoDevices
+            cbCamera.Items.Add(device.Name)
+        Next
+
+        If cbCamera.Items.Count > 0 Then
+            cbCamera.SelectedIndex = 0
+        Else
+            MessageBox.Show("No webcam detected.")
+        End If
+
+    End Sub
     ' 🔄 Detect changes
     Private Sub Control_Changed(sender As Object, e As EventArgs)
         isDirty = True
@@ -151,7 +205,7 @@ Public Class EditInfo
                     "employmentstatus=@employmentstatus, businessname=@businessname, businessnature=@businessnature, " &
                     "employername=@employername, workname=@workname, " &
                     "polmember=@polmember, relationshippol=@relationshippol, " &
-                    "nameemergency=@nameemergency, relationshipemergency=@relationshipemergency, contactemergency=@contactemergency " &
+                    "nameemergency=@nameemergency, relationshipemergency=@relationshipemergency, contactemergency=@contactemergency, photo=@photo " &
                     "WHERE id=@id"
 
                 Using cmd As New SQLiteCommand(query, conn)
@@ -187,6 +241,11 @@ Public Class EditInfo
                     cmd.Parameters.AddWithValue("@nameemergency", tbNameEmergency.Text)
                     cmd.Parameters.AddWithValue("@relationshipemergency", tbRelationShipEmergency.Text)
                     cmd.Parameters.AddWithValue("@contactemergency", tbContactEmergency.Text)
+                    If selectedPhotoBytes IsNot Nothing Then
+                        cmd.Parameters.AddWithValue("@photo", selectedPhotoBytes)
+                    Else
+                        cmd.Parameters.AddWithValue("@photo", DBNull.Value)
+                    End If
 
                     cmd.Parameters.AddWithValue("@id", SelectedMemberID)
                     cmd.ExecuteNonQuery()
@@ -205,14 +264,21 @@ Public Class EditInfo
     End Sub
 
     Private Sub CloseEditInfo()
+
+        StopCamera()
+
         If TypeOf Me.Parent Is Form Then
             Me.FindForm().Close()
         Else
             Dim parentPanel As Control = Me.Parent
             Me.Parent.Controls.Remove(Me)
             Me.Dispose()
-            If TypeOf parentPanel Is Panel Then parentPanel.Visible = False
+
+            If TypeOf parentPanel Is Panel Then
+                parentPanel.Visible = False
+            End If
         End If
+
     End Sub
 
     Private Sub rbEmployed_CheckedChanged(sender As Object, e As EventArgs) Handles rbEmployed.CheckedChanged
@@ -247,4 +313,158 @@ Public Class EditInfo
         End If
     End Sub
 
+    Private Sub BtnAddPhoto_Click(sender As Object, e As EventArgs) Handles BtnAddPhoto.Click
+
+        Using ofd As New OpenFileDialog()
+
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp"
+
+            If ofd.ShowDialog() = DialogResult.OK Then
+
+                ' Stop webcam if running
+                StopCamera()
+
+                webcamRunning = False
+                photoCaptured = False
+
+                Button2.Text = "Use Webcam"
+
+                ' Replace current image
+                If pbCameraDisplay.Image IsNot Nothing Then
+                    pbCameraDisplay.Image.Dispose()
+                    pbCameraDisplay.Image = Nothing
+                End If
+
+                pbCameraDisplay.Image = Image.FromFile(ofd.FileName)
+
+                selectedPhotoBytes = File.ReadAllBytes(ofd.FileName)
+
+                isDirty = True
+                btnSave.Enabled = True
+
+            End If
+
+        End Using
+
+    End Sub
+
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        If Not webcamRunning Then
+
+            If cbCamera.SelectedIndex < 0 Then
+                MessageBox.Show("Select a camera first.")
+                Return
+            End If
+
+            If pbCameraDisplay.Image IsNot Nothing Then
+                pbCameraDisplay.Image.Dispose()
+                pbCameraDisplay.Image = Nothing
+            End If
+
+            photoCaptured = False
+
+            videoSource = New VideoCaptureDevice(
+        videoDevices(cbCamera.SelectedIndex).MonikerString)
+
+            AddHandler videoSource.NewFrame, AddressOf Video_NewFrame
+
+            videoSource.Start()
+
+            webcamRunning = True
+
+            Button2.Text = "Capture Photo"
+
+            Return
+
+        End If
+
+        If webcamRunning AndAlso Not photoCaptured Then
+
+            If pbCameraDisplay.Image IsNot Nothing Then
+
+                capturedImage = New Bitmap(pbCameraDisplay.Image)
+
+                Dim result As DialogResult =
+            MessageBox.Show(
+                "Do you want to use this picture?",
+                "Confirm Picture",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question)
+
+                If result = DialogResult.Yes Then
+
+                    Using ms As New MemoryStream()
+
+                        capturedImage.Save(ms, Imaging.ImageFormat.Jpeg)
+
+                        selectedPhotoBytes = ms.ToArray()
+
+                    End Using
+
+                    photoCaptured = True
+
+                    StopCamera()
+
+                    webcamRunning = False
+
+                    Button2.Text = "Use Webcam"
+
+                    MessageBox.Show(
+                "Photo saved successfully.",
+                "Success",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+                Else
+
+                    capturedImage.Dispose()
+                    capturedImage = Nothing
+
+                    MessageBox.Show(
+                "Retake your photo.",
+                "Retake",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+                End If
+
+            End If
+
+            Return
+
+        End If
+
+        If webcamRunning AndAlso photoCaptured Then
+
+            If videoSource IsNot Nothing AndAlso videoSource.IsRunning Then
+                videoSource.SignalToStop()
+                videoSource.WaitForStop()
+            End If
+
+            webcamRunning = False
+            photoCaptured = False
+
+            Button2.Text = "Use Webcam"
+
+        End If
+
+    End Sub
+
+    Private Sub cbCamera_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbCamera.SelectedIndexChanged
+
+        If webcamRunning Then
+
+            videoSource.SignalToStop()
+
+            videoSource = New VideoCaptureDevice(
+            videoDevices(cbCamera.SelectedIndex).MonikerString)
+
+            AddHandler videoSource.NewFrame, AddressOf Video_NewFrame
+
+            videoSource.Start()
+
+        End If
+
+    End Sub
 End Class

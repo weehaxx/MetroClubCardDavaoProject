@@ -2,11 +2,12 @@
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Drawing.Imaging
+Imports System.Drawing.Printing
 Imports System.Drawing.Text
 Imports System.IO
 Imports Guna.UI2.WinForms
-Imports Zen.Barcode
 Imports MessagingToolkit.Barcode
+Imports Zen.Barcode
 
 
 
@@ -75,7 +76,112 @@ Public Class Members
 
 
     End Sub
+    Private Sub SendCutCommand()
+        Try
+            Dim printerName As String = "Your Printer Name"
 
+            Dim cutCommand() As Byte = {29, 86, 65, 0} ' ESC/POS Full Cut
+
+            Dim printerPath As String = "\\.\\" & printerName
+
+            Using fs As New FileStream(printerPath, FileMode.Open, FileAccess.Write)
+                fs.Write(cutCommand, 0, cutCommand.Length)
+            End Using
+
+        Catch ex As Exception
+            ' Printer might not support cut
+        End Try
+    End Sub
+    Private Sub PrintSingleRaffle(raffleID As Integer)
+
+        Dim dbPath As String = GetDatabasePath()
+        Dim dtTicket As New DataTable()
+
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+
+            Dim sql As String = "
+            SELECT full_name, raffle_number 
+            FROM raffle 
+            WHERE id = @id
+        "
+
+            Using cmd As New SQLiteCommand(sql, conn)
+                cmd.Parameters.AddWithValue("@id", raffleID)
+                Using adapter As New SQLiteDataAdapter(cmd)
+                    adapter.Fill(dtTicket)
+                End Using
+            End Using
+        End Using
+
+        If dtTicket.Rows.Count = 0 Then
+            MessageBox.Show("Raffle entry not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Dim memberName As String = dtTicket.Rows(0)("full_name").ToString()
+        Dim raffleNumber As String = dtTicket.Rows(0)("raffle_number").ToString()
+
+        Dim pd As New PrintDocument()
+        pd.DefaultPageSettings.Margins = New Margins(20, 20, 20, 20)
+
+        AddHandler pd.PrintPage, Sub(sender2, e2)
+
+                                     Dim g As Graphics = e2.Graphics
+                                     g.Clear(Color.White)
+
+                                     Dim fontTitle As New Font("Arial", 14, FontStyle.Bold)
+                                     Dim fontHeader As New Font("Arial", 11, FontStyle.Bold)
+                                     Dim fontText As New Font("Arial", 10)
+                                     Dim fontBig As New Font("Arial", 20, FontStyle.Bold)
+
+                                     Dim center As New StringFormat()
+                                     center.Alignment = StringAlignment.Center
+
+                                     Dim y As Integer = 10
+                                     Dim centerX As Single = e2.PageBounds.Width / 2
+
+                                     g.DrawString("METRO CARD CLUB DAVAO", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
+
+                                     g.DrawString("RAFFLE TICKET", fontTitle, Brushes.Black, centerX, y, center)
+                                     y += 25
+
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
+                                     y += 25
+
+                                     g.DrawString("Member:", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 20
+
+                                     g.DrawString(memberName, fontText, Brushes.Black, centerX, y, center)
+                                     y += 30
+
+                                     g.DrawString("Ticket Number", fontHeader, Brushes.Black, centerX, y, center)
+                                     y += 25
+
+                                     g.DrawString("# " & raffleNumber, fontBig, Brushes.Black, centerX, y, center)
+                                     y += 40
+
+                                     g.DrawString("--------------------------------", fontText, Brushes.Black, centerX, y, center)
+                                     y += 40 ' extra space for cutter
+
+                                     e2.HasMorePages = False
+
+                                 End Sub
+
+        Dim printDlg As New PrintDialog() With {.Document = pd}
+        If printDlg.ShowDialog() = DialogResult.OK Then
+            Try
+                pd.Print()
+                SendCutCommand()
+            Catch ex As System.ComponentModel.Win32Exception
+                MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Catch ex As Exception
+                MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End If
+
+    End Sub
     Private Sub LoadRegistrations()
         dgvRegistrations.ClearSelection()
         dgvRegistrations.CurrentCell = Nothing
@@ -741,14 +847,13 @@ Public Class Members
             Dim memberID As Long = Convert.ToInt64(selectedRowView.Row("id"))
             Dim fullName As String = $"{selectedRowView.Row("lastname")} {selectedRowView.Row("firstname")} {selectedRowView.Row("middlename")}".Trim()
 
-            ' Determine next sequential raffle number for this member
+            ' Determine next sequential raffle number
             Dim dbPath As String = GetDatabasePath()
             Dim nextRaffleNumber As Integer = 1
 
             Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                 conn.Open()
 
-                ' Get max raffle number
                 Dim sqlMax As String = "SELECT MAX(CAST(raffle_number AS INTEGER)) FROM raffle"
                 Using cmdMax As New SQLiteCommand(sqlMax, conn)
                     Dim result = cmdMax.ExecuteScalar()
@@ -756,68 +861,67 @@ Public Class Members
                         nextRaffleNumber = Convert.ToInt32(result) + 1
                     End If
                 End Using
-
-
             End Using
 
             ' --- Inline dialog to edit date & time ---
             Dim promptForm As New Form() With {
-            .Text = "Edit Raffle Date & Time",
-            .Size = New Size(300, 260),
-            .StartPosition = FormStartPosition.CenterParent,
-            .FormBorderStyle = FormBorderStyle.FixedDialog,
-            .MaximizeBox = False,
-            .MinimizeBox = False
-        }
+                .Text = "Edit Raffle Date & Time",
+                .Size = New Size(300, 260),
+                .StartPosition = FormStartPosition.CenterParent,
+                .FormBorderStyle = FormBorderStyle.FixedDialog,
+                .MaximizeBox = False,
+                .MinimizeBox = False
+            }
 
             Dim lblName As New Label() With {
-            .Text = $"Member: {fullName}",
-            .AutoSize = True,
-            .Location = New Point(10, 10)
-        }
+                .Text = $"Member: {fullName}",
+                .AutoSize = True,
+                .Location = New Point(10, 10)
+            }
 
             Dim lblCurrentDate As New Label() With {
-    .Text = "Current Date: ",
-    .AutoSize = True,
-    .Location = New Point(10, 30),
-    .Font = New Font("Segoe UI", 9, FontStyle.Bold)
-}
+                .Text = "Current Date:",
+                .AutoSize = True,
+                .Location = New Point(10, 30),
+                .Font = New Font("Segoe UI", 9, FontStyle.Bold)
+            }
+
             Dim dtpDate As New DateTimePicker() With {
-            .Format = DateTimePickerFormat.Short,
-            .Value = DateTime.Now.Date,
-            .Location = New Point(10, 50)
-        }
+                .Format = DateTimePickerFormat.Short,
+                .Value = DateTime.Now.Date,
+                .Location = New Point(10, 50)
+            }
 
             Dim lblSession As New Label() With {
-    .Text = "Session Date:",
-    .AutoSize = True,
-    .Location = New Point(10, 90)
-}
+                .Text = "Session Date:",
+                .AutoSize = True,
+                .Location = New Point(10, 90)
+            }
 
             Dim dtpSessionDate As New DateTimePicker() With {
-    .Format = DateTimePickerFormat.Short,
-    .Value = DateTime.Now.Date,
-    .Location = New Point(10, 110)
-}
+                .Format = DateTimePickerFormat.Short,
+                .Value = DateTime.Now.Date,
+                .Location = New Point(10, 110)
+            }
 
             Dim dtpTime As New DateTimePicker() With {
-            .Format = DateTimePickerFormat.Time,
-            .ShowUpDown = True,
-            .Value = DateTime.Now,
-            .Location = New Point(10, 140)
-        }
+                .Format = DateTimePickerFormat.Time,
+                .ShowUpDown = True,
+                .Value = DateTime.Now,
+                .Location = New Point(10, 140)
+            }
 
             Dim btnOK As New Button() With {
-            .Text = "OK",
-            .DialogResult = DialogResult.OK,
-            .Location = New Point(50, 170)
-        }
+                .Text = "OK",
+                .DialogResult = DialogResult.OK,
+                .Location = New Point(50, 170)
+            }
 
             Dim btnCancel As New Button() With {
-            .Text = "Cancel",
-            .DialogResult = DialogResult.Cancel,
-            .Location = New Point(150, 170)
-        }
+                .Text = "Cancel",
+                .DialogResult = DialogResult.Cancel,
+                .Location = New Point(150, 170)
+            }
 
             promptForm.Controls.Add(lblName)
             promptForm.Controls.Add(lblCurrentDate)
@@ -827,27 +931,26 @@ Public Class Members
             promptForm.Controls.Add(dtpTime)
             promptForm.Controls.Add(btnOK)
             promptForm.Controls.Add(btnCancel)
+
             promptForm.AcceptButton = btnOK
             promptForm.CancelButton = btnCancel
 
-            ' Show dialog and insert
             If promptForm.ShowDialog() = DialogResult.OK Then
 
                 Dim selectedDate As DateTime = dtpDate.Value.Date
                 Dim sessionDate As DateTime = dtpSessionDate.Value.Date
                 Dim selectedTime As DateTime = dtpTime.Value
-                Dim selectedDateTime As DateTime = selectedDate.Add(selectedTime.TimeOfDay)
 
                 Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                     conn.Open()
 
-                    ' CHECK if player already has entry for the same session date
+                    ' Check duplicate session entry
                     Dim checkSql As String = "
-        SELECT COUNT(*) 
-        FROM raffle 
-        WHERE registration_id = @regid 
-        AND date(session_raffle_date) = date(@sessiondate)
-        "
+                SELECT COUNT(*)
+                FROM raffle
+                WHERE registration_id = @regid
+                AND date(session_raffle_date) = date(@sessiondate)
+            "
 
                     Dim entryCount As Integer
 
@@ -858,25 +961,31 @@ Public Class Members
                         entryCount = Convert.ToInt32(cmdCheck.ExecuteScalar())
                     End Using
 
-                    ' If entry exists, ask user if they want to proceed
                     If entryCount > 0 Then
                         Dim proceed = MessageBox.Show(
-                $"{fullName} already has a raffle entry for session {sessionDate:yyyy-MM-dd}." & Environment.NewLine &
-                "Do you still want to add another entry?",
-                "Duplicate Session Entry",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning)
+                            $"{fullName} already has a raffle entry for session {sessionDate:yyyy-MM-dd}." &
+                            Environment.NewLine &
+                            "Do you still want to add another entry?",
+                            "Duplicate Session Entry",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning)
 
                         If proceed = DialogResult.No Then
                             Exit Sub
                         End If
                     End If
 
-                    ' INSERT raffle entry
+                    ' Insert raffle entry and get inserted ID
+                    Dim newRaffleID As Integer
+
                     Dim sqlInsert As String = "
-        INSERT INTO raffle (raffle_number, registration_id, full_name, raffle_date, raffle_time, session_raffle_date)
-        VALUES (@num, @regid, @name, @date, @time, @sessiondate)
-        "
+                INSERT INTO raffle
+                (raffle_number, registration_id, full_name, raffle_date, raffle_time, session_raffle_date)
+                VALUES
+                (@num, @regid, @name, @date, @time, @sessiondate);
+
+                SELECT last_insert_rowid();
+            "
 
                     Using cmdInsert As New SQLiteCommand(sqlInsert, conn)
                         cmdInsert.Parameters.AddWithValue("@num", nextRaffleNumber)
@@ -886,13 +995,24 @@ Public Class Members
                         cmdInsert.Parameters.AddWithValue("@time", selectedTime)
                         cmdInsert.Parameters.AddWithValue("@sessiondate", sessionDate)
 
-                        cmdInsert.ExecuteNonQuery()
+                        newRaffleID = Convert.ToInt32(cmdInsert.ExecuteScalar())
                     End Using
+
+                    UpdateRaffleEntryCount()
+
+                    Dim printResult As DialogResult = MessageBox.Show(
+                        $"Raffle entry #{nextRaffleNumber} added for {fullName}." &
+                        Environment.NewLine & Environment.NewLine &
+                        "Do you want to print the raffle ticket now?",
+                        "Print Ticket",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question)
+
+                    If printResult = DialogResult.Yes Then
+                        PrintSingleRaffle(newRaffleID)
+                    End If
+
                 End Using
-
-                UpdateRaffleEntryCount()
-
-                MessageBox.Show($"Raffle entry #{nextRaffleNumber} added for {fullName}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             Else
                 MessageBox.Show("Raffle entry cancelled.", "Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -902,6 +1022,7 @@ Public Class Members
             MessageBox.Show("Error adding raffle entry: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
     Private Sub dgvRegistrations_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvRegistrations.CellContentClick
         UpdateRaffleEntryCount()
     End Sub
