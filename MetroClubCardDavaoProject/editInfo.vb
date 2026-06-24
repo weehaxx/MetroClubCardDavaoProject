@@ -15,6 +15,7 @@ Public Class EditInfo
     Private capturedImage As Bitmap
     Private webcamRunning As Boolean = False
     Private photoCaptured As Boolean = False
+    Private latestFrame As Bitmap
 
     ' ✅ Safe database path inside AppData
     Private ReadOnly dbPath As String = Path.Combine(
@@ -120,6 +121,13 @@ Public Class EditInfo
     Private Sub Video_NewFrame(sender As Object, eventArgs As NewFrameEventArgs)
 
         Dim frame As Bitmap = DirectCast(eventArgs.Frame.Clone(), Bitmap)
+
+        ' Store latest frame for capture
+        If latestFrame IsNot Nothing Then
+            latestFrame.Dispose()
+        End If
+
+        latestFrame = DirectCast(frame.Clone(), Bitmap)
 
         If pbCameraDisplay.InvokeRequired Then
 
@@ -381,11 +389,16 @@ Public Class EditInfo
 
         If webcamRunning AndAlso Not photoCaptured Then
 
-            If pbCameraDisplay.Image IsNot Nothing Then
+            MessageBox.Show("Capture button clicked.")
 
-                capturedImage = New Bitmap(pbCameraDisplay.Image)
+            If latestFrame Is Nothing Then
+                MessageBox.Show("No camera frame available.")
+                Return
+            End If
 
-                Dim result As DialogResult =
+            capturedImage = DirectCast(latestFrame.Clone(), Bitmap)
+
+            Dim result As DialogResult =
             MessageBox.Show(
                 "Do you want to use this picture?",
                 "Confirm Picture",
@@ -431,9 +444,7 @@ Public Class EditInfo
 
             End If
 
-            Return
-
-        End If
+        Return
 
         If webcamRunning AndAlso photoCaptured Then
 
