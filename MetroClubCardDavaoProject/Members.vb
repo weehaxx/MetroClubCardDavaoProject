@@ -722,7 +722,7 @@ Public Class Members
             Dim selectedRow = selectedRowView.Row
 
             ' ✅ Format and convert name to ALL CAPS: LASTNAME, FIRSTNAME MIDDLENAME
-            Dim memberName As String = $"{selectedRow("lastname")}, {selectedRow("firstname")} {selectedRow("middlename")}".ToUpper()
+            Dim memberName As String = $"{selectedRow("lastname")}, {selectedRow("firstname")} {selectedRow("middlename")}"
 
             Dim registrationID As String = selectedRow("registration_id").ToString()
 
