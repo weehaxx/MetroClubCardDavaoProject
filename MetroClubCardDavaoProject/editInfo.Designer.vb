@@ -129,6 +129,10 @@ Partial Class editInfo
         Panel1 = New Panel()
         Panel2 = New Panel()
         Panel3 = New Panel()
+        cbCamera = New ComboBox()
+        Label26 = New Label()
+        BtnAddPhoto = New Button()
+        Button2 = New Button()
         CType(pbCameraDisplay, ComponentModel.ISupportInitialize).BeginInit()
         gpPoliticalExpose.SuspendLayout()
         SuspendLayout()
@@ -142,12 +146,12 @@ Partial Class editInfo
         tbYes.CheckedState.FillColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbYes.CheckedState.InnerColor = Color.White
         tbYes.CheckedState.InnerOffset = -4
-        tbYes.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbYes.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbYes.ForeColor = Color.Black
         tbYes.Location = New Point(62, 12)
         tbYes.Margin = New Padding(3, 4, 3, 4)
         tbYes.Name = "tbYes"
-        tbYes.Size = New Size(55, 22)
+        tbYes.Size = New Size(55, 24)
         tbYes.TabIndex = 39
         tbYes.Text = "Yes"
         tbYes.UncheckedState.BorderColor = Color.FromArgb(CByte(125), CByte(137), CByte(149))
@@ -166,12 +170,12 @@ Partial Class editInfo
         tbNo.CheckedState.FillColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbNo.CheckedState.InnerColor = Color.White
         tbNo.CheckedState.InnerOffset = -4
-        tbNo.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbNo.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbNo.ForeColor = Color.Black
         tbNo.Location = New Point(13, 12)
         tbNo.Margin = New Padding(3, 4, 3, 4)
         tbNo.Name = "tbNo"
-        tbNo.Size = New Size(48, 22)
+        tbNo.Size = New Size(47, 24)
         tbNo.TabIndex = 38
         tbNo.TabStop = True
         tbNo.Text = "No"
@@ -210,11 +214,11 @@ Partial Class editInfo
         ' 
         Label25.AutoSize = True
         Label25.BackColor = Color.Transparent
-        Label25.Font = New Font("Arial Rounded MT Bold", 15.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label25.Font = New Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label25.ForeColor = Color.Black
         Label25.Location = New Point(16, 16)
         Label25.Name = "Label25"
-        Label25.Size = New Size(256, 24)
+        Label25.Size = New Size(248, 25)
         Label25.TabIndex = 115
         Label25.Text = "UPDATE INFORMATION"
         ' 
@@ -229,7 +233,7 @@ Partial Class editInfo
         btnCancel.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnCancel.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnCancel.FillColor = Color.Red
-        btnCancel.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnCancel.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnCancel.ForeColor = Color.White
         btnCancel.Location = New Point(29, 794)
         btnCancel.Margin = New Padding(3, 4, 3, 4)
@@ -250,7 +254,7 @@ Partial Class editInfo
         btnSave.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnSave.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnSave.FillColor = Color.FromArgb(CByte(0), CByte(192), CByte(0))
-        btnSave.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnSave.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnSave.ForeColor = Color.White
         btnSave.Location = New Point(1126, 794)
         btnSave.Margin = New Padding(3, 4, 3, 4)
@@ -269,7 +273,7 @@ Partial Class editInfo
         tbContactEmergency.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbContactEmergency.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbContactEmergency.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbContactEmergency.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbContactEmergency.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbContactEmergency.ForeColor = Color.Black
         tbContactEmergency.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbContactEmergency.Location = New Point(773, 701)
@@ -285,11 +289,11 @@ Partial Class editInfo
         ' 
         Label22.AutoSize = True
         Label22.BackColor = Color.Transparent
-        Label22.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label22.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label22.ForeColor = Color.Black
         Label22.Location = New Point(676, 720)
         Label22.Name = "Label22"
-        Label22.Size = New Size(90, 18)
+        Label22.Size = New Size(82, 20)
         Label22.TabIndex = 111
         Label22.Text = "Contact #:"
         ' 
@@ -302,7 +306,7 @@ Partial Class editInfo
         tbRelationShipEmergency.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbRelationShipEmergency.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbRelationShipEmergency.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbRelationShipEmergency.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbRelationShipEmergency.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbRelationShipEmergency.ForeColor = Color.Black
         tbRelationShipEmergency.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbRelationShipEmergency.Location = New Point(447, 707)
@@ -318,11 +322,11 @@ Partial Class editInfo
         ' 
         Label23.AutoSize = True
         Label23.BackColor = Color.Transparent
-        Label23.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label23.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label23.ForeColor = Color.Black
         Label23.Location = New Point(334, 720)
         Label23.Name = "Label23"
-        Label23.Size = New Size(112, 18)
+        Label23.Size = New Size(101, 20)
         Label23.TabIndex = 109
         Label23.Text = "Relationship:"
         ' 
@@ -335,7 +339,7 @@ Partial Class editInfo
         tbNameEmergency.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbNameEmergency.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbNameEmergency.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbNameEmergency.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbNameEmergency.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbNameEmergency.ForeColor = Color.Black
         tbNameEmergency.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbNameEmergency.Location = New Point(99, 707)
@@ -351,11 +355,11 @@ Partial Class editInfo
         ' 
         Label24.AutoSize = True
         Label24.BackColor = Color.Transparent
-        Label24.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label24.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label24.ForeColor = Color.Black
         Label24.Location = New Point(33, 720)
         Label24.Name = "Label24"
-        Label24.Size = New Size(59, 18)
+        Label24.Size = New Size(55, 20)
         Label24.TabIndex = 107
         Label24.Text = "Name:"
         ' 
@@ -363,11 +367,11 @@ Partial Class editInfo
         ' 
         Label21.AutoSize = True
         Label21.BackColor = Color.Transparent
-        Label21.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label21.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label21.ForeColor = Color.Black
         Label21.Location = New Point(29, 667)
         Label21.Name = "Label21"
-        Label21.Size = New Size(306, 18)
+        Label21.Size = New Size(272, 20)
         Label21.TabIndex = 106
         Label21.Text = "Contact person in case of emergency"
         ' 
@@ -380,7 +384,7 @@ Partial Class editInfo
         tbRelationshipPol.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbRelationshipPol.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbRelationshipPol.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbRelationshipPol.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbRelationshipPol.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbRelationshipPol.ForeColor = Color.Black
         tbRelationshipPol.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbRelationshipPol.Location = New Point(681, 588)
@@ -396,11 +400,11 @@ Partial Class editInfo
         ' 
         Label20.AutoSize = True
         Label20.BackColor = Color.Transparent
-        Label20.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label20.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label20.ForeColor = Color.Black
         Label20.Location = New Point(562, 604)
         Label20.Name = "Label20"
-        Label20.Size = New Size(112, 18)
+        Label20.Size = New Size(101, 20)
         Label20.TabIndex = 104
         Label20.Text = "Relationship:"
         ' 
@@ -408,11 +412,11 @@ Partial Class editInfo
         ' 
         Label19.AutoSize = True
         Label19.BackColor = Color.Transparent
-        Label19.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label19.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label19.ForeColor = Color.Black
         Label19.Location = New Point(29, 597)
         Label19.Name = "Label19"
-        Label19.Size = New Size(395, 18)
+        Label19.Size = New Size(353, 20)
         Label19.TabIndex = 103
         Label19.Text = "Have family member/s who are political exposed?"
         ' 
@@ -425,9 +429,9 @@ Partial Class editInfo
         tbPresentedID.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPresentedID.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPresentedID.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPresentedID.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbPresentedID.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbPresentedID.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPresentedID.Location = New Point(1083, 323)
+        tbPresentedID.Location = New Point(1092, 420)
         tbPresentedID.Margin = New Padding(4, 5, 4, 5)
         tbPresentedID.Name = "tbPresentedID"
         tbPresentedID.PlaceholderText = ""
@@ -440,11 +444,11 @@ Partial Class editInfo
         ' 
         Label18.AutoSize = True
         Label18.BackColor = Color.Transparent
-        Label18.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label18.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label18.ForeColor = Color.Black
-        Label18.Location = New Point(1083, 297)
+        Label18.Location = New Point(1092, 394)
         Label18.Name = "Label18"
-        Label18.Size = New Size(117, 18)
+        Label18.Size = New Size(107, 20)
         Label18.TabIndex = 101
         Label18.Text = "ID Presented:"
         ' 
@@ -452,11 +456,11 @@ Partial Class editInfo
         ' 
         Label17.AutoSize = True
         Label17.BackColor = Color.Transparent
-        Label17.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label17.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label17.ForeColor = Color.Black
         Label17.Location = New Point(447, 522)
         Label17.Name = "Label17"
-        Label17.Size = New Size(132, 18)
+        Label17.Size = New Size(120, 20)
         Label17.TabIndex = 100
         Label17.Text = "Nature of Work:"
         ' 
@@ -469,7 +473,7 @@ Partial Class editInfo
         tnWorkName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tnWorkName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tnWorkName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tnWorkName.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tnWorkName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tnWorkName.ForeColor = Color.Black
         tnWorkName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tnWorkName.Location = New Point(610, 512)
@@ -490,7 +494,7 @@ Partial Class editInfo
         tbBusinessNature.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBusinessNature.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBusinessNature.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBusinessNature.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbBusinessNature.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbBusinessNature.ForeColor = Color.Black
         tbBusinessNature.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbBusinessNature.Location = New Point(209, 514)
@@ -506,11 +510,11 @@ Partial Class editInfo
         ' 
         Label16.AutoSize = True
         Label16.BackColor = Color.Transparent
-        Label16.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label16.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label16.ForeColor = Color.Black
         Label16.Location = New Point(43, 521)
         Label16.Name = "Label16"
-        Label16.Size = New Size(168, 18)
+        Label16.Size = New Size(152, 20)
         Label16.TabIndex = 97
         Label16.Text = "Nature of Business: "
         ' 
@@ -523,7 +527,7 @@ Partial Class editInfo
         tbEmployerName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbEmployerName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbEmployerName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbEmployerName.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbEmployerName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbEmployerName.ForeColor = Color.Black
         tbEmployerName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbEmployerName.Location = New Point(610, 463)
@@ -539,11 +543,11 @@ Partial Class editInfo
         ' 
         Label15.AutoSize = True
         Label15.BackColor = Color.Transparent
-        Label15.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label15.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label15.ForeColor = Color.Black
         Label15.Location = New Point(446, 478)
         Label15.Name = "Label15"
-        Label15.Size = New Size(157, 18)
+        Label15.Size = New Size(143, 20)
         Label15.TabIndex = 95
         Label15.Text = "Name of Employer:"
         ' 
@@ -556,7 +560,7 @@ Partial Class editInfo
         tnBusinessName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tnBusinessName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tnBusinessName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tnBusinessName.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tnBusinessName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tnBusinessName.ForeColor = Color.Black
         tnBusinessName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tnBusinessName.Location = New Point(209, 463)
@@ -572,11 +576,11 @@ Partial Class editInfo
         ' 
         Label14.AutoSize = True
         Label14.BackColor = Color.Transparent
-        Label14.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label14.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label14.ForeColor = Color.Black
         Label14.Location = New Point(43, 478)
         Label14.Name = "Label14"
-        Label14.Size = New Size(159, 18)
+        Label14.Size = New Size(146, 20)
         Label14.TabIndex = 93
         Label14.Text = "Name of Business: "
         ' 
@@ -589,12 +593,12 @@ Partial Class editInfo
         rbEmployed.CheckedState.FillColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         rbEmployed.CheckedState.InnerColor = Color.White
         rbEmployed.CheckedState.InnerOffset = -4
-        rbEmployed.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        rbEmployed.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         rbEmployed.ForeColor = Color.Black
         rbEmployed.Location = New Point(447, 442)
         rbEmployed.Margin = New Padding(3, 4, 3, 4)
         rbEmployed.Name = "rbEmployed"
-        rbEmployed.Size = New Size(104, 22)
+        rbEmployed.Size = New Size(97, 24)
         rbEmployed.TabIndex = 92
         rbEmployed.Text = "Employed"
         rbEmployed.UncheckedState.BorderColor = Color.FromArgb(CByte(125), CByte(137), CByte(149))
@@ -612,12 +616,12 @@ Partial Class editInfo
         rbSelfEmployed.CheckedState.FillColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         rbSelfEmployed.CheckedState.InnerColor = Color.White
         rbSelfEmployed.CheckedState.InnerOffset = -4
-        rbSelfEmployed.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        rbSelfEmployed.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         rbSelfEmployed.ForeColor = Color.Black
         rbSelfEmployed.Location = New Point(43, 439)
         rbSelfEmployed.Margin = New Padding(3, 4, 3, 4)
         rbSelfEmployed.Name = "rbSelfEmployed"
-        rbSelfEmployed.Size = New Size(138, 22)
+        rbSelfEmployed.Size = New Size(128, 24)
         rbSelfEmployed.TabIndex = 91
         rbSelfEmployed.Text = "Self-employed"
         rbSelfEmployed.UncheckedState.BorderColor = Color.FromArgb(CByte(125), CByte(137), CByte(149))
@@ -630,11 +634,11 @@ Partial Class editInfo
         ' 
         Label13.AutoSize = True
         Label13.BackColor = Color.Transparent
-        Label13.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label13.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label13.ForeColor = Color.Black
         Label13.Location = New Point(31, 407)
         Label13.Name = "Label13"
-        Label13.Size = New Size(156, 18)
+        Label13.Size = New Size(153, 20)
         Label13.TabIndex = 90
         Label13.Text = "SOURCE OF FUND"
         ' 
@@ -647,7 +651,7 @@ Partial Class editInfo
         tbMobileNumber.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbMobileNumber.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbMobileNumber.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbMobileNumber.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbMobileNumber.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbMobileNumber.ForeColor = Color.Black
         tbMobileNumber.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbMobileNumber.Location = New Point(799, 323)
@@ -663,11 +667,11 @@ Partial Class editInfo
         ' 
         Label12.AutoSize = True
         Label12.BackColor = Color.Transparent
-        Label12.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label12.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label12.ForeColor = Color.Black
         Label12.Location = New Point(707, 340)
         Label12.Name = "Label12"
-        Label12.Size = New Size(77, 18)
+        Label12.Size = New Size(72, 20)
         Label12.TabIndex = 88
         Label12.Text = "Mobile #:"
         ' 
@@ -680,7 +684,7 @@ Partial Class editInfo
         tbEmail.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbEmail.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbEmail.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbEmail.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbEmail.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbEmail.ForeColor = Color.Black
         tbEmail.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbEmail.Location = New Point(421, 323)
@@ -696,11 +700,11 @@ Partial Class editInfo
         ' 
         Label11.AutoSize = True
         Label11.BackColor = Color.Transparent
-        Label11.Font = New Font("Arial Rounded MT Bold", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label11.Font = New Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label11.ForeColor = Color.Black
         Label11.Location = New Point(361, 341)
         Label11.Name = "Label11"
-        Label11.Size = New Size(53, 17)
+        Label11.Size = New Size(49, 18)
         Label11.TabIndex = 86
         Label11.Text = "Email:"
         ' 
@@ -713,7 +717,7 @@ Partial Class editInfo
         tbNationality.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbNationality.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbNationality.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbNationality.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbNationality.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbNationality.ForeColor = Color.Black
         tbNationality.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbNationality.Location = New Point(127, 323)
@@ -729,11 +733,11 @@ Partial Class editInfo
         ' 
         Label10.AutoSize = True
         Label10.BackColor = Color.Transparent
-        Label10.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label10.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label10.ForeColor = Color.Black
         Label10.Location = New Point(29, 340)
         Label10.Name = "Label10"
-        Label10.Size = New Size(102, 18)
+        Label10.Size = New Size(90, 20)
         Label10.TabIndex = 84
         Label10.Text = "Nationality: "
         ' 
@@ -746,7 +750,7 @@ Partial Class editInfo
         tbCivilStatus.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbCivilStatus.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbCivilStatus.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbCivilStatus.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbCivilStatus.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbCivilStatus.ForeColor = Color.Black
         tbCivilStatus.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbCivilStatus.Location = New Point(885, 268)
@@ -762,12 +766,12 @@ Partial Class editInfo
         ' 
         Label9.AutoSize = True
         Label9.BackColor = Color.Transparent
-        Label9.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label9.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label9.ForeColor = Color.Black
         Label9.ImageAlign = ContentAlignment.MiddleLeft
         Label9.Location = New Point(786, 279)
         Label9.Name = "Label9"
-        Label9.Size = New Size(102, 18)
+        Label9.Size = New Size(91, 20)
         Label9.TabIndex = 82
         Label9.Text = "Civil Status:"
         ' 
@@ -780,7 +784,7 @@ Partial Class editInfo
         tbBirthPlace.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBirthPlace.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbBirthPlace.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbBirthPlace.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbBirthPlace.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbBirthPlace.ForeColor = Color.Black
         tbBirthPlace.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbBirthPlace.Location = New Point(485, 268)
@@ -796,11 +800,11 @@ Partial Class editInfo
         ' 
         Label8.AutoSize = True
         Label8.BackColor = Color.Transparent
-        Label8.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label8.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label8.ForeColor = Color.Black
         Label8.Location = New Point(381, 279)
         Label8.Name = "Label8"
-        Label8.Size = New Size(101, 18)
+        Label8.Size = New Size(89, 20)
         Label8.TabIndex = 80
         Label8.Text = "Birth Place:"
         ' 
@@ -826,11 +830,11 @@ Partial Class editInfo
         ' 
         Label7.AutoSize = True
         Label7.BackColor = Color.Transparent
-        Label7.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label7.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label7.ForeColor = Color.Black
         Label7.Location = New Point(33, 279)
         Label7.Name = "Label7"
-        Label7.Size = New Size(81, 18)
+        Label7.Size = New Size(71, 20)
         Label7.TabIndex = 78
         Label7.Text = "Birthday:"
         ' 
@@ -843,7 +847,7 @@ Partial Class editInfo
         tbPermanentAddress.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPermanentAddress.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPermanentAddress.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPermanentAddress.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbPermanentAddress.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbPermanentAddress.ForeColor = Color.Black
         tbPermanentAddress.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbPermanentAddress.Location = New Point(208, 213)
@@ -859,11 +863,11 @@ Partial Class editInfo
         ' 
         Label6.AutoSize = True
         Label6.BackColor = Color.Transparent
-        Label6.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label6.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label6.ForeColor = Color.Black
         Label6.Location = New Point(29, 224)
         Label6.Name = "Label6"
-        Label6.Size = New Size(172, 18)
+        Label6.Size = New Size(154, 20)
         Label6.TabIndex = 76
         Label6.Text = "Permanent Address:"
         ' 
@@ -876,7 +880,7 @@ Partial Class editInfo
         tbPresentAddress.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPresentAddress.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbPresentAddress.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbPresentAddress.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbPresentAddress.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbPresentAddress.ForeColor = Color.Black
         tbPresentAddress.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbPresentAddress.Location = New Point(208, 159)
@@ -892,11 +896,11 @@ Partial Class editInfo
         ' 
         Label5.AutoSize = True
         Label5.BackColor = Color.Transparent
-        Label5.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label5.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label5.ForeColor = Color.Black
         Label5.Location = New Point(29, 171)
         Label5.Name = "Label5"
-        Label5.Size = New Size(147, 18)
+        Label5.Size = New Size(131, 20)
         Label5.TabIndex = 74
         Label5.Text = "Present Address:"
         ' 
@@ -909,7 +913,7 @@ Partial Class editInfo
         tbAlternativeName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbAlternativeName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbAlternativeName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbAlternativeName.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbAlternativeName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbAlternativeName.ForeColor = Color.Black
         tbAlternativeName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbAlternativeName.Location = New Point(608, 105)
@@ -925,11 +929,11 @@ Partial Class editInfo
         ' 
         Label4.AutoSize = True
         Label4.BackColor = Color.Transparent
-        Label4.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label4.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label4.ForeColor = Color.Black
         Label4.Location = New Point(29, 117)
         Label4.Name = "Label4"
-        Label4.Size = New Size(576, 18)
+        Label4.Size = New Size(509, 20)
         Label4.TabIndex = 72
         Label4.Text = "Alternative Name (Name that will appear on our social media accounts):"
         ' 
@@ -942,7 +946,7 @@ Partial Class editInfo
         tbMiddleName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbMiddleName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbMiddleName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbMiddleName.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbMiddleName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbMiddleName.ForeColor = Color.Black
         tbMiddleName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbMiddleName.Location = New Point(797, 52)
@@ -958,11 +962,11 @@ Partial Class editInfo
         ' 
         Label3.AutoSize = True
         Label3.BackColor = Color.Transparent
-        Label3.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label3.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label3.ForeColor = Color.Black
         Label3.Location = New Point(676, 65)
         Label3.Name = "Label3"
-        Label3.Size = New Size(114, 18)
+        Label3.Size = New Size(105, 20)
         Label3.TabIndex = 70
         Label3.Text = "Middle Name:"
         ' 
@@ -975,7 +979,7 @@ Partial Class editInfo
         tbFirstName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbFirstName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbFirstName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbFirstName.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbFirstName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbFirstName.ForeColor = Color.Black
         tbFirstName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbFirstName.Location = New Point(447, 51)
@@ -991,11 +995,11 @@ Partial Class editInfo
         ' 
         Label2.AutoSize = True
         Label2.BackColor = Color.Transparent
-        Label2.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label2.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label2.ForeColor = Color.Black
         Label2.Location = New Point(341, 65)
         Label2.Name = "Label2"
-        Label2.Size = New Size(99, 18)
+        Label2.Size = New Size(90, 20)
         Label2.TabIndex = 68
         Label2.Text = "First Name:"
         ' 
@@ -1008,7 +1012,7 @@ Partial Class editInfo
         tbLastName.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbLastName.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbLastName.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbLastName.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbLastName.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbLastName.ForeColor = Color.Black
         tbLastName.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbLastName.Location = New Point(134, 52)
@@ -1025,11 +1029,11 @@ Partial Class editInfo
         ' 
         Label1.AutoSize = True
         Label1.BackColor = Color.Transparent
-        Label1.Font = New Font("Arial Rounded MT Bold", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label1.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label1.ForeColor = Color.Black
         Label1.Location = New Point(29, 65)
         Label1.Name = "Label1"
-        Label1.Size = New Size(98, 18)
+        Label1.Size = New Size(90, 20)
         Label1.TabIndex = 66
         Label1.Text = "Last Name:"
         ' 
@@ -1057,11 +1061,55 @@ Partial Class editInfo
         Panel3.Size = New Size(1007, 2)
         Panel3.TabIndex = 120
         ' 
+        ' cbCamera
+        ' 
+        cbCamera.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        cbCamera.FormattingEnabled = True
+        cbCamera.Location = New Point(1113, 31)
+        cbCamera.Margin = New Padding(3, 2, 3, 2)
+        cbCamera.Name = "cbCamera"
+        cbCamera.Size = New Size(133, 28)
+        cbCamera.TabIndex = 121
+        ' 
+        ' Label26
+        ' 
+        Label26.AutoSize = True
+        Label26.BackColor = Color.Transparent
+        Label26.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label26.ForeColor = Color.Black
+        Label26.Location = New Point(1126, 9)
+        Label26.Name = "Label26"
+        Label26.Size = New Size(107, 20)
+        Label26.TabIndex = 122
+        Label26.Text = "ID Presented:"
+        ' 
+        ' BtnAddPhoto
+        ' 
+        BtnAddPhoto.Location = New Point(1083, 279)
+        BtnAddPhoto.Name = "BtnAddPhoto"
+        BtnAddPhoto.Size = New Size(200, 38)
+        BtnAddPhoto.TabIndex = 123
+        BtnAddPhoto.Text = "Add Photo"
+        BtnAddPhoto.UseVisualStyleBackColor = True
+        ' 
+        ' Button2
+        ' 
+        Button2.Location = New Point(1083, 323)
+        Button2.Name = "Button2"
+        Button2.Size = New Size(200, 38)
+        Button2.TabIndex = 124
+        Button2.Text = "USE WEBCAM"
+        Button2.UseVisualStyleBackColor = True
+        ' 
         ' editInfo
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.WhiteSmoke
+        Controls.Add(Button2)
+        Controls.Add(BtnAddPhoto)
+        Controls.Add(Label26)
+        Controls.Add(cbCamera)
         Controls.Add(Panel3)
         Controls.Add(Panel2)
         Controls.Add(Panel1)
@@ -1185,5 +1233,9 @@ Partial Class editInfo
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
     Friend WithEvents Panel3 As Panel
+    Friend WithEvents cbCamera As ComboBox
+    Friend WithEvents Label26 As Label
+    Friend WithEvents BtnAddPhoto As Button
+    Friend WithEvents Button2 As Button
 
 End Class

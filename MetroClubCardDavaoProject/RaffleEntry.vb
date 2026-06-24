@@ -118,6 +118,11 @@ Public Class RaffleEntry
             Try
                 pd.Print()
                 SendCutCommand()
+                MessageBox.Show(
+                    $"Raffle Ticket #{raffleNumber} has been printed successfully.",
+                    "Printing Complete",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information)
             Catch ex As System.ComponentModel.Win32Exception
                 MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Catch ex As Exception
@@ -285,7 +290,11 @@ Public Class RaffleEntry
             SendCutCommand()
 
         Next
-
+        MessageBox.Show(
+                $"Finished printing {dtTickets.Rows.Count} ticket(s) for {memberName}.",
+                "Printing Complete",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
     End Sub
 
     Private Sub PrintSingleTicket(memberName As String, raffleNumber As String)
@@ -506,7 +515,11 @@ Public Class RaffleEntry
 
             SendCutCommand()
         Next
-
+        MessageBox.Show(
+                $"Finished printing all {dtTickets.Rows.Count} raffle ticket(s).",
+                "Printing Complete",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
     End Sub
 
     Private Sub tbSearch_TextChanged(sender As Object, e As EventArgs) Handles tbSearch.TextChanged
@@ -877,6 +890,10 @@ Public Class RaffleEntry
 
             SendCutCommand()
         Next
-
+        MessageBox.Show(
+            $"Finished printing {dtTickets.Rows.Count} raffle ticket(s) for the selected date range.",
+            "Printing Complete",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
     End Sub
 End Class
