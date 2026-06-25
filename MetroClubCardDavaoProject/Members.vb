@@ -57,7 +57,26 @@ Public Class Members
         dgvRegistrations.ClearSelection()
         dgvRegistrations.CurrentCell = Nothing
     End Sub
+    Private Sub MarkTicketPrinted(raffleID As Integer)
 
+        Dim dbPath = GetDatabasePath()
+
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+
+            Dim sql As String =
+            "UPDATE raffle SET is_printed=1 WHERE id=@id"
+
+            Using cmd As New SQLiteCommand(sql, conn)
+
+                cmd.Parameters.AddWithValue("@id", raffleID)
+                cmd.ExecuteNonQuery()
+
+            End Using
+
+        End Using
+
+    End Sub
     Private Sub Members_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         dgvRegistrations.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         Dim dbPath As String = GetDatabasePath()
@@ -980,9 +999,9 @@ Public Class Members
 
                     Dim sqlInsert As String = "
                 INSERT INTO raffle
-                (raffle_number, registration_id, full_name, raffle_date, raffle_time, session_raffle_date)
+                (raffle_number, registration_id, full_name, raffle_date, raffle_time, session_raffle_date, is_printed)
                 VALUES
-                (@num, @regid, @name, @date, @time, @sessiondate);
+                (@num, @regid, @name, @date, @time, @sessiondate, 0);
 
                 SELECT last_insert_rowid();
             "
@@ -1009,7 +1028,24 @@ Public Class Members
                         MessageBoxIcon.Question)
 
                     If printResult = DialogResult.Yes Then
+
                         PrintSingleRaffle(newRaffleID)
+
+                        ' Mark as printed
+                        MarkTicketPrinted(newRaffleID)
+
+                    Else
+
+                        ' Explicitly mark as not printed
+                        Using cmd As New SQLiteCommand(
+        "UPDATE raffle SET is_printed = 0 WHERE id = @id",
+        conn)
+
+                            cmd.Parameters.AddWithValue("@id", newRaffleID)
+                            cmd.ExecuteNonQuery()
+
+                        End Using
+
                     End If
 
                 End Using

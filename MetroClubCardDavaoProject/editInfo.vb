@@ -112,38 +112,82 @@ Public Class EditInfo
     End Sub
     Private Sub StopCamera()
 
-        If videoSource IsNot Nothing AndAlso videoSource.IsRunning Then
-            videoSource.SignalToStop()
-            videoSource.WaitForStop()
-        End If
+        Try
+
+            If videoSource IsNot Nothing Then
+
+                RemoveHandler videoSource.NewFrame, AddressOf Video_NewFrame
+
+                If videoSource.IsRunning Then
+                    videoSource.SignalToStop()
+                End If
+
+                videoSource = Nothing
+
+            End If
+
+        Catch
+        End Try
 
     End Sub
     Private Sub Video_NewFrame(sender As Object, eventArgs As NewFrameEventArgs)
 
-        Dim frame As Bitmap = DirectCast(eventArgs.Frame.Clone(), Bitmap)
+        Try
 
-        ' Store latest frame for capture
-        If latestFrame IsNot Nothing Then
-            latestFrame.Dispose()
-        End If
+            Dim frame As Bitmap = DirectCast(eventArgs.Frame.Clone(), Bitmap)
 
-        latestFrame = DirectCast(frame.Clone(), Bitmap)
+            ' Store latest frame for capture
+            If latestFrame IsNot Nothing Then
+                latestFrame.Dispose()
+            End If
 
-        If pbCameraDisplay.InvokeRequired Then
+            latestFrame = DirectCast(frame.Clone(), Bitmap)
 
-            pbCameraDisplay.Invoke(
-            New MethodInvoker(
-                Sub()
+            ' Form is closing/disposed
+            If Me.IsDisposed OrElse pbCameraDisplay.IsDisposed Then
+                frame.Dispose()
+                Return
+            End If
 
-                    If pbCameraDisplay.Image IsNot Nothing Then
-                        pbCameraDisplay.Image.Dispose()
-                    End If
+            If pbCameraDisplay.InvokeRequired Then
 
-                    pbCameraDisplay.Image = DirectCast(frame.Clone(), Bitmap)
+                Try
 
-                End Sub))
+                    pbCameraDisplay.Invoke(
+                    New MethodInvoker(
+                        Sub()
 
-        End If
+                            If Me.IsDisposed OrElse pbCameraDisplay.IsDisposed Then
+                                Return
+                            End If
+
+                            If pbCameraDisplay.Image IsNot Nothing Then
+                                pbCameraDisplay.Image.Dispose()
+                            End If
+
+                            pbCameraDisplay.Image = DirectCast(frame.Clone(), Bitmap)
+
+                        End Sub))
+
+                Catch
+                    ' Ignore if form is closing
+                End Try
+
+            Else
+
+                If pbCameraDisplay.Image IsNot Nothing Then
+                    pbCameraDisplay.Image.Dispose()
+                End If
+
+                pbCameraDisplay.Image = DirectCast(frame.Clone(), Bitmap)
+
+            End If
+
+            frame.Dispose()
+
+        Catch
+            ' Ignore camera frame errors during shutdown
+        End Try
 
     End Sub
     Private Sub LoadCameras()
@@ -274,7 +318,7 @@ Public Class EditInfo
     Private Sub CloseEditInfo()
 
         StopCamera()
-
+        Application.DoEvents()
         If TypeOf Me.Parent Is Form Then
             Me.FindForm().Close()
         Else
@@ -450,7 +494,6 @@ Public Class EditInfo
 
             If videoSource IsNot Nothing AndAlso videoSource.IsRunning Then
                 videoSource.SignalToStop()
-                videoSource.WaitForStop()
             End If
 
             webcamRunning = False
