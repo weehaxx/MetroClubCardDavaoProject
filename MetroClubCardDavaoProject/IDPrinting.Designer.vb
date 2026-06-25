@@ -27,10 +27,10 @@ Partial Class IDPrinting
         Dim CustomizableEdges3 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges4 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         pbIDphoto = New Guna.UI2.WinForms.Guna2PictureBox()
-        lblName = New Guna.UI2.WinForms.Guna2HtmlLabel()
         btnPrint = New Guna.UI2.WinForms.Guna2Button()
         lblMemberID = New Label()
         pbBarcode = New PictureBox()
+        lblName = New Label()
         CType(pbIDphoto, ComponentModel.ISupportInitialize).BeginInit()
         CType(pbBarcode, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
@@ -48,18 +48,6 @@ Partial Class IDPrinting
         pbIDphoto.TabIndex = 1
         pbIDphoto.TabStop = False
         ' 
-        ' lblName
-        ' 
-        lblName.BackColor = Color.Transparent
-        lblName.Font = New Font("Arial Narrow", 22.2F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        lblName.ForeColor = Color.White
-        lblName.Location = New Point(372, 69)
-        lblName.Margin = New Padding(3, 4, 3, 4)
-        lblName.Name = "lblName"
-        lblName.Size = New Size(90, 45)
-        lblName.TabIndex = 2
-        lblName.Text = "NAME"
-        ' 
         ' btnPrint
         ' 
         btnPrint.CustomizableEdges = CustomizableEdges3
@@ -70,7 +58,7 @@ Partial Class IDPrinting
         btnPrint.FillColor = Color.FromArgb(CByte(0), CByte(192), CByte(0))
         btnPrint.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnPrint.ForeColor = Color.White
-        btnPrint.Location = New Point(330, 513)
+        btnPrint.Location = New Point(331, 516)
         btnPrint.Margin = New Padding(3, 4, 3, 4)
         btnPrint.Name = "btnPrint"
         btnPrint.ShadowDecoration.CustomizableEdges = CustomizableEdges4
@@ -97,10 +85,23 @@ Partial Class IDPrinting
         pbBarcode.BackColor = Color.White
         pbBarcode.Location = New Point(246, 445)
         pbBarcode.Name = "pbBarcode"
-        pbBarcode.Size = New Size(383, 53)
+        pbBarcode.Size = New Size(383, 54)
         pbBarcode.SizeMode = PictureBoxSizeMode.Zoom
         pbBarcode.TabIndex = 9
         pbBarcode.TabStop = False
+        ' 
+        ' lblName
+        ' 
+        lblName.AutoSize = True
+        lblName.Font = New Font("Arial Narrow", 22.2F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        lblName.ForeColor = Color.White
+        lblName.Location = New Point(733, 67)
+        lblName.Name = "lblName"
+        lblName.RightToLeft = RightToLeft.No
+        lblName.Size = New Size(106, 43)
+        lblName.TabIndex = 10
+        lblName.Text = "NAME"
+        lblName.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' IDPrinting
         ' 
@@ -109,11 +110,11 @@ Partial Class IDPrinting
         BackColor = Color.Transparent
         BackgroundImage = My.Resources.Resources.Membership_ID_Back_CR80_size___Blank_01
         BackgroundImageLayout = ImageLayout.Stretch
+        Controls.Add(lblName)
         Controls.Add(pbBarcode)
         Controls.Add(pbIDphoto)
         Controls.Add(lblMemberID)
         Controls.Add(btnPrint)
-        Controls.Add(lblName)
         Margin = New Padding(3, 4, 3, 4)
         Name = "IDPrinting"
         Size = New Size(874, 571)
@@ -123,9 +124,9 @@ Partial Class IDPrinting
         PerformLayout()
     End Sub
     Friend WithEvents pbIDphoto As Guna.UI2.WinForms.Guna2PictureBox
-    Friend WithEvents lblName As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents btnPrint As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents lblMemberID As Label
     Friend WithEvents pbBarcode As PictureBox
+    Friend WithEvents lblName As Label
 
 End Class

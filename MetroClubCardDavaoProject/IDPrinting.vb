@@ -9,9 +9,22 @@ Public Class IDPrinting
     Public Property MemberID As String
     Public Property MemberPhoto As System.Drawing.Image
 
+    Private lblNameRightEdge As Integer
+
     Private Sub IDPrinting_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        ' Save the original right edge position
+        lblNameRightEdge = lblName.Left + lblName.Width
+
+        ' Make label auto-size
+        lblName.AutoSize = True
+
+        ' Set member name
         lblName.Text = MemberName
+
+        ' Move label so its right edge stays fixed
+        lblName.Left = lblNameRightEdge - lblName.Width
+
         lblMemberID.Text = MemberID
 
         If MemberPhoto IsNot Nothing Then
@@ -152,4 +165,7 @@ Public Class IDPrinting
         PrintToC80PDF()
     End Sub
 
+    Private Sub lblName_Click(sender As Object, e As EventArgs) Handles lblName.Click
+
+    End Sub
 End Class
