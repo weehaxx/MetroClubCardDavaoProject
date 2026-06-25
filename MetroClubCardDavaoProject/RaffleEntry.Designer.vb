@@ -22,19 +22,19 @@ Partial Class RaffleEntry
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim CustomizableEdges1 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges2 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges3 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges4 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges5 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges6 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges7 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges8 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges9 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
-        Dim CustomizableEdges10 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim DataGridViewCellStyle4 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim CustomizableEdges11 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges12 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges13 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges14 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges15 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges16 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges17 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges18 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges19 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim CustomizableEdges20 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Label25 = New Label()
         dgvRaffleEntries = New Guna.UI2.WinForms.Guna2DataGridView()
         btnprint = New Guna.UI2.WinForms.Guna2Button()
@@ -45,6 +45,8 @@ Partial Class RaffleEntry
         tbSearch = New Guna.UI2.WinForms.Guna2TextBox()
         btnPrintPlayer = New Guna.UI2.WinForms.Guna2Button()
         BtnPrintByDate = New Guna.UI2.WinForms.Guna2Button()
+        BtnPrintedAll = New Button()
+        BtnUnprintAll = New Button()
         CType(dgvRaffleEntries, ComponentModel.ISupportInitialize).BeginInit()
         Panel2.SuspendLayout()
         SuspendLayout()
@@ -53,38 +55,38 @@ Partial Class RaffleEntry
         ' 
         Label25.AutoSize = True
         Label25.BackColor = Color.Transparent
-        Label25.Font = New Font("Arial Rounded MT Bold", 20.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Label25.Font = New Font("Microsoft Sans Serif", 20.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Label25.ForeColor = Color.Black
         Label25.Location = New Point(21, 21)
         Label25.Name = "Label25"
-        Label25.Size = New Size(244, 32)
+        Label25.Size = New Size(245, 31)
         Label25.TabIndex = 52
         Label25.Text = "RAFFLE ENTRIES"
         ' 
         ' dgvRaffleEntries
         ' 
-        DataGridViewCellStyle1.BackColor = Color.White
-        dgvRaffleEntries.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle4.BackColor = Color.White
+        dgvRaffleEntries.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle4
         dgvRaffleEntries.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left
         dgvRaffleEntries.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText
-        DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = Color.White
-        DataGridViewCellStyle2.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        DataGridViewCellStyle2.ForeColor = Color.Black
-        DataGridViewCellStyle2.SelectionBackColor = SystemColors.ActiveCaption
-        DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = DataGridViewTriState.True
-        dgvRaffleEntries.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = Color.White
+        DataGridViewCellStyle5.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle5.ForeColor = Color.Black
+        DataGridViewCellStyle5.SelectionBackColor = SystemColors.ActiveCaption
+        DataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = DataGridViewTriState.True
+        dgvRaffleEntries.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
         dgvRaffleEntries.ColumnHeadersHeight = 40
         dgvRaffleEntries.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
-        DataGridViewCellStyle3.Font = New Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        DataGridViewCellStyle3.ForeColor = Color.Black
-        DataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(CByte(239), CByte(241), CByte(243))
-        DataGridViewCellStyle3.SelectionForeColor = Color.Black
-        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.False
-        dgvRaffleEntries.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
+        DataGridViewCellStyle6.Font = New Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle6.ForeColor = Color.Black
+        DataGridViewCellStyle6.SelectionBackColor = Color.FromArgb(CByte(239), CByte(241), CByte(243))
+        DataGridViewCellStyle6.SelectionForeColor = Color.Black
+        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
+        dgvRaffleEntries.DefaultCellStyle = DataGridViewCellStyle6
         dgvRaffleEntries.GridColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
         dgvRaffleEntries.Location = New Point(21, 175)
         dgvRaffleEntries.Margin = New Padding(3, 2, 3, 2)
@@ -105,7 +107,7 @@ Partial Class RaffleEntry
         dgvRaffleEntries.ThemeStyle.GridColor = Color.FromArgb(CByte(247), CByte(248), CByte(249))
         dgvRaffleEntries.ThemeStyle.HeaderStyle.BackColor = Color.White
         dgvRaffleEntries.ThemeStyle.HeaderStyle.BorderStyle = DataGridViewHeaderBorderStyle.None
-        dgvRaffleEntries.ThemeStyle.HeaderStyle.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        dgvRaffleEntries.ThemeStyle.HeaderStyle.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         dgvRaffleEntries.ThemeStyle.HeaderStyle.ForeColor = Color.Black
         dgvRaffleEntries.ThemeStyle.HeaderStyle.HeaightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
         dgvRaffleEntries.ThemeStyle.HeaderStyle.Height = 40
@@ -121,7 +123,7 @@ Partial Class RaffleEntry
         ' btnprint
         ' 
         btnprint.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        btnprint.CustomizableEdges = CustomizableEdges1
+        btnprint.CustomizableEdges = CustomizableEdges11
         btnprint.DisabledState.BorderColor = Color.DarkGray
         btnprint.DisabledState.CustomBorderColor = Color.DarkGray
         btnprint.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
@@ -132,7 +134,7 @@ Partial Class RaffleEntry
         btnprint.Location = New Point(1162, 800)
         btnprint.Margin = New Padding(3, 2, 3, 2)
         btnprint.Name = "btnprint"
-        btnprint.ShadowDecoration.CustomizableEdges = CustomizableEdges2
+        btnprint.ShadowDecoration.CustomizableEdges = CustomizableEdges12
         btnprint.Size = New Size(173, 32)
         btnprint.TabIndex = 71
         btnprint.Text = "PRINT ALL"
@@ -164,43 +166,43 @@ Partial Class RaffleEntry
         ' 
         Guna2HtmlLabel13.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
         Guna2HtmlLabel13.BackColor = Color.Transparent
-        Guna2HtmlLabel13.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Guna2HtmlLabel13.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         Guna2HtmlLabel13.ForeColor = Color.White
         Guna2HtmlLabel13.Location = New Point(14, 10)
         Guna2HtmlLabel13.Name = "Guna2HtmlLabel13"
-        Guna2HtmlLabel13.Size = New Size(139, 20)
+        Guna2HtmlLabel13.Size = New Size(131, 22)
         Guna2HtmlLabel13.TabIndex = 75
         Guna2HtmlLabel13.Text = "TOTAL ENTRIES:"
         ' 
         ' btnReset
         ' 
         btnReset.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
-        btnReset.CustomizableEdges = CustomizableEdges3
+        btnReset.CustomizableEdges = CustomizableEdges13
         btnReset.DisabledState.BorderColor = Color.DarkGray
         btnReset.DisabledState.CustomBorderColor = Color.DarkGray
         btnReset.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
         btnReset.DisabledState.ForeColor = Color.FromArgb(CByte(141), CByte(141), CByte(141))
         btnReset.FillColor = Color.Red
-        btnReset.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        btnReset.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnReset.ForeColor = Color.White
         btnReset.Location = New Point(21, 800)
         btnReset.Margin = New Padding(3, 2, 3, 2)
         btnReset.Name = "btnReset"
-        btnReset.ShadowDecoration.CustomizableEdges = CustomizableEdges4
+        btnReset.ShadowDecoration.CustomizableEdges = CustomizableEdges14
         btnReset.Size = New Size(173, 32)
         btnReset.TabIndex = 89
         btnReset.Text = "RESET RAFFLE"
         ' 
         ' tbSearch
         ' 
-        tbSearch.CustomizableEdges = CustomizableEdges5
+        tbSearch.CustomizableEdges = CustomizableEdges15
         tbSearch.DefaultText = ""
         tbSearch.DisabledState.BorderColor = Color.FromArgb(CByte(208), CByte(208), CByte(208))
         tbSearch.DisabledState.FillColor = Color.FromArgb(CByte(226), CByte(226), CByte(226))
         tbSearch.DisabledState.ForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbSearch.DisabledState.PlaceholderForeColor = Color.FromArgb(CByte(138), CByte(138), CByte(138))
         tbSearch.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        tbSearch.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbSearch.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbSearch.ForeColor = Color.Black
         tbSearch.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         tbSearch.IconLeft = My.Resources.Resources.find
@@ -210,14 +212,14 @@ Partial Class RaffleEntry
         tbSearch.PlaceholderForeColor = Color.Silver
         tbSearch.PlaceholderText = "Find Member"
         tbSearch.SelectedText = ""
-        tbSearch.ShadowDecoration.CustomizableEdges = CustomizableEdges6
+        tbSearch.ShadowDecoration.CustomizableEdges = CustomizableEdges16
         tbSearch.Size = New Size(338, 35)
         tbSearch.TabIndex = 90
         ' 
         ' btnPrintPlayer
         ' 
         btnPrintPlayer.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        btnPrintPlayer.CustomizableEdges = CustomizableEdges7
+        btnPrintPlayer.CustomizableEdges = CustomizableEdges17
         btnPrintPlayer.DisabledState.BorderColor = Color.DarkGray
         btnPrintPlayer.DisabledState.CustomBorderColor = Color.DarkGray
         btnPrintPlayer.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
@@ -228,7 +230,7 @@ Partial Class RaffleEntry
         btnPrintPlayer.Location = New Point(956, 800)
         btnPrintPlayer.Margin = New Padding(3, 2, 3, 2)
         btnPrintPlayer.Name = "btnPrintPlayer"
-        btnPrintPlayer.ShadowDecoration.CustomizableEdges = CustomizableEdges8
+        btnPrintPlayer.ShadowDecoration.CustomizableEdges = CustomizableEdges18
         btnPrintPlayer.Size = New Size(173, 32)
         btnPrintPlayer.TabIndex = 91
         btnPrintPlayer.Text = "PRINT PLAYER"
@@ -236,7 +238,7 @@ Partial Class RaffleEntry
         ' BtnPrintByDate
         ' 
         BtnPrintByDate.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        BtnPrintByDate.CustomizableEdges = CustomizableEdges9
+        BtnPrintByDate.CustomizableEdges = CustomizableEdges19
         BtnPrintByDate.DisabledState.BorderColor = Color.DarkGray
         BtnPrintByDate.DisabledState.CustomBorderColor = Color.DarkGray
         BtnPrintByDate.DisabledState.FillColor = Color.FromArgb(CByte(169), CByte(169), CByte(169))
@@ -247,15 +249,39 @@ Partial Class RaffleEntry
         BtnPrintByDate.Location = New Point(751, 800)
         BtnPrintByDate.Margin = New Padding(3, 2, 3, 2)
         BtnPrintByDate.Name = "BtnPrintByDate"
-        BtnPrintByDate.ShadowDecoration.CustomizableEdges = CustomizableEdges10
+        BtnPrintByDate.ShadowDecoration.CustomizableEdges = CustomizableEdges20
         BtnPrintByDate.Size = New Size(173, 32)
         BtnPrintByDate.TabIndex = 92
         BtnPrintByDate.Text = "PRINT BY DATE"
         ' 
+        ' BtnPrintedAll
+        ' 
+        BtnPrintedAll.BackColor = SystemColors.ButtonShadow
+        BtnPrintedAll.ForeColor = Color.Black
+        BtnPrintedAll.Location = New Point(504, 76)
+        BtnPrintedAll.Name = "BtnPrintedAll"
+        BtnPrintedAll.Size = New Size(149, 32)
+        BtnPrintedAll.TabIndex = 93
+        BtnPrintedAll.Text = "Printed All (Optional)"
+        BtnPrintedAll.UseVisualStyleBackColor = False
+        ' 
+        ' BtnUnprintAll
+        ' 
+        BtnUnprintAll.BackColor = SystemColors.ButtonShadow
+        BtnUnprintAll.ForeColor = Color.Black
+        BtnUnprintAll.Location = New Point(504, 130)
+        BtnUnprintAll.Name = "BtnUnprintAll"
+        BtnUnprintAll.Size = New Size(149, 32)
+        BtnUnprintAll.TabIndex = 94
+        BtnUnprintAll.Text = "UnPrinted All (Optional)"
+        BtnUnprintAll.UseVisualStyleBackColor = False
+        ' 
         ' RaffleEntry
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
+        Controls.Add(BtnUnprintAll)
+        Controls.Add(BtnPrintedAll)
         Controls.Add(BtnPrintByDate)
         Controls.Add(btnPrintPlayer)
         Controls.Add(tbSearch)
@@ -283,5 +309,7 @@ Partial Class RaffleEntry
     Friend WithEvents tbSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents btnPrintPlayer As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents BtnPrintByDate As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents BtnPrintedAll As Button
+    Friend WithEvents BtnUnprintAll As Button
 
 End Class

@@ -714,6 +714,7 @@ Public Class RaffleEntry
     ' ================= EDIT RAFFLE ENTRY =================
     Private Sub EditRaffleEntry(raffleID As Integer)
         ' Find the row for this raffleID
+
         Dim row As DataGridViewRow = dgvRaffleEntries.Rows.Cast(Of DataGridViewRow)() _
             .FirstOrDefault(Function(r) Convert.ToInt32(r.Cells("RaffleID").Value) = raffleID)
         If row Is Nothing Then Return
@@ -721,11 +722,13 @@ Public Class RaffleEntry
         Dim currentDate As String = row.Cells("RaffleDate").Value.ToString()
         Dim currentTime As String = row.Cells("RaffleTime").Value.ToString()
         Dim currentSessionDate As String = row.Cells("SessionDate").Value.ToString()
+        Dim currentPrinted As Boolean =
+    row.Cells("PrintStatus").Value.ToString() = "PRINTED"
 
         ' ===== Create dialog =====
         Dim editForm As New Form() With {
             .Text = "Edit Raffle Entry",
-            .Size = New Size(300, 300),
+            .Size = New Size(300, 350),
             .StartPosition = FormStartPosition.CenterParent,
             .FormBorderStyle = FormBorderStyle.FixedDialog,
             .MaximizeBox = False,
@@ -748,6 +751,12 @@ Public Class RaffleEntry
     .CustomFormat = "yyyy-MM-dd"
 }
         Dim lblTime As New Label() With {.Text = "Raffle Time:", .Location = New Point(20, 140)}
+        Dim chkPrinted As New CheckBox() With {
+    .Text = "Printed",
+    .Location = New Point(20, 200),
+    .AutoSize = True,
+    .Checked = currentPrinted
+}
         Dim dtpTime As New DateTimePicker() With {
             .Location = New Point(20, 165),
             .Width = 240,
@@ -768,13 +777,21 @@ Public Class RaffleEntry
             dtpSessionDate.Value = parsedSessionDate
         End If
 
-        Dim btnSave As New Button() With {.Text = "Save", .Location = New Point(50, 205), .DialogResult = DialogResult.OK}
-        Dim btnCancel As New Button() With {.Text = "Cancel", .Location = New Point(150, 205), .DialogResult = DialogResult.Cancel}
-
+        Dim btnSave As New Button() With {
+    .Text = "Save",
+    .Location = New Point(50, 240),
+    .DialogResult = DialogResult.OK
+}
+        Dim btnCancel As New Button() With {
+    .Text = "Cancel",
+    .Location = New Point(150, 240),
+    .DialogResult = DialogResult.Cancel
+}
         editForm.Controls.AddRange({
             lblDate, dtpDate,
             lblSessionDate, dtpSessionDate,
             lblTime, dtpTime,
+            chkPrinted,
             btnSave, btnCancel
         })
         editForm.AcceptButton = btnSave
@@ -784,21 +801,25 @@ Public Class RaffleEntry
             Dim newDate As String = dtpDate.Value.ToString("yyyy-MM-dd")
             Dim newSessionDate As String = dtpSessionDate.Value.ToString("yyyy-MM-dd")
             Dim newTime As String = dtpTime.Value.ToString("HH:mm:ss")
+            Dim isPrinted As Integer =
+    If(chkPrinted.Checked, 1, 0)
             ' Update DB
             Try
                 Dim dbPath As String = GetDatabasePath()
                 Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
                     conn.Open()
                     Dim sql As String = "
-                    UPDATE raffle 
+                    UPDATE raffle
                     SET raffle_date=@date,
                         session_raffle_date=@sessiondate,
-                        raffle_time=@time
+                        raffle_time=@time,
+                        is_printed=@printed
                     WHERE id=@id"
                     Using cmd As New SQLiteCommand(sql, conn)
                         cmd.Parameters.AddWithValue("@date", newDate)
                         cmd.Parameters.AddWithValue("@sessiondate", newSessionDate)
                         cmd.Parameters.AddWithValue("@time", newTime)
+                        cmd.Parameters.AddWithValue("@printed", isPrinted)
                         cmd.Parameters.AddWithValue("@id", raffleID)
                         cmd.ExecuteNonQuery()
                     End Using
@@ -1114,5 +1135,80 @@ Public Class RaffleEntry
         Next
 
         LoadRaffleEntries()
+    End Sub
+
+    Private Sub BtnPrintedAll_Click(sender As Object, e As EventArgs) Handles BtnPrintedAll.Click
+        Dim confirm = MessageBox.Show(
+     "Mark ALL raffle tickets as PRINTED?",
+     "Confirm",
+     MessageBoxButtons.YesNo,
+     MessageBoxIcon.Question)
+
+        If confirm = DialogResult.No Then Exit Sub
+
+        Try
+            Dim dbPath As String = GetDatabasePath()
+
+            Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+                conn.Open()
+
+                Dim sql As String = "UPDATE raffle SET is_printed = 1"
+
+                Using cmd As New SQLiteCommand(sql, conn)
+                    Dim rowsAffected As Integer = cmd.ExecuteNonQuery()
+
+                    MessageBox.Show(
+                        $"{rowsAffected} ticket(s) marked as PRINTED.",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information)
+                End Using
+            End Using
+
+            LoadRaffleEntries()
+
+        Catch ex As Exception
+            MessageBox.Show(
+                "Error updating tickets: " & ex.Message,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub BtnUnprintAll_Click(sender As Object, e As EventArgs) Handles BtnUnprintAll.Click
+        Dim confirm = MessageBox.Show(
+        "Mark ALL raffle tickets as NOT PRINTED?",
+        "Confirm",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Question)
+
+        If confirm = DialogResult.No Then Exit Sub
+
+        Try
+            Dim dbPath As String = GetDatabasePath()
+
+            Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+                conn.Open()
+
+                Dim sql As String = "UPDATE raffle SET is_printed = 0"
+
+                Using cmd As New SQLiteCommand(sql, conn)
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+
+            LoadRaffleEntries()
+
+            MessageBox.Show(
+            "All tickets marked as NOT PRINTED.",
+            "Success",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
+
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message)
+        End Try
+
     End Sub
 End Class
