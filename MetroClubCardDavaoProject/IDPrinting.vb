@@ -87,58 +87,155 @@ Public Class IDPrinting
     Private Sub PrintToC80PDF()
 
         Try
-            btnPrint.Visible = False
-            Me.Refresh()
 
-            ' 🔥 CLEAN CAPTURE
-            Dim bmp As New System.Drawing.Bitmap(Me.Width, Me.Height,
-                                                 System.Drawing.Imaging.PixelFormat.Format32bppArgb)
+            Dim bmp As New Bitmap(Me.Width, Me.Height)
 
-            Me.DrawToBitmap(bmp, New System.Drawing.Rectangle(0, 0, Me.Width, Me.Height))
+            Using g As Graphics = Graphics.FromImage(bmp)
 
-            ' 🔥 REMOVE WHITE PIXEL HALO (IMPORTANT FIX)
-            Dim bmpFlat As New System.Drawing.Bitmap(bmp.Width, bmp.Height,
-                                                     System.Drawing.Imaging.PixelFormat.Format24bppRgb)
+                g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
+                g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+                g.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit
 
-            Using g As System.Drawing.Graphics = System.Drawing.Graphics.FromImage(bmpFlat)
-                g.Clear(System.Drawing.Color.White)
-                g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height)
+                ' Draw background
+                If Me.BackgroundImage IsNot Nothing Then
+
+                    g.DrawImage(
+                    Me.BackgroundImage,
+                    New System.Drawing.Rectangle(
+                        0,
+                        0,
+                        Me.Width,
+                        Me.Height))
+
+                Else
+
+                    g.Clear(Me.BackColor)
+
+                End If
+
+                ' Draw photo
+                If pbIDphoto.Image IsNot Nothing Then
+
+                    g.DrawImage(
+                    pbIDphoto.Image,
+                    pbIDphoto.Left,
+                    pbIDphoto.Top,
+                    pbIDphoto.Width,
+                    pbIDphoto.Height)
+
+                End If
+
+                ' Draw barcode
+                If pbBarcode.Image IsNot Nothing Then
+
+                    g.DrawImage(
+                    pbBarcode.Image,
+                    pbBarcode.Left,
+                    pbBarcode.Top,
+                    pbBarcode.Width,
+                    pbBarcode.Height)
+
+                End If
+
+                ' Draw Name
+                Using br As New SolidBrush(lblName.ForeColor)
+
+                    g.DrawString(
+                    lblName.Text,
+                    lblName.Font,
+                    br,
+                    lblName.Left,
+                    lblName.Top)
+
+                End Using
+
+                ' Draw Member ID
+                Using br As New SolidBrush(lblMemberID.ForeColor)
+
+                    g.DrawString(
+                    lblMemberID.Text,
+                    lblMemberID.Font,
+                    br,
+                    lblMemberID.Left,
+                    lblMemberID.Top)
+
+                End Using
+
             End Using
 
-            bmp.Dispose()
+            ' Optional test image
+            Dim pngPath As String =
+            Application.StartupPath & "\TestID.png"
 
-            btnPrint.Visible = True
+            If File.Exists(pngPath) Then
+                File.Delete(pngPath)
+            End If
 
-            ' C80 / CR80 size
+            bmp.Save(
+            pngPath,
+            System.Drawing.Imaging.ImageFormat.Png)
+
+            ' CR80 Card Size
             Dim cardWidth As Single = 85.6F * 2.83465F
             Dim cardHeight As Single = 54.0F * 2.83465F
 
             Using sfd As New SaveFileDialog()
+
                 sfd.Filter = "PDF Files|*.pdf"
                 sfd.FileName = "IDCard.pdf"
 
                 If sfd.ShowDialog() <> DialogResult.OK Then Exit Sub
 
-                Using fs As New FileStream(sfd.FileName, FileMode.Create)
+                ' Overwrite existing file
+                If File.Exists(sfd.FileName) Then
+
+                    Try
+                        File.Delete(sfd.FileName)
+
+                    Catch ex As Exception
+
+                        MessageBox.Show(
+                        "Please close the existing PDF first.",
+                        "File In Use",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning)
+
+                        Exit Sub
+
+                    End Try
+
+                End If
+
+                Using fs As New FileStream(
+                sfd.FileName,
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.None)
 
                     Dim doc As New iTextSharp.text.Document(
-                        New iTextSharp.text.Rectangle(cardWidth, cardHeight),
-                        0, 0, 0, 0
-                    )
+                    New iTextSharp.text.Rectangle(
+                        cardWidth,
+                        cardHeight),
+                    0, 0, 0, 0)
 
-                    Dim writer = PdfWriter.GetInstance(doc, fs)
+                    PdfWriter.GetInstance(doc, fs)
+
                     doc.Open()
 
                     Using ms As New MemoryStream()
 
-                        ' 🔥 USE JPEG (removes edge artifacts)
-                        bmpFlat.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg)
+                        bmp.Save(
+                        ms,
+                        System.Drawing.Imaging.ImageFormat.Png)
 
                         Dim img As iTextSharp.text.Image =
-                            iTextSharp.text.Image.GetInstance(ms.ToArray())
+                        iTextSharp.text.Image.GetInstance(
+                            ms.ToArray())
 
-                        ' 🔥 NO SCALETOFIT (causes pixel halo)
-                        img.ScaleAbsolute(cardWidth, cardHeight)
+                        img.ScaleAbsolute(
+                        cardWidth,
+                        cardHeight)
+
                         img.SetAbsolutePosition(0, 0)
 
                         doc.Add(img)
@@ -146,17 +243,27 @@ Public Class IDPrinting
                     End Using
 
                     doc.Close()
-                    writer.Close()
 
                 End Using
+
             End Using
 
-            MessageBox.Show("✅ ID Saved Successfully")
+            bmp.Dispose()
 
-            Me.FindForm().Close()
+            MessageBox.Show(
+            "✅ ID Saved Successfully",
+            "Success",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
 
         Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message)
+
+            MessageBox.Show(
+            ex.ToString(),
+            "Error",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error)
+
         End Try
 
     End Sub
