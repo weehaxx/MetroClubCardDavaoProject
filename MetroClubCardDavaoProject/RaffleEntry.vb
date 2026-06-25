@@ -20,6 +20,53 @@ Public Class RaffleEntry
         Return Path.Combine(appDataPath, "metrocarddavaodb.db")
 
     End Function
+    Private Function IsTicketPrinted(raffleID As Integer) As Boolean
+
+        Dim dbPath = GetDatabasePath()
+
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+
+            Dim sql As String =
+            "SELECT is_printed FROM raffle WHERE id=@id"
+
+            Using cmd As New SQLiteCommand(sql, conn)
+
+                cmd.Parameters.AddWithValue("@id", raffleID)
+
+                Dim result = cmd.ExecuteScalar()
+
+                If result IsNot Nothing Then
+                    Return Convert.ToInt32(result) = 1
+                End If
+
+            End Using
+
+        End Using
+
+        Return False
+
+    End Function
+    Private Sub MarkTicketPrinted(raffleID As Integer)
+
+        Dim dbPath = GetDatabasePath()
+
+        Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
+            conn.Open()
+
+            Dim sql As String =
+            "UPDATE raffle SET is_printed=1 WHERE id=@id"
+
+            Using cmd As New SQLiteCommand(sql, conn)
+
+                cmd.Parameters.AddWithValue("@id", raffleID)
+                cmd.ExecuteNonQuery()
+
+            End Using
+
+        End Using
+
+    End Sub
     Private Sub SendCutCommand()
         Try
             Dim printerName As String = "Your Printer Name"
@@ -59,6 +106,22 @@ Public Class RaffleEntry
         End Using
 
         If dtTicket.Rows.Count = 0 Then
+            If IsTicketPrinted(raffleID) Then
+
+                If MessageBox.Show(
+        "This ticket was already printed." &
+        vbCrLf &
+        "Do you want to print it again?",
+        "Already Printed",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Warning
+    ) = DialogResult.No Then
+
+                    Return
+
+                End If
+
+            End If
             MessageBox.Show("Raffle entry not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
@@ -118,17 +181,37 @@ Public Class RaffleEntry
             Try
                 pd.Print()
                 SendCutCommand()
-                MessageBox.Show(
-                    $"Raffle Ticket #{raffleNumber} has been printed successfully.",
-                    "Printing Complete",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information)
+                MarkTicketPrinted(raffleID)
+                LoadRaffleEntries()
             Catch ex As System.ComponentModel.Win32Exception
                 MessageBox.Show("Cannot print because the file is in use. Close it and try again.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Catch ex As Exception
                 MessageBox.Show("An error occurred while printing: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
+
+    End Sub
+
+    Private Sub dgvRaffleEntries_DataBindingComplete(
+    sender As Object,
+    e As DataGridViewBindingCompleteEventArgs
+) Handles dgvRaffleEntries.DataBindingComplete
+
+        For Each row As DataGridViewRow In dgvRaffleEntries.Rows
+
+            Dim status As String = ""
+
+            If row.Cells("PrintStatus").Value IsNot Nothing Then
+                status = row.Cells("PrintStatus").Value.ToString()
+            End If
+
+            If status = "PRINTED" Then
+                row.Cells("PrintStatus").Style.ForeColor = Color.Red
+                row.Cells("PrintStatus").Style.Font =
+        New Font(dgvRaffleEntries.Font, FontStyle.Bold)
+            End If
+
+        Next
 
     End Sub
     ' ================= LOAD RAFFLE ENTRIES =================
@@ -149,7 +232,11 @@ Public Class RaffleEntry
                            reg.registration_id AS RegistrationID,
                            r.raffle_date AS RaffleDate,
                            r.session_raffle_date AS SessionDate,
-                           strftime('%I:%M %p', r.raffle_time) AS RaffleTime
+                           strftime('%I:%M %p', r.raffle_time) AS RaffleTime,
+                           CASE
+                               WHEN r.is_printed = 1 THEN 'PRINTED'
+                               ELSE 'NOT PRINTED'
+                           END AS PrintStatus
                     FROM raffle r
                     INNER JOIN registrations reg ON r.registration_id = reg.id
                     ORDER BY CAST(r.raffle_number AS INTEGER) ASC
@@ -184,7 +271,7 @@ Public Class RaffleEntry
                 .Columns("RaffleDate").HeaderText = "Date"
                 .Columns("SessionDate").HeaderText = "Session Date"
                 .Columns("RaffleTime").HeaderText = "Time"
-
+                .Columns("PrintStatus").HeaderText = "Status"
                 .Columns("RaffleDate").DefaultCellStyle.Format = "yyyy-MM-dd"
                 .Columns("SessionDate").DefaultCellStyle.Format = "yyyy-MM-dd"
                 .AutoResizeColumns()
@@ -255,7 +342,11 @@ Public Class RaffleEntry
         Using conn As New SQLiteConnection($"Data Source={dbPath};Version=3;")
             conn.Open()
 
-            Dim sql As String = "SELECT raffle_number FROM raffle WHERE full_name=@name ORDER BY raffle_number ASC"
+            Dim sql As String = "SELECT id,
+                       raffle_number,
+                       is_printed
+                FROM raffle
+                WHERE full_name=@name ORDER BY raffle_number ASC"
 
             Using cmd As New SQLiteCommand(sql, conn)
                 cmd.Parameters.AddWithValue("@name", memberName)
@@ -271,30 +362,71 @@ Public Class RaffleEntry
             Return
         End If
 
+        ' Count already printed tickets
+        Dim alreadyPrinted As Integer =
+    dtTickets.AsEnumerable().
+    Count(Function(r)
+              If IsDBNull(r("is_printed")) Then
+                  Return False
+              End If
+
+              Return Convert.ToInt32(r("is_printed")) = 1
+          End Function)
+
+        If alreadyPrinted > 0 Then
+
+            If MessageBox.Show(
+        $"{alreadyPrinted} ticket(s) were already printed." &
+        vbCrLf &
+        "Print again?",
+        "Already Printed",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Warning
+    ) = DialogResult.No Then
+
+                Return
+
+            End If
+
+        End If
+
         If MessageBox.Show($"Print {dtTickets.Rows.Count} raffle tickets for {memberName}?",
-                       "Print Confirmation",
-                       MessageBoxButtons.YesNo,
-                       MessageBoxIcon.Question) <> DialogResult.Yes Then
+               "Print Confirmation",
+               MessageBoxButtons.YesNo,
+               MessageBoxIcon.Question) <> DialogResult.Yes Then
             Return
         End If
 
-
         For Each row As DataRow In dtTickets.Rows
 
+            Dim raffleID As Integer = Convert.ToInt32(row("id"))
             Dim raffleNumber As String = row("raffle_number").ToString()
 
-            PrintSingleTicket(memberName, raffleNumber)
+            Try
 
-            Threading.Thread.Sleep(300)
+                PrintSingleTicket(memberName, raffleNumber)
 
-            SendCutCommand()
+                MarkTicketPrinted(raffleID)
+
+                Threading.Thread.Sleep(300)
+
+                SendCutCommand()
+
+            Catch ex As Exception
+
+                MessageBox.Show(
+            "Failed to print ticket #" & raffleNumber &
+            vbCrLf &
+            ex.Message,
+            "Print Error",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error)
+
+            End Try
 
         Next
-        MessageBox.Show(
-                $"Finished printing {dtTickets.Rows.Count} ticket(s) for {memberName}.",
-                "Printing Complete",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information)
+
+        LoadRaffleEntries()
     End Sub
 
     Private Sub PrintSingleTicket(memberName As String, raffleNumber As String)
@@ -480,7 +612,10 @@ Public Class RaffleEntry
             conn.Open()
 
             Dim sql As String = "
-        SELECT full_name, raffle_number 
+        SELECT id,
+           full_name,
+           raffle_number,
+           is_printed 
         FROM raffle 
         ORDER BY CAST(raffle_number AS INTEGER) ASC"
 
@@ -491,9 +626,32 @@ Public Class RaffleEntry
             End Using
         End Using
 
-        If dtTickets.Rows.Count = 0 Then
-            MessageBox.Show("No raffle entries found.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Return
+        ' Count already printed tickets
+        Dim alreadyPrinted As Integer =
+    dtTickets.AsEnumerable().
+    Count(Function(r)
+              If IsDBNull(r("is_printed")) Then
+                  Return False
+              End If
+
+              Return Convert.ToInt32(r("is_printed")) = 1
+          End Function)
+
+        If alreadyPrinted > 0 Then
+
+            If MessageBox.Show(
+        $"{alreadyPrinted} ticket(s) were already printed." &
+        vbCrLf &
+        "Print again?",
+        "Already Printed",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Warning
+    ) = DialogResult.No Then
+
+                Return
+
+            End If
+
         End If
 
         ' CONFIRMATION BEFORE PRINT
@@ -506,20 +664,36 @@ Public Class RaffleEntry
 
 
         For Each row As DataRow In dtTickets.Rows
+
+            Dim raffleID As Integer = Convert.ToInt32(row("id"))
             Dim memberName As String = row("full_name").ToString()
             Dim raffleNumber As String = row("raffle_number").ToString()
 
-            PrintSingleTicket(memberName, raffleNumber)
+            Try
 
-            Threading.Thread.Sleep(300)
+                PrintSingleTicket(memberName, raffleNumber)
 
-            SendCutCommand()
+                MarkTicketPrinted(raffleID)
+
+                Threading.Thread.Sleep(300)
+
+                SendCutCommand()
+
+            Catch ex As Exception
+
+                MessageBox.Show(
+            "Failed to print ticket #" & raffleNumber &
+            vbCrLf &
+            ex.Message,
+            "Print Error",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error)
+
+            End Try
+
         Next
-        MessageBox.Show(
-                $"Finished printing all {dtTickets.Rows.Count} raffle ticket(s).",
-                "Printing Complete",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information)
+
+        LoadRaffleEntries()
     End Sub
 
     Private Sub tbSearch_TextChanged(sender As Object, e As EventArgs) Handles tbSearch.TextChanged
@@ -847,7 +1021,10 @@ Public Class RaffleEntry
             conn.Open()
 
             Dim sql As String = "
-        SELECT full_name, raffle_number
+        SELECT id,
+               full_name,
+               raffle_number,
+               is_printed
         FROM raffle
         WHERE DATE(session_raffle_date) BETWEEN DATE(@from) AND DATE(@to)
         ORDER BY CAST(raffle_number AS INTEGER) ASC"
@@ -871,7 +1048,33 @@ Public Class RaffleEntry
             MessageBox.Show("No raffle entries found for this session date range.", "No Tickets", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
         End If
+        ' Count already printed tickets
+        Dim alreadyPrinted As Integer =
+    dtTickets.AsEnumerable().
+    Count(Function(r)
+              If IsDBNull(r("is_printed")) Then
+                  Return False
+              End If
 
+              Return Convert.ToInt32(r("is_printed")) = 1
+          End Function)
+
+        If alreadyPrinted > 0 Then
+
+            If MessageBox.Show(
+        $"{alreadyPrinted} ticket(s) in this date range were already printed." &
+        vbCrLf &
+        "Do you want to print them again?",
+        "Already Printed",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Warning
+    ) = DialogResult.No Then
+
+                Return
+
+            End If
+
+        End If
         If MessageBox.Show("Print raffle tickets for this date range?",
                    "Print Confirmation",
                    MessageBoxButtons.YesNo,
@@ -881,19 +1084,35 @@ Public Class RaffleEntry
 
 
         For Each row As DataRow In dtTickets.Rows
+
+            Dim raffleID As Integer = Convert.ToInt32(row("id"))
             Dim memberName As String = row("full_name").ToString()
             Dim raffleNumber As String = row("raffle_number").ToString()
 
-            PrintSingleTicket(memberName, raffleNumber)
+            Try
 
-            Threading.Thread.Sleep(300)
+                PrintSingleTicket(memberName, raffleNumber)
 
-            SendCutCommand()
+                MarkTicketPrinted(raffleID)
+
+                Threading.Thread.Sleep(300)
+
+                SendCutCommand()
+
+            Catch ex As Exception
+
+                MessageBox.Show(
+                    "Failed to print ticket #" & raffleNumber &
+                    vbCrLf &
+                    ex.Message,
+                    "Print Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error)
+
+            End Try
+
         Next
-        MessageBox.Show(
-            $"Finished printing {dtTickets.Rows.Count} raffle ticket(s) for the selected date range.",
-            "Printing Complete",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information)
+
+        LoadRaffleEntries()
     End Sub
 End Class
