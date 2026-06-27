@@ -152,12 +152,20 @@ Public Class IDPrinting
                 ' Draw Member ID
                 Using br As New SolidBrush(lblMemberID.ForeColor)
 
+                    Dim sf As New StringFormat()
+                    sf.Alignment = StringAlignment.Center        ' Center horizontally
+                    sf.LineAlignment = StringAlignment.Center    ' Center vertically
+
                     g.DrawString(
-                    lblMemberID.Text,
-                    lblMemberID.Font,
-                    br,
-                    lblMemberID.Left,
-                    lblMemberID.Top)
+        lblMemberID.Text,
+        lblMemberID.Font,
+        br,
+        New RectangleF(
+            lblMemberID.Left,
+            lblMemberID.Top,
+            lblMemberID.Width,
+            lblMemberID.Height),
+        sf)
 
                 End Using
 
@@ -233,10 +241,10 @@ Public Class IDPrinting
                             ms.ToArray())
 
                         img.ScaleAbsolute(
-                        cardWidth,
-                        cardHeight)
+    cardWidth + 4,
+    cardHeight + 4)
 
-                        img.SetAbsolutePosition(0, 0)
+                        img.SetAbsolutePosition(-2, -2)
 
                         doc.Add(img)
 
@@ -273,6 +281,10 @@ Public Class IDPrinting
     End Sub
 
     Private Sub lblName_Click(sender As Object, e As EventArgs) Handles lblName.Click
+
+    End Sub
+
+    Private Sub lblMemberID_Click(sender As Object, e As EventArgs) Handles lblMemberID.Click
 
     End Sub
 End Class

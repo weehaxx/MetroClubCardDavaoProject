@@ -39,7 +39,7 @@ Partial Class IDPrinting
         ' 
         pbIDphoto.CustomizableEdges = CustomizableEdges1
         pbIDphoto.ImageRotate = 0F
-        pbIDphoto.Location = New Point(45, 142)
+        pbIDphoto.Location = New Point(38, 142)
         pbIDphoto.Margin = New Padding(3, 4, 3, 4)
         pbIDphoto.Name = "pbIDphoto"
         pbIDphoto.ShadowDecoration.CustomizableEdges = CustomizableEdges2
@@ -58,7 +58,7 @@ Partial Class IDPrinting
         btnPrint.FillColor = Color.FromArgb(CByte(0), CByte(192), CByte(0))
         btnPrint.Font = New Font("Arial Rounded MT Bold", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         btnPrint.ForeColor = Color.White
-        btnPrint.Location = New Point(331, 516)
+        btnPrint.Location = New Point(348, 521)
         btnPrint.Margin = New Padding(3, 4, 3, 4)
         btnPrint.Name = "btnPrint"
         btnPrint.ShadowDecoration.CustomizableEdges = CustomizableEdges4
@@ -72,7 +72,7 @@ Partial Class IDPrinting
         lblMemberID.BackColor = Color.Transparent
         lblMemberID.Font = New Font("Arial", 13.8F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         lblMemberID.ForeColor = Color.White
-        lblMemberID.Location = New Point(45, 382)
+        lblMemberID.Location = New Point(45, 378)
         lblMemberID.Name = "lblMemberID"
         lblMemberID.RightToLeft = RightToLeft.Yes
         lblMemberID.Size = New Size(220, 26)
@@ -115,9 +115,9 @@ Partial Class IDPrinting
         Controls.Add(pbIDphoto)
         Controls.Add(lblMemberID)
         Controls.Add(btnPrint)
-        Margin = New Padding(3, 4, 3, 4)
+        Margin = New Padding(0)
         Name = "IDPrinting"
-        Size = New Size(874, 571)
+        Size = New Size(874, 567)
         CType(pbIDphoto, ComponentModel.ISupportInitialize).EndInit()
         CType(pbBarcode, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
